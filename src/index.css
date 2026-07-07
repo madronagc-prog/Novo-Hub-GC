@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #00b2ff;
+  --color-brand-grafite: #444444;
+  --color-brand-cinza: #b2bab9;
+  --color-brand-red: #FC745C;
+  --color-brand-green: #D0FFCC;
+  --color-brand-yellow: #FFF6D3;
+  --color-brand-navy: #0a1e3f;
+
+  --font-serif: "Times New Roman", Times, serif;
+  --font-sans: "Calibri", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-brand-grafite;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+

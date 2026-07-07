@@ -1,0 +1,196 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: projetosDeLei
+    // Document ID: auto-generated
+    // Fields:
+    //   - id: string
+    //   - projeto: string (required)
+    //   - ementa: string (required)
+    //   - situacao: string (required)
+    //   - ultimoAndamento: string
+    //   - comissao: string
+    //   - local: string
+    //   - unAn: string (semicolon separated)
+    //   - tema: string (semicolon separated)
+    //   - lei: string (semicolon separated)
+    //   - link: string (required, URL)
+    //   - updatedAt: timestamp
+    //
+    // Collection: users
+    // Document ID: userId
+    // Fields:
+    //   - uid: string
+    //   - email: string
+    //   - role: string ('admin', 'user')
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.email != null && request.auth.token.email.lower() in [
+          "carnivalofdisgustblog@gmail.com", 
+          "gc.madronafialho@gmail.com",
+          "andrezzasoares08@gmail.com",
+          "amandacarvaleite@gmail.com",
+          "madrona.gc@gmail.com"
+        ]) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isValidProjeto(data) {
+      return data.projeto is string && data.projeto.size() > 0 &&
+             data.ementa is string && data.ementa.size() > 0 &&
+             data.situacao is string && data.situacao.size() > 0 &&
+             (!('link' in data) || data.link == "" || data.link == "#" || data.link.matches("^https?://.*")) &&
+             (!('unAn' in data) || data.unAn is string) &&
+             (!('tema' in data) || data.tema is string) &&
+             (!('lei' in data) || data.lei is string) &&
+             (!('tipo' in data) || data.tipo is string) &&
+             (!('clipping' in data) || data.clipping is string) &&
+             (!('updatedAt' in data) || data.updatedAt is string || data.updatedAt is timestamp) &&
+             (!('pareceres' in data) || (data.pareceres is list && data.pareceres.size() <= 20));
+    }
+
+    function isValidSource(data) {
+      return data.nome is string && data.nome.size() > 0 &&
+             (!('link' in data) || data.link == "" || data.link == "#" || data.link.matches("^https?://.*")) &&
+             data.tema is string && data.tema.size() > 0 &&
+             (!('statusInoreader' in data) || data.statusInoreader in ["Leitor de RSS", "Acesso Direto"]);
+    }
+
+    function isValidSTF(data) {
+      return data.numeroTema is string && data.numeroTema.size() > 0 &&
+             (!('tituloTema' in data) || data.tituloTema is string) &&
+             (!('situacaoRG' in data) || data.situacaoRG is string) &&
+             (!('situacaoAdmissibilidade' in data) || data.situacaoAdmissibilidade is string) &&
+             (!('processo' in data) || data.processo is string) &&
+             (!('relator' in data) || data.relator is string) &&
+             (!('situacao' in data) || data.situacao is string) &&
+             (!('dataAutuacao' in data) || data.dataAutuacao is string) &&
+             (!('linkProcesso' in data) || data.linkProcesso is string) &&
+             (!('descricaoTema' in data) || data.descricaoTema is string) &&
+             (!('tese' in data) || data.tese is string) &&
+             (!('updatedAt' in data) || data.updatedAt is string || data.updatedAt is timestamp);
+    }
+
+    function isValidSTJ(data) {
+      return data.numeroControversia is string && data.numeroControversia.size() > 0 &&
+             (!('ramoDireito' in data) || data.ramoDireito is string) &&
+             (!('orgaoJulgador' in data) || data.orgaoJulgador is string) &&
+             (!('situacaoControversia' in data) || data.situacaoControversia is string) &&
+             (!('descricao' in data) || data.descricao is string) &&
+             (!('informacoesComplementares' in data) || data.informacoesComplementares is string) &&
+             (!('anotacoesNugepnac' in data) || data.anotacoesNugepnac is string) &&
+             (!('repercussaoGeral' in data) || data.repercussaoGeral is string) &&
+             (!('processos' in data) || data.processos is list) &&
+             (!('updatedAt' in data) || data.updatedAt is string || data.updatedAt is timestamp);
+    }
+
+    function isValidRepetitivo(data) {
+      return data.numeroTema is string && data.numeroTema.size() > 0 &&
+             (!('ramoDireito' in data) || data.ramoDireito is string) &&
+             (!('orgaoJulgador' in data) || data.orgaoJulgador is string) &&
+             (!('questao' in data) || data.questao is string) &&
+             (!('delimitacao' in data) || data.delimitacao is string) &&
+             (!('tese' in data) || data.tese is string) &&
+             (!('anotacoesNugepnac' in data) || data.anotacoesNugepnac is string) &&
+             (!('repercussaoGeral' in data) || data.repercussaoGeral is string) &&
+             (!('processos' in data) || data.processos is list) &&
+             (!('updatedAt' in data) || data.updatedAt is string || data.updatedAt is timestamp);
+    }
+
+    function isValidNewsItem(data) {
+      return data.id is string && data.id.size() > 0 &&
+             data.title is string && data.title.size() > 0 &&
+             data.link is string && data.link.size() > 0 &&
+             data.company is string && data.company.size() > 0 &&
+             data.timestamp is number &&
+             (!('pubDate' in data) || data.pubDate is string) &&
+             (!('content' in data) || data.content is string) &&
+             (!('createdAt' in data) || data.createdAt is string || data.createdAt is timestamp);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /clippings/{editionId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'user';
+      allow update: if isAdmin();
+    }
+
+    match /projetosDeLei/{projetoId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidProjeto(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /fontesDeInformacao/{sourceId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSource(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    match /temasRepetitivos/{temaId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidRepetitivo(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    match /controversiasSTJ/{controversiaId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSTJ(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    match /repercussaoGeralSTF/{temaId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSTF(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    match /news_items/{itemId} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() && isValidNewsItem(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // ── Serviços de GC ────────────────────────────────────────────────────────
+    // Estrutura: /services/{serviceId}
+    // Campos editáveis: name, description, accessInfo, areas, updatedAt, updatedBy
+    // Leitura: todos os autenticados
+    // Escrita: apenas admins (mesmas contas do isAdmin())
+    match /services/{serviceId} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+    match /madronaLab/{itemId} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "entities": {
+    "ProjetoDeLei": {
+      "title": "Projeto de Lei",
+      "description": "Projeto de lei acompanhado pela área de Gestão do Conhecimento.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projeto": { "type": "string", "description": "Número do projeto acompanhado" },
+        "ementa": { "type": "string", "description": "Resumo do tema do projeto" },
+        "situacao": { "type": "string", "description": "Estado atual do projeto na Câmara ou Senado" },
+        "ultimoAndamento": { "type": "string", "description": "Descrição do último movimento relevante" },
+        "comissao": { "type": "string", "description": "Comissão onde o projeto está tramitando" },
+        "local": { "type": "string", "description": "Senado ou Câmara" },
+        "unAn": { "type": "string", "description": "Unidade de negócio impactada (separada por ;)" },
+        "tema": { "type": "string", "description": "Tema do projeto (separado por ;)" },
+        "lei": { "type": "string", "description": "Leis que serão alteradas (separada por ;)" },
+        "link": { "type": "string", "description": "Link da página do projeto" },
+        "pareceres": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titulo": { "type": "string" },
+              "link": { "type": "string" }
+            },
+            "required": ["titulo", "link"]
+          },
+          "description": "Lista de pareceres aprovados (máximo 10)"
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["projeto", "ementa", "situacao", "link"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User of the application.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Source": {
+      "title": "Fonte de Informação",
+      "description": "Fonte de informação usada para clippings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "link": { "type": "string" },
+        "tema": { "type": "string" },
+        "statusInoreader": { "type": "string", "enum": ["Leitor de RSS", "Acesso Direto"] },
+        "sigla": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nome", "link", "tema", "statusInoreader"]
+    },
+    "TemaRepetitivo": {
+      "title": "Tema Repetitivo",
+      "description": "Tema repetitivo do STJ.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "Tema": { "type": "string" },
+        "Situação do Tema": { "type": "string" },
+        "Órgão Julgador": { "type": "string" },
+        "Ramo do Direito": { "type": "string" },
+        "Questão Submetida a Julgamento": { "type": "string" },
+        "Tese Firmada": { "type": "string" },
+        "Anotações Nugepnac": { "type": "string" },
+        "Informações Complementares": { "type": "string" },
+        "Repercussão Geral": { "type": "string" },
+        "processos": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "ControversiaSTJ": {
+      "title": "Controvérsia do STJ",
+      "description": "Controvérsia do STJ.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "Controvérsia": { "type": "string" },
+        "Situação da Controvérsia": { "type": "string" },
+        "Órgão Julgador": { "type": "string" },
+        "Ramo do Direito": { "type": "string" },
+        "Descrição": { "type": "string" },
+        "Anotações Nugepnac": { "type": "string" },
+        "Informações Complementares": { "type": "string" },
+        "Repercussão Geral": { "type": "string" },
+        "processos": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "RepercussaoGeralSTF": {
+      "title": "Repercussão Geral STF",
+      "description": "Repercussão Geral STF.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "Número Tema": { "type": "string" },
+        "Título tema": { "type": "string" },
+        "Tese": { "type": "string" },
+        "Descrição tema": { "type": "string" },
+        "Situação repercussão geral": { "type": "string" },
+        "Processo paradigma": { "type": "string" },
+        "Relator atual": { "type": "string" },
+        "Situação Processo Paradigma": { "type": "string" },
+        "Situação admissibilidade tema": { "type": "string" },
+        "Situação julgamento tema": { "type": "string" },
+        "Data autuação": { "type": "string" },
+        "Data admissibilidade RG": { "type": "string" },
+        "Data julgamento tema": { "type": "string" },
+        "processos": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "NewsItem": {
+      "title": "Notícia de Empresa",
+      "description": "Item de notícia capturado via feed RSS para monitoramento de empresas.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "link": { "type": "string" },
+        "pubDate": { "type": "string" },
+        "content": { "type": "string" },
+        "company": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "link", "company", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/projetosDeLei/{projetoId}": {
+      "schema": "ProjetoDeLei",
+      "description": "Coleção de projetos de lei monitorados."
+    },
+    "/fontesDeInformacao/{sourceId}": {
+      "schema": "Source",
+      "description": "Coleção de fontes de informação."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Coleção de usuários e seus papéis."
+    },
+    "/temasRepetitivos/{temaId}": {
+      "schema": "TemaRepetitivo",
+      "description": "Coleção de temas repetitivos do STJ."
+    },
+    "/controversiasSTJ/{controversiaId}": {
+      "schema": "ControversiaSTJ",
+      "description": "Coleção de controvérsias do STJ."
+    },
+    "/repercussaoGeralSTF/{temaId}": {
+      "schema": "RepercussaoGeralSTF",
+      "description": "Coleção de repercussão geral do STF."
+    },
+    "/news_items/{itemId}": {
+      "schema": "NewsItem",
+      "description": "Histórico de notícias capturadas para monitoramento de empresas."
+    }
+  }
+}
