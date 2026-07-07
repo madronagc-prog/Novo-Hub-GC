@@ -39,7 +39,7 @@ service cloud.firestore {
 
     function isAdmin() {
       return isAuthenticated() && (
-        (request.auth.token.email != null && request.auth.token.email.lower() in [
+        (request.auth.token.email != null && request.auth.token.email in [
           "carnivalofdisgustblog@gmail.com", 
           "gc.madronafialho@gmail.com",
           "andrezzasoares08@gmail.com",
