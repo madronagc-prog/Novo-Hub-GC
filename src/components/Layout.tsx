@@ -118,7 +118,7 @@ export default function Layout() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" ref={dropdownRef}>
+            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2" ref={dropdownRef}>
               {navItems.map((item) => {
                 const Icon = item.icon;
 
@@ -140,13 +140,13 @@ export default function Layout() {
                             setOpenDropdown(isOpen ? null : item.label);
                           }
                         }}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                           isActive || isOpen
                             ? 'bg-white/20 text-white'
                             : 'text-white/80 hover:bg-white/10 hover:text-white'
                         }`}
                       >
-                        <Icon size={18} />
+                        <Icon size={18} className="flex-shrink-0" />
                         {item.label}
                         <div 
                           onClick={(e) => {
@@ -205,13 +205,13 @@ export default function Layout() {
                   <Link
                     key={item.path}
                     to={item.path!}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                       isActive
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:bg-white/10 hover:text-white'
                     }`}
                   >
-                    <Icon size={18} />
+                    <Icon size={18} className="flex-shrink-0" />
                     {item.label}
                   </Link>
                 );
