@@ -165,6 +165,10 @@ service cloud.firestore {
       allow create, update: if isAdmin() && isValidSTF(request.resource.data);
       allow delete: if isAdmin();
     }
+    match /precedentesSTJ/{precedenteId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
     match /news_items/{itemId} {
       allow read: if true;
       allow create, update: if isAuthenticated() && isValidNewsItem(request.resource.data);

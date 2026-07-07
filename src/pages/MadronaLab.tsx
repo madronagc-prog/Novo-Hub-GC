@@ -53,15 +53,23 @@ export default function MadronaLab() {
     async function loadOverrides() {
       try {
         const querySnapshot = await getDocs(collection(db, 'madronaLab'));
-        const overrides: Record<string, Partial<ServiceOverride>> = {};
+        const overrides: Record<string, any> = {};
         querySnapshot.forEach(docSnap => {
-          overrides[docSnap.id] = docSnap.data() as Partial<ServiceOverride>;
+          overrides[docSnap.id] = docSnap.data();
         });
 
         const merged = madronaLabData.map(svc => ({
           ...svc,
-          ...overrides[svc.id]
+          ...(overrides[svc.id] ?? {})
         }));
+
+        const baseIds = new Set(madronaLabData.map(s => s.id));
+        querySnapshot.forEach(docSnap => {
+          if (!baseIds.has(docSnap.id)) {
+            merged.push({ id: docSnap.id, ...docSnap.data() } as MadronaLabItem);
+          }
+        });
+
         setServices(merged);
       } catch (error) {
         console.warn('[MadronaLab] erro ao carregar do Firestore:', error);
@@ -146,17 +154,23 @@ export default function MadronaLab() {
         accessInfo: editForm.accessInfo,
         areas: editForm.areas,
         featureGroups: editForm.featureGroups || [],
-        updatedAt: serverTimestamp(),
       };
 
-      await setDoc(doc(db, 'madronaLab', editingId), dataToSave, { merge: true });
+      await setDoc(
+        doc(db, 'madronaLab', editingId),
+        {
+          ...dataToSave,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
 
       setServices(prev => {
         const exists = prev.find(p => p.id === editingId);
         if (exists) {
           return prev.map(p => p.id === editingId ? { ...p, ...dataToSave } : p);
         } else {
-          return [...prev, { id: editingId, category: '', ...dataToSave } as MadronaLabItem];
+          return [...prev, { id: editingId, ...dataToSave } as MadronaLabItem];
         }
       });
       setSaveStatus('success');

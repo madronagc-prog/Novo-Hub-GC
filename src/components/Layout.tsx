@@ -118,7 +118,7 @@ export default function Layout() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2" ref={dropdownRef}>
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 flex-nowrap" ref={dropdownRef}>
               {navItems.map((item) => {
                 const Icon = item.icon;
 
@@ -130,7 +130,7 @@ export default function Layout() {
                   const isOpen   = openDropdown === item.label;
 
                   return (
-                    <div key={item.label} className="relative">
+                    <div key={item.label} className="relative flex-shrink-0">
                       <button
                         onClick={() => {
                           if (item.path) {
@@ -140,23 +140,15 @@ export default function Layout() {
                             setOpenDropdown(isOpen ? null : item.label);
                           }
                         }}
-                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                        className={`flex items-center gap-1 px-1.5 py-1.5 xl:px-2 rounded-md text-xs xl:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                           isActive || isOpen
                             ? 'bg-white/20 text-white'
                             : 'text-white/80 hover:bg-white/10 hover:text-white'
                         }`}
                       >
-                        <Icon size={18} className="flex-shrink-0" />
-                        {item.label}
-                        <div 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpenDropdown(isOpen ? null : item.label);
-                          }}
-                          className="flex items-center justify-center p-1 hover:bg-white/10 rounded-full"
-                        >
-                          <ChevronDown size={14} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                        </div>
+                        <Icon size={16} className="flex-shrink-0" />
+                        <span className="whitespace-nowrap flex-shrink-0">{item.label}</span>
+                        <ChevronDown size={14} className={`transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
                       </button>
 
                       {isOpen && (
@@ -205,23 +197,23 @@ export default function Layout() {
                   <Link
                     key={item.path}
                     to={item.path!}
-                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                    className={`flex items-center gap-1 px-1.5 py-1.5 xl:px-2 rounded-md text-xs xl:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                       isActive
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:bg-white/10 hover:text-white'
                     }`}
                   >
-                    <Icon size={18} className="flex-shrink-0" />
-                    {item.label}
+                    <Icon size={16} className="flex-shrink-0" />
+                    <span className="whitespace-nowrap flex-shrink-0">{item.label}</span>
                   </Link>
                 );
               })}
 
-              <div className="h-6 w-[1px] bg-white/20 mx-2" />
+              <div className="h-6 w-[1px] bg-white/20 mx-2 flex-shrink-0" />
 
               {/* User Authentication UI */}
               {user ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-shrink-0">
                   <div className="flex items-center gap-2">
                     {user.photoURL ? (
                       <img src={user.photoURL} alt={user.displayName || ''} className="w-8 h-8 rounded-full border-2 border-white/20" />
@@ -236,7 +228,7 @@ export default function Layout() {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/80 hover:text-white"
+                    className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/80 hover:text-white flex-shrink-0"
                     title="Sair"
                   >
                     <LogOut size={18} />
@@ -245,16 +237,16 @@ export default function Layout() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="flex items-center gap-2 bg-white text-brand-grafite px-4 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-blue-50 transition-all border border-transparent"
+                  className="flex items-center gap-1.5 bg-white text-brand-grafite px-3 py-1.5 rounded-full text-xs xl:text-sm font-bold shadow-sm hover:bg-blue-50 transition-all border border-transparent flex-shrink-0"
                 >
-                  <LogIn size={18} />
+                  <LogIn size={16} />
                   Acesso Administrador
                 </button>
               )}
             </nav>
 
             {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
+            <div className="lg:hidden flex items-center">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 focus:outline-none"
@@ -267,7 +259,7 @@ export default function Layout() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-[#0099d9]">
+          <div className="lg:hidden bg-[#0099d9]">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {navItems.map((item) => {
                 const Icon = item.icon;

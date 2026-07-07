@@ -17,13 +17,13 @@ export interface ServiceItem {
 }
 
 export const CATEGORIES = [
-  'Doutrina',
-  'Due Diligence',
-  'Assinatura Digital',
-  'Inteligência Artificial',
-  'Jurisprudência',
-  'Legislação',
-  'Notícias',
+  "Doutrina",
+  "Due Diligence",
+  "Assinatura Digital",
+  "Inteligência Artificial",
+  "Jurisprudência",
+  "Legislação",
+  "Notícias"
 ];
 
 export const servicesGCData: ServiceItem[] = [
@@ -294,10 +294,47 @@ export const servicesGCData: ServiceItem[] = [
   {
     "id": "econet",
     "name": "Econet",
-    "description": "",
-    "featureGroups": [],
+    "description": "Plataforma de consultoria e informações legais voltada para profissionais das áreas fiscal, tributária, contábil, trabalhista e previdenciária. Fornece conteúdo normativo completo e atualizado, com o compromisso de não fracionar ou omitir informações legislativas. Oferece boletins, regulamentos consolidados, cadernos temáticos e suporte consultivo, com atualizações acompanhando o ritmo das alterações normativas.",
+    "featureGroups": [
+      {
+        "title": "Área Fiscal (Federal, Estadual, Municipal e Comércio Exterior)",
+        "items": [
+          "Tributos federais (IPI, IOF, II, IE, ITR), estaduais (ICMS, IPVA, ITCMD) e municipais (ISS, IPTU, ITBI) e comércio exterior",
+          "Regulamento do ICMS, Regulamento do IPI, Tabela do IPI e Legislação do ISS das Capitais",
+          "Caderno de ICMS, IPI e ISS do Boletim Econet",
+          "Indicadores econômicos e índices de aluguéis"
+        ]
+      },
+      {
+        "title": "Área Trabalhista e Previdenciária",
+        "items": [
+          "Rotinas trabalhistas: férias, 13º salário, FGTS, jornada de trabalho, aviso prévio, CAGED, RAIS, PIS/PASEP, contribuição sindical, insalubridade, estágio, entre outros",
+          "Conteúdo previdenciário: aposentadoria, benefícios, contribuições, salário de contribuição, auxílio-doença, entre outros",
+          "CLT consolidada e Caderno Trabalhista e Previdenciário do Boletim Econet"
+        ]
+      },
+      {
+        "title": "Imposto de Renda e Contabilidade",
+        "items": [
+          "IRPJ (lucro real, presumido e arbitrado), IRPF (carnê-leão, declaração anual, ganhos de capital), IRRF, CSLL, PIS/COFINS, Simples Nacional",
+          "Conteúdo contábil (balanços, demonstrações, lançamentos) e societário (CNPJ, sociedades limitadas, S.A., cooperativas)",
+          "Regulamento do Imposto de Renda e Caderno de IR e Contabilidade do Boletim Econet"
+        ]
+      },
+      {
+        "title": "Produtos editoriais e acompanhamento",
+        "items": [
+          "Boletim Econet com cadernos temáticos por área",
+          "Síntese semanal por e-mail com as principais atualizações normativas",
+          "Suporte consultivo sobre os produtos fornecidos"
+        ]
+      }
+    ],
     "accessInfo": "",
-    "category": "Legislação"
+    "category": "Legislação",
+    "fullName": "",
+    "provider": "",
+    "areas": ""
   },
   {
     "id": "rc-ambiental",
@@ -472,5 +509,81 @@ export const servicesGCData: ServiceItem[] = [
     "featureGroups": [],
     "accessInfo": "",
     "category": "Due Diligence"
+  },
+  {
+    "id": "mlex",
+    "name": "MLex",
+    "provider": "LexisNexis",
+    "description": "Serviço de notícias e análises preditivas sobre regulação e risco regulatório, com foco global. Conta com mais de 70 jornalistas especializados distribuídos em 15 escritórios ao redor do mundo, produzindo mais de 100 artigos por dia. Oferece cobertura imparcial e aprofundada sobre propostas regulatórias, investigações, ações de enforcement e decisões judiciais e administrativas que impactam negócios, permitindo antecipar mudanças legais antes que se concretizem.",
+    "featureGroups": [
+      {
+        "title": "Cobertura temática especializada",
+        "items": [
+          "Antitruste e concorrência (cartéis, práticas restritivas, abuso de posição dominante, litigância concorrencial)",
+          "Fusões e aquisições (DealRisk®, análise de risco em operações de M&A)",
+          "Inteligência artificial e tecnologia",
+          "Privacidade e proteção de dados",
+          "Propriedade intelectual",
+          "Comércio internacional (trade)",
+          "Energia",
+          "Serviços financeiros e crimes financeiros",
+          "Auxílios estatais (state aid)"
+        ]
+      },
+      {
+        "title": "Ferramentas de acompanhamento",
+        "items": [
+          "Newsletters segmentadas por área de prática, entregues diretamente por e-mail",
+          "Alertas personalizáveis para rastreamento em tempo real de leis, casos, temas, setores, empresas e jurisdições",
+          "Case Files: dossiês com notícias, análises e documentos-fonte organizados em linha do tempo com filtros individualizáveis"
+        ]
+      },
+      {
+        "title": "Recursos adicionais",
+        "items": [
+          "Biblioteca de recursos (Resource Library) com orientações de uso da plataforma",
+          "Cobertura global com escritórios em Washington, Londres, Bruxelas, Pequim, entre outros"
+        ]
+      }
+    ],
+    "accessInfo": "",
+    "category": "Notícias"
+  },
+  {
+    "id": "head-energia",
+    "name": "Head Energia",
+    "description": "Plataforma online de capacitação e desenvolvimento profissional voltada para o setor elétrico, com foco em mercado e regulação de energia. Reúne cursos, séries, masterclasses e certificações ministrados por mais de 220 especialistas executivos do setor. Já transformou mais de 4.000 carreiras, é utilizada por mais de 150 empresas e inclui uma comunidade de networking. Referência na preparação para a Prova de Certificação da CCEE, tendo formado 37% dos aprovados desde 2022.",
+    "featureGroups": [
+      {
+        "title": "Assinatura de Formação Contínua",
+        "items": [
+          "Acesso a conteúdos atualizados sobre mercado e regulação de energia, ministrados por especialistas executivos",
+          "Inclui o Preparatório para a Prova de Certificação de Operadores da CCEE",
+          "Cinco cursos inclusos na assinatura com certificado: Migração para o Mercado Livre, Negócios em Transmissão, Oficina de Reajuste e Revisão Tarifária de Distribuidoras, Excludentes de Responsabilidade e Técnicas de Estudo"
+        ]
+      },
+      {
+        "title": "Cursos de Aprofundamento",
+        "items": [
+          "Cursos estruturados em módulos fechados, ministrados por professores especialistas em temas específicos do setor",
+          "Exemplo: \"Impactos da Reforma Tributária no Setor Elétrico e Estudos de Caso em Usinas Renováveis\""
+        ]
+      },
+      {
+        "title": "Cursos In Company",
+        "items": [
+          "Cursos elaborados de acordo com as necessidades específicas de cada empresa"
+        ]
+      },
+      {
+        "title": "Comunidade e networking",
+        "items": [
+          "Rede de profissionais do setor elétrico para troca de experiências e fortalecimento de conexões, de estagiários a CEOs"
+        ]
+      }
+    ],
+    "areas": "Geração, comercialização, distribuição e transmissão de energia",
+    "accessInfo": "",
+    "category": "Notícias"
   }
 ];
