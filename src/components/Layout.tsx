@@ -78,20 +78,20 @@ export default function Layout() {
     },
 
     {
+      label: 'Monitoramentos',
+      icon: LayoutDashboard,
+      subItems: [
+        { path: '/projetos-de-lei',          label: 'Acompanhamento legislativo' },
+        { path: '/monitoramento-de-empresas', label: 'Monitoramento de Empresas' },
+      ],
+    },
+    {
       label: 'Jurisprudência',
       icon: Scale,
       subItems: [
         { path: '/precedentes/temas-repetitivos', label: 'Temas repetitivos do STJ' },
         { path: '/precedentes/controversias',     label: 'Controvérsias do STJ' },
         { path: '/precedentes/repercussao-geral', label: 'Repercussão Geral STF' },
-      ],
-    },
-    {
-      label: 'Monitoramentos',
-      icon: LayoutDashboard,
-      subItems: [
-        { path: '/projetos-de-lei',          label: 'Acompanhamento legislativo' },
-        { path: '/monitoramento-de-empresas', label: 'Monitoramento de Empresas' },
       ],
     },
     {
