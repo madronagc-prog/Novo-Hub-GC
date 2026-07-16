@@ -6,12 +6,14 @@ import { db } from '../firebase';
 import { defaultClippingData } from './clipping/clippingData';
 import { defaultClippingMaioData } from './clipping/clippingMaioData';
 import { defaultClippingJunhoData } from './clipping/clippingJunhoData';
+import { defaultClippingJulhoData } from './clipping/clippingJulhoData';
 
 export default function ClippingCorporativo() {
   const [allClippings, setAllClippings] = useState<any>({
     'abril-2026': defaultClippingData,
     'maio-2026': defaultClippingMaioData,
-    'junho-2026': defaultClippingJunhoData
+    'junho-2026': defaultClippingJunhoData,
+    'julho-2026': defaultClippingJulhoData
   });
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -46,6 +48,7 @@ export default function ClippingCorporativo() {
       if (id === 'abril-2026') return '1ª Edição — Abril 2026';
       if (id === 'maio-2026') return '2ª Edição — Maio 2026';
       if (id === 'junho-2026') return '3ª Edição — Junho 2026';
+      if (id === 'julho-2026') return '4ª Edição — Julho 2026';
       return id;
     };
     
@@ -119,6 +122,26 @@ export default function ClippingCorporativo() {
 
       {!searchQuery.trim() ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Edition Card Julho 2026 */}
+          <Link 
+            to="/clipping-corporativo/julho-2026"
+            className="group block bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all hover:border-brand-grafite/30"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-gray-100 p-2.5 rounded-xl text-brand-grafite group-hover:bg-brand-grafite group-hover:text-white transition-colors">
+                <BookOpen size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-brand-grafite leading-tight">4ª Edição — Julho 2026</h3>
+              </div>
+            </div>
+            
+            <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-sm">
+              <span className="font-semibold text-brand-grafite group-hover:text-brand-grafite/80">Ler edição</span>
+              <ChevronRight size={18} className="text-brand-grafite/70 group-hover:text-brand-grafite transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
+
           {/* Edition Card Junho 2026 */}
           <Link 
             to="/clipping-corporativo/junho-2026"

@@ -21,6 +21,7 @@ import ClippingCorporativo from './pages/ClippingCorporativo';
 import ClippingAbril2026 from './pages/clipping/ClippingAbril2026';
 import ClippingMaio2026 from './pages/clipping/ClippingMaio2026';
 import ClippingJunho2026 from './pages/clipping/ClippingJunho2026';
+import ClippingJulho2026 from './pages/clipping/ClippingJulho2026';
 import ErrorBoundary from './components/ErrorBoundary';
 
 const checkPreviewEnvironment = () => {
@@ -71,6 +72,7 @@ export default function App() {
               <Route path="/clipping-corporativo/abril-2026" element={<ClippingAbril2026 />} />
               <Route path="/clipping-corporativo/maio-2026" element={<ClippingMaio2026 />} />
               <Route path="/clipping-corporativo/junho-2026" element={<ClippingJunho2026 />} />
+              <Route path="/clipping-corporativo/julho-2026" element={<ClippingJulho2026 />} />
             </Route>
           </Routes>
         </Router>

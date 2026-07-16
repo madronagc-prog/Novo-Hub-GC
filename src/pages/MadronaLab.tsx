@@ -61,11 +61,11 @@ export default function MadronaLab() {
         const merged = madronaLabData.map(svc => ({
           ...svc,
           ...(overrides[svc.id] ?? {})
-        }));
+        })).filter(svc => svc.id !== 'pesquisas-estrategicas');
 
         const baseIds = new Set(madronaLabData.map(s => s.id));
         querySnapshot.forEach(docSnap => {
-          if (!baseIds.has(docSnap.id)) {
+          if (docSnap.id !== 'pesquisas-estrategicas' && !baseIds.has(docSnap.id)) {
             merged.push({ id: docSnap.id, ...docSnap.data() } as MadronaLabItem);
           }
         });
@@ -183,7 +183,22 @@ export default function MadronaLab() {
     }
   };
 
-  const filteredServices = [...services].sort((a, b) => a.name.localeCompare(b.name));
+  const PREFERRED_ORDER = [
+    'madrona-lex-juris',
+    'madrona-lab-coins',
+    'academia-madrona',
+    'madrona-research',
+    'grupo-de-debates'
+  ];
+
+  const filteredServices = [...services].sort((a, b) => {
+    const idxA = PREFERRED_ORDER.indexOf(a.id);
+    const idxB = PREFERRED_ORDER.indexOf(b.id);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.name.localeCompare(b.name);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 flex flex-col w-full">
