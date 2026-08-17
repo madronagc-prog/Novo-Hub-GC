@@ -74,8 +74,7 @@ export default function App() {
               <Route path="/clipping-corporativo/maio-2026" element={<ClippingMaio2026 />} />
               <Route path="/clipping-corporativo/junho-2026" element={<ClippingJunho2026 />} />
               <Route path="/clipping-corporativo/julho-2026" element={<ClippingJulho2026 />} />
-              <Route path="/clipping-corporativo/edicao-5" element={<ClippingEdicao5 />} />
-              <Route path="/clipping-corporativo/julho-2026-ed5" element={<ClippingEdicao5 />} />
+              <Route path="/clipping-corporativo/agosto-2026" element={<ClippingEdicao5 />} />
             </Route>
           </Routes>
         </Router>
