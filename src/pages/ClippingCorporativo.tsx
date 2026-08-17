@@ -156,7 +156,8 @@ export default function ClippingCorporativo() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-brand-grafite leading-tight">4ª Edição — Julho 2026</h3>
+                <h3 className="font-bold text-brand-grafite leading-tight">4ª Edição - Julho 2026</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 30 de junho de 2026</p>
               </div>
             </div>
             
@@ -176,7 +177,8 @@ export default function ClippingCorporativo() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-brand-grafite leading-tight">3ª Edição — Junho 2026</h3>
+                <h3 className="font-bold text-brand-grafite leading-tight">3ª Edição - Junho 2026</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 30 de maio de 2026</p>
               </div>
             </div>
             
@@ -196,7 +198,8 @@ export default function ClippingCorporativo() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-brand-grafite leading-tight">2ª Edição — Maio 2026</h3>
+                <h3 className="font-bold text-brand-grafite leading-tight">2ª Edição - Maio 2026</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 30 de abril de 2026</p>
               </div>
             </div>
             
@@ -216,7 +219,8 @@ export default function ClippingCorporativo() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-brand-grafite leading-tight">1ª Edição — Abril 2026</h3>
+                <h3 className="font-bold text-brand-grafite leading-tight">1ª Edição - Abril 2026</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 31 de marçp de 2026</p>
               </div>
             </div>
             
