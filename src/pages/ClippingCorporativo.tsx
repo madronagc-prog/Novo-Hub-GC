@@ -47,11 +47,11 @@ export default function ClippingCorporativo() {
     
     // helper to get a nice edition name
     const getEditionName = (id: string) => {
-      if (id === 'edicao-5' || id === 'julho-2026-ed5') return '5ª Edição — Julho 2026';
-      if (id === 'julho-2026') return '4ª Edição — Julho 2026';
-      if (id === 'junho-2026') return '3ª Edição — Junho 2026';
-      if (id === 'maio-2026') return '2ª Edição — Maio 2026';
-      if (id === 'abril-2026') return '1ª Edição — Abril 2026';
+      if (id === 'edicao-5' || id === 'julho-2026-ed5') return '5ª Edição - Agosto 2026';
+      if (id === 'julho-2026') return '4ª Edição - Julho 2026';
+      if (id === 'junho-2026') return '3ª Edição - Junho 2026';
+      if (id === 'maio-2026') return '2ª Edição - Maio 2026';
+      if (id === 'abril-2026') return '1ª Edição - Abril 2026';
       return id;
     };
     
@@ -125,9 +125,9 @@ export default function ClippingCorporativo() {
 
       {!searchQuery.trim() ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Edition Card 5ª Edição - Julho 2026 */}
+          {/* Edition Card 5ª Edição - Agosto 2026 */}
           <Link 
-            to="/clipping-corporativo/edicao-5"
+            to="/clipping-corporativo/agosto-2026"
             className="group block bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all hover:border-brand-grafite/30"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -135,7 +135,7 @@ export default function ClippingCorporativo() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-brand-grafite leading-tight">5ª Edição — Julho 2026</h3>
+                <h3 className="font-bold text-brand-grafite leading-tight">5ª Edição — Agosto 2026</h3>
                 <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 31 de julho de 2026</p>
               </div>
             </div>
