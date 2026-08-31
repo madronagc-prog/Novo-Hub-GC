@@ -178,7 +178,7 @@ export default function ClippingCorporativo() {
               </div>
               <div>
                 <h3 className="font-bold text-brand-grafite leading-tight">3ª Edição - Junho 2026</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 30 de maio de 2026</p>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 31 de maio de 2026</p>
               </div>
             </div>
             
@@ -220,7 +220,7 @@ export default function ClippingCorporativo() {
               </div>
               <div>
                 <h3 className="font-bold text-brand-grafite leading-tight">1ª Edição - Abril 2026</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 31 de marçp de 2026</p>
+                <p className="text-xs text-gray-500 mt-0.5">Pesquisa: 1 a 31 de março de 2026</p>
               </div>
             </div>
             
