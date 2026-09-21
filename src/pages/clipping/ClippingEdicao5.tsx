@@ -7,7 +7,8 @@ import {
 import { Link } from 'react-router-dom';
 import { db, auth } from '../../firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { ADMIN_EMAILS } from '../../constants';
 import { defaultClippingEdicao5Data } from './clippingEdicao5Data';
 
 // Helper to render **bold text**
@@ -41,12 +42,15 @@ export default function ClippingEdicao5() {
   const [activeTab, setActiveTab] = useState<'jurisprudencia' | 'legislacao' | 'doutrinas' | 'relatorios' | 'json'>('jurisprudencia');
   const [rawJsonStr, setRawJsonStr] = useState("");
 
+  const checkIsAdmin = (user: User | null): boolean => {
+    if (!user?.email) return false;
+    return ADMIN_EMAILS.includes(user.email.toLowerCase());
+  };
+
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
-      if (u) {
-        setIsAdmin(true); 
-      } else {
-        setIsAdmin(false);
+      setIsAdmin(checkIsAdmin(u));
+      if (!checkIsAdmin(u)) {
         setIsEditing(false);
       }
     });
@@ -187,7 +191,7 @@ export default function ClippingEdicao5() {
             <div className="p-4 sm:p-5 border-b border-gray-200 flex justify-between items-center bg-slate-50">
               <div>
                 <h2 className="text-lg font-bold text-brand-grafite">Editor do Clipping UN Corporate</h2>
-                <p className="text-xs text-gray-500">5ª Edição — Julho 2026 (Pesquisa: 1 a 31 de julho de 2026)</p>
+                <p className="text-xs text-gray-500">5ª Edição — Agosto 2026 (Pesquisa: 1 a 31 de julho de 2026)</p>
               </div>
               <button 
                 onClick={() => setIsEditing(false)} 
@@ -636,7 +640,7 @@ export default function ClippingEdicao5() {
             <h1 className="text-2xl md:text-3xl font-bold font-serif mb-3">Clipping UN Corporate</h1>
             <div className="inline-flex items-center gap-2 bg-brand-grafite/80 px-4 py-2 rounded-full text-brand-cinza text-sm font-medium border border-slate-700">
               <Calendar size={16} />
-              <span>5ª Edição — Julho 2026 | Pesquisa: 1 a 31 de julho de 2026</span>
+              <span>5ª Edição — Agosto 2026 | Pesquisa: 1 a 31 de julho de 2026</span>
             </div>
           </div>
         </div>
