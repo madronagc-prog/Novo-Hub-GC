@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, Calendar, ExternalLink, Scale, FileText,
   ChevronDown, ChevronUp, Edit2, Save, X, ArrowLeft, ArrowUp, ArrowDown, 
-  Trash2, Plus, Bold, Code, Loader2
+  Trash2, Plus, Bold, Code, Loader2, CheckCircle2
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { db, auth } from '../../firebase';
-import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { ADMIN_EMAILS } from '../../constants';
 
@@ -22,7 +22,7 @@ const renderFormattedText = (text: string) => {
   });
 };
 
-type SectionKey = 'jurisprudencia' | 'legislacao' | 'doutrinas' | 'relatorios';
+type SectionKey = 'jurisprudencia' | 'legislacao' | 'doutrinas' | 'relatorios' | 'outrosNormativos';
 
 interface ClippingItemDynamic {
   id: string;
@@ -34,6 +34,7 @@ interface ClippingItemDynamic {
   paragraphs?: string[];
   content?: string;
   author?: string;
+  description?: string;
   link?: string;
   hideCommentLabel?: boolean;
 }
@@ -43,6 +44,7 @@ interface DynamicClippingContent {
   legislacao: ClippingItemDynamic[];
   doutrinas: ClippingItemDynamic[];
   relatorios: ClippingItemDynamic[];
+  outrosNormativos?: ClippingItemDynamic[];
 }
 
 export default function ClippingViewDynamic() {
@@ -73,13 +75,14 @@ export default function ClippingViewDynamic() {
     jurisprudencia: [],
     legislacao: [],
     doutrinas: [],
-    relatorios: []
+    relatorios: [],
+    outrosNormativos: []
   });
   
   // States for block-by-block editor
   const [tempData, setTempData] = useState<any>(null);
   const [tempMeta, setTempMeta] = useState({ title: '', period: '' });
-  const [activeTab, setActiveTab] = useState<'jurisprudencia' | 'legislacao' | 'doutrinas' | 'relatorios' | 'json'>('jurisprudencia');
+  const [activeTab, setActiveTab] = useState<'jurisprudencia' | 'legislacao' | 'doutrinas' | 'relatorios' | 'outrosNormativos' | 'json'>('jurisprudencia');
   const [rawJsonStr, setRawJsonStr] = useState("");
 
   const checkIsAdmin = (user: User | null): boolean => {
@@ -211,6 +214,15 @@ export default function ClippingViewDynamic() {
       newItem.author = "Autor(es)";
       newItem.content = "Resumo analítico aqui. Use **negrito** para destacar.";
       newItem.link = "";
+    } else if (section === 'relatorios') {
+      newItem.tag = "Estudo / Pesquisa";
+      newItem.title = "Novo Relatório ou Pesquisa";
+      newItem.paragraphs = ["Descrição e conclusões do relatório aqui. Use **negrito** para destacar."];
+      newItem.link = "";
+    } else if (section === 'outrosNormativos') {
+      newItem.title = "Ofício-Circular ou Portaria";
+      newItem.description = "Breve descrição dos impactos do normativo.";
+      newItem.link = "";
     }
 
     setTempData((prev: any) => ({
@@ -335,6 +347,22 @@ export default function ClippingViewDynamic() {
                 >
                   <BookOpen size={18} />
                   Doutrinas Selecionadas
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('relatorios')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'relatorios' ? 'bg-brand-grafite text-white' : 'text-gray-700 hover:bg-gray-200'}`}
+                >
+                  <FileText size={18} className="text-rose-500" />
+                  Relatórios e Pesquisas
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('outrosNormativos')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'outrosNormativos' ? 'bg-brand-grafite text-white' : 'text-gray-700 hover:bg-gray-200'}`}
+                >
+                  <CheckCircle2 size={18} className="text-emerald-500" />
+                  Outros Normativos
                 </button>
 
                 <div className="border-t border-gray-200 my-4"></div>
@@ -702,6 +730,187 @@ export default function ClippingViewDynamic() {
                   </div>
                 )}
 
+                {/* Tab: RELATÓRIOS */}
+                {activeTab === 'relatorios' && (
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center pb-2 border-b border-gray-200">
+                      <h3 className="font-bold text-brand-grafite text-base flex items-center gap-2">
+                        <FileText size={18} className="text-rose-500" />
+                        Relatórios e Pesquisas ({(tempData.relatorios || []).length} relatórios)
+                      </h3>
+                      <button
+                        onClick={() => handleAddItem('relatorios')}
+                        className="bg-brand-grafite hover:bg-brand-grafite/90 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"
+                      >
+                        <Plus size={16} /> Adicionar Relatório
+                      </button>
+                    </div>
+
+                    {(tempData.relatorios || []).map((item: any, index: number) => (
+                      <div key={item.id} className="bg-slate-50 border border-gray-200 rounded-xl p-4 sm:p-5 relative space-y-4">
+                        <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                          <span className="font-bold text-xs bg-rose-700 text-white px-2.5 py-0.5 rounded-full">
+                            #{index + 1} • {item.tag || "Relatório"}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button 
+                              onClick={() => handleMoveItem('relatorios', index, 'up')}
+                              disabled={index === 0}
+                              className="p-1 text-gray-400 hover:text-brand-grafite disabled:opacity-30"
+                              title="Mover para cima"
+                            >
+                              <ArrowUp size={16} />
+                            </button>
+                            <button 
+                              onClick={() => handleMoveItem('relatorios', index, 'down')}
+                              disabled={index === (tempData.relatorios.length - 1)}
+                              className="p-1 text-gray-400 hover:text-brand-grafite disabled:opacity-30"
+                              title="Mover para baixo"
+                            >
+                              <ArrowDown size={16} />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteItem('relatorios', item.id)}
+                              className="p-1 text-gray-400 hover:text-red-600 transition-colors ml-2"
+                              title="Excluir relatório"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase">Tag / Categoria</label>
+                            <input 
+                              type="text"
+                              value={item.tag || ""}
+                              onChange={(e) => handleFieldChange('relatorios', item.id, 'tag', e.target.value)}
+                              placeholder="Ex: Estudo / Pesquisa"
+                              className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase">Link da Íntegra (URL)</label>
+                            <input 
+                              type="text"
+                              value={item.link || ""}
+                              onChange={(e) => handleFieldChange('relatorios', item.id, 'link', e.target.value)}
+                              className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase">Título do Relatório</label>
+                          <input 
+                            type="text"
+                            value={item.title || ""}
+                            onChange={(e) => handleFieldChange('relatorios', item.id, 'title', e.target.value)}
+                            className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase">Comentários e Destaques (Quebre parágrafos por linha)</label>
+                          <textarea 
+                            rows={4}
+                            value={item.paragraphs ? item.paragraphs.join('\n') : (item.content || "")}
+                            onChange={(e) => handleParagraphsChange('relatorios', item.id, e.target.value)}
+                            className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite font-sans"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tab: OUTROS NORMATIVOS */}
+                {activeTab === 'outrosNormativos' && (
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center pb-2 border-b border-gray-200">
+                      <h3 className="font-bold text-brand-grafite text-base flex items-center gap-2">
+                        <CheckCircle2 size={18} className="text-emerald-500" />
+                        Outros Normativos Publicados ({(tempData.outrosNormativos || []).length} itens)
+                      </h3>
+                      <button
+                        onClick={() => handleAddItem('outrosNormativos')}
+                        className="bg-brand-grafite hover:bg-brand-grafite/90 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"
+                      >
+                        <Plus size={16} /> Adicionar Normativo
+                      </button>
+                    </div>
+
+                    {(tempData.outrosNormativos || []).map((item: any, index: number) => (
+                      <div key={item.id} className="bg-slate-50 border border-gray-200 rounded-xl p-4 sm:p-5 relative space-y-4">
+                        <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                          <span className="font-bold text-xs bg-emerald-800 text-white px-2.5 py-0.5 rounded-full">
+                            #{index + 1}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button 
+                              onClick={() => handleMoveItem('outrosNormativos', index, 'up')}
+                              disabled={index === 0}
+                              className="p-1 text-gray-400 hover:text-brand-grafite disabled:opacity-30"
+                              title="Mover para cima"
+                            >
+                              <ArrowUp size={16} />
+                            </button>
+                            <button 
+                              onClick={() => handleMoveItem('outrosNormativos', index, 'down')}
+                              disabled={index === (tempData.outrosNormativos.length - 1)}
+                              className="p-1 text-gray-400 hover:text-brand-grafite disabled:opacity-30"
+                              title="Mover para baixo"
+                            >
+                              <ArrowDown size={16} />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteItem('outrosNormativos', item.id)}
+                              className="p-1 text-gray-400 hover:text-red-600 transition-colors ml-2"
+                              title="Excluir item"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase">Identificação / Título da Norma</label>
+                            <input 
+                              type="text"
+                              value={item.title || ""}
+                              onChange={(e) => handleFieldChange('outrosNormativos', item.id, 'title', e.target.value)}
+                              placeholder="Ex: Ofício-Circular/CVM/SIN nº 02/2026"
+                              className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase">Link da Norma (URL)</label>
+                            <input 
+                              type="text"
+                              value={item.link || ""}
+                              onChange={(e) => handleFieldChange('outrosNormativos', item.id, 'link', e.target.value)}
+                              className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase">Descrição Sucinta</label>
+                          <textarea 
+                            rows={2}
+                            value={item.description || ""}
+                            onChange={(e) => handleFieldChange('outrosNormativos', item.id, 'description', e.target.value)}
+                            placeholder="Descreva brevemente o conteúdo ou recomendação do normativo"
+                            className="w-full text-xs border border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-brand-grafite font-sans"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {/* Tab: JSON BRUTO */}
                 {activeTab === 'json' && (
                   <div className="h-full flex flex-col space-y-2">
@@ -776,6 +985,9 @@ export default function ClippingViewDynamic() {
             <a href="#jurisprudencia" className="text-brand-grafite hover:text-brand-grafite/80 transition-colors">Jurisprudência Comentada</a>
             <a href="#legislacao" className="text-brand-grafite hover:text-brand-grafite/80 transition-colors">Legislação Comentada</a>
             <a href="#doutrinas" className="text-brand-grafite hover:text-brand-grafite/80 transition-colors">Doutrinas Selecionadas</a>
+            {clippingData?.relatorios && clippingData.relatorios.length > 0 && (
+              <a href="#relatorios" className="text-brand-grafite hover:text-brand-grafite/80 transition-colors">Relatórios</a>
+            )}
           </div>
         </div>
       </div>
@@ -885,6 +1097,28 @@ export default function ClippingViewDynamic() {
                     )}
                   </div>
                 ))}
+                {clippingData.outrosNormativos && clippingData.outrosNormativos.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 hover:shadow-md transition-shadow">
+                    <h3 className="text-lg font-bold text-brand-grafite mb-6 pb-4 border-b border-gray-100">
+                      Outros normativos publicados no período
+                    </h3>
+                    <ul className="space-y-4">
+                      {clippingData.outrosNormativos.map((item: any) => (
+                        <li key={item.id} className="flex gap-3">
+                          <CheckCircle2 size={18} className="text-brand-grafite flex-shrink-0 mt-0.5" />
+                          <span className="text-sm text-brand-grafite">
+                            {item.link ? (
+                              <a href={item.link} target="_blank" rel="noopener noreferrer" className="font-bold hover:text-brand-grafite transition-colors">{item.title}</a>
+                            ) : (
+                              <span className="font-bold">{item.title}</span>
+                            )}
+                            {item.description && ` — ${item.description}`}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -920,6 +1154,56 @@ export default function ClippingViewDynamic() {
                       <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-brand-grafite hover:text-brand-grafite/80 text-sm font-bold transition-colors mt-auto">
                         Leia a íntegra do artigo
                         <ExternalLink size={14} />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* SEÇÃO 4: RELATÓRIOS E ESTUDOS */}
+        {clippingData?.relatorios && clippingData.relatorios.length > 0 && (
+          <section id="relatorios" className="scroll-mt-40">
+            <button 
+              onClick={() => toggleSection('relatorios')}
+              className="w-full bg-brand-grafite text-white py-3 px-6 rounded-t-xl border-b-4 border-rose-500 flex items-center justify-between gap-3 transition-colors hover:bg-brand-grafite/90"
+            >
+              <div className="flex items-center gap-3">
+                <FileText size={20} className="text-rose-500" />
+                <h2 className="text-xl font-bold uppercase tracking-wide">Relatórios</h2>
+              </div>
+              {openSections.relatorios ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </button>
+            
+            {openSections.relatorios && (
+              <div className="pt-6 space-y-6">
+                {clippingData.relatorios.map((item: any) => (
+                  <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 hover:shadow-md transition-shadow">
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span className="text-sm font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded">{item.tag || "Estudo"}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-grafite mb-4 leading-tight">{item.title}</h3>
+                    <div className="prose prose-sm text-brand-grafite mb-6 space-y-4">
+                      {item.paragraphs?.length ? (
+                        item.paragraphs.map((p: string, i: number) => (
+                          <p key={i} className="leading-relaxed">
+                            {(i === 0 && !item.hideCommentLabel) && <span className="font-bold">Comentário: </span>}
+                            {renderFormattedText(p)}
+                          </p>
+                        ))
+                      ) : (
+                        <p className="leading-relaxed">
+                          <span className="font-bold">Comentário: </span>
+                          {renderFormattedText(item.content || "")}
+                        </p>
+                      )}
+                    </div>
+                    {item.link && (
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-brand-grafite hover:bg-brand-grafite/90 text-white px-5 py-2.5 rounded-lg font-semibold transition-colors text-sm w-full sm:w-auto">
+                        Leia a íntegra do relatório
+                        <ExternalLink size={16} />
                       </a>
                     )}
                   </div>
