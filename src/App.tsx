@@ -24,6 +24,7 @@ import ClippingJunho2026 from './pages/clipping/ClippingJunho2026';
 import ClippingJulho2026 from './pages/clipping/ClippingJulho2026';
 import ClippingEdicao5 from './pages/clipping/ClippingEdicao5';
 import ClippingViewDynamic from './pages/clipping/ClippingViewDynamic';
+import BancoDeClausulas from './pages/BancoDeClausulas';
 import ErrorBoundary from './components/ErrorBoundary';
 
 const checkPreviewEnvironment = () => {
@@ -77,6 +78,7 @@ export default function App() {
               <Route path="/clipping-corporativo/julho-2026" element={<ClippingJulho2026 />} />
               <Route path="/clipping-corporativo/agosto-2026" element={<ClippingEdicao5 />} />
               <Route path="/clipping-corporativo/edicao/:editionId" element={<ClippingViewDynamic />} />
+              <Route path="/banco-de-clausulas" element={<BancoDeClausulas />} />
             </Route>
           </Routes>
         </Router>
