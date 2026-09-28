@@ -95,13 +95,14 @@ export default function Layout() {
       ],
     },
     {
-      label: 'Curadoria',
-      icon: BookOpen,
-      subItems: [
-        { path: '/explorador',          label: 'Fontes de informação' },
-        { path: '/clipping-corporativo', label: 'Clipping de Corporativo' },
-      ],
-    },
+  label: 'Curadoria',
+  icon: BookOpen,
+  subItems: [
+    { path: '/banco-de-clausulas',   label: 'Banco de Cláusulas' },
+    { path: '/explorador',          label: 'Fontes de informação' },
+    { path: '/clipping-corporativo', label: 'Clipping de Corporativo' },
+  ],
+},
   ];
 
   return (
