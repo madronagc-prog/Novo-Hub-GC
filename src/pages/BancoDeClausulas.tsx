@@ -31,6 +31,9 @@ import {
   Underline
 } from 'lucide-react';
 import { INITIAL_CLAUSULAS, Clausula, composeClausulaTitulo } from '../data/clausulasData';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
+import { canEditBancoDeClausulas } from '../constants';
 
 export type Variacao = '1C 1V' | '1C 2V' | '2C 1V' | '2C 2V';
 export type Idioma = 'pt' | 'en';
@@ -497,7 +500,7 @@ export function getFallbackDefinicoes(tipo?: string): string {
   return 'Partes, Contrato, Data do Fechamento, Perda, Compradora, Vendedores, Companhia.';
 }
 
-const STORAGE_DATA_KEY = 'banco_clausulas_user_data_v7';
+const STORAGE_DATA_KEY = 'banco_clausulas_user_data_v9';
 
 function persistClausulas(list: Clausula[]) {
   try {
@@ -508,58 +511,32 @@ function persistClausulas(list: Clausula[]) {
 }
 
 export default function BancoDeClausulas() {
-  // Master list of clauses with zeroed counters by default and composed titles from Tipo + Subtipo
+  // Master list of clauses
   const [clausulas, setClausulas] = useState<Clausula[]>(() => {
     try {
-      // Clear legacy copy counters
       localStorage.removeItem('banco_clausulas_copies');
-      const saved =
-        localStorage.getItem(STORAGE_DATA_KEY) ||
-        localStorage.getItem('banco_clausulas_user_data_v6') ||
-        localStorage.getItem('banco_clausulas_user_data_v5') ||
-        localStorage.getItem('banco_clausulas_user_data_v4');
+      const saved = localStorage.getItem(STORAGE_DATA_KEY);
       if (saved) {
         const parsed: Clausula[] = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map(c => {
-            const initClause = INITIAL_CLAUSULAS.find(init => init.id === c.id);
-            const tituloComposto = composeClausulaTitulo(
-              c.tipoClausula !== undefined ? c.tipoClausula : initClause?.tipoClausula,
-              c.subtipo !== undefined ? c.subtipo : initClause?.subtipo
-            );
-            return {
-              ...c,
-              titulo: c.titulo !== undefined && c.titulo !== '' ? c.titulo : tituloComposto,
-              tipoClausula: c.tipoClausula !== undefined ? c.tipoClausula : (initClause?.tipoClausula || 'Geral'),
-              subtipo: c.subtipo !== undefined ? c.subtipo : (initClause?.subtipo || ''),
-              contextoUso: c.contextoUso !== undefined ? c.contextoUso : (initClause?.contextoUso ?? getFallbackContexto(c.tipoClausula)),
-              pontosAtencao: c.pontosAtencao !== undefined ? c.pontosAtencao : (initClause?.pontosAtencao ?? getFallbackPontos(c.tipoClausula)),
-              definicoesUtilizadas: c.definicoesUtilizadas !== undefined ? c.definicoesUtilizadas : (initClause?.definicoesUtilizadas ?? getFallbackDefinicoes(c.tipoClausula)),
-              observacao: c.observacao !== undefined ? c.observacao : (initClause?.observacao ?? ''),
-              aprovador: c.aprovador !== undefined ? c.aprovador : (initClause?.aprovador ?? ''),
-              contribuidor: c.contribuidor !== undefined ? c.contribuidor : (initClause?.contribuidor ?? ''),
-              tipoDocumento: c.tipoDocumento !== undefined ? c.tipoDocumento : (initClause?.tipoDocumento || 'SPA'),
-              // Ensure prefilled numbers 7 or 4 are reset to 0 as requested
-              contadorCopias: (c.contadorCopias === 7 || c.contadorCopias === 4) ? 0 : (c.contadorCopias ?? 0)
-            };
-          });
+          return parsed;
         }
       }
     } catch {
       // fallback
     }
-    return INITIAL_CLAUSULAS.map(c => ({
-      ...c,
-      titulo: composeClausulaTitulo(c.tipoClausula, c.subtipo),
-      contextoUso: c.contextoUso || getFallbackContexto(c.tipoClausula),
-      pontosAtencao: c.pontosAtencao || getFallbackPontos(c.tipoClausula),
-      definicoesUtilizadas: c.definicoesUtilizadas || getFallbackDefinicoes(c.tipoClausula),
-      observacao: c.observacao || 'Cláusula revisada pela equipe de Curadoria e Gestão do Conhecimento.',
-      aprovador: c.aprovador || 'Lucas Grilli Bastos',
-      tipoDocumento: c.tipoDocumento || 'SPA',
-      contadorCopias: 0
-    }));
+    return INITIAL_CLAUSULAS;
   });
+
+  // Permissions: Admin or specific Banco de Cláusulas editor
+  const [canEdit, setCanEdit] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
+      setCanEdit(canEditBancoDeClausulas(u?.email));
+    });
+    return () => unsubscribeAuth();
+  }, []);
 
   // Modal for Edit / Add Clause
   const [modalOpen, setModalOpen] = useState(false);
@@ -735,6 +712,7 @@ export default function BancoDeClausulas() {
   };
 
   const handleOpenCreate = () => {
+    if (!canEdit) return;
     setEditingClausulaId(null);
     const defaultTipo = tiposClausula[0] || 'Preço';
     const defaultSubtipo = '';
@@ -753,16 +731,16 @@ export default function BancoDeClausulas() {
       idiomaOriginal: 'Português',
       tipoClausula: defaultTipo,
       subtipo: defaultSubtipo,
-      contextoUso: getFallbackContexto(defaultTipo),
-      pontosAtencao: getFallbackPontos(defaultTipo),
-      definicoesUtilizadas: getFallbackDefinicoes(defaultTipo),
+      contextoUso: '',
+      pontosAtencao: '',
+      definicoesUtilizadas: '',
       posicaoNegocial: 'Neutro',
       tagsInput: '',
-      observacao: 'Cláusula revisada pela equipe de Curadoria e Gestão do Conhecimento.',
-      selo: 'Padrão do Escritório',
+      observacao: '',
+      selo: 'Nenhum',
       status: 'Publicado',
       contribuidor: '',
-      aprovador: 'Lucas Grilli Bastos',
+      aprovador: '',
       tipoDocumento: 'SPA',
       initialTextoOriginal: ''
     });
@@ -773,19 +751,20 @@ export default function BancoDeClausulas() {
   };
 
   const handleOpenEdit = (c: Clausula) => {
+    if (!canEdit) return;
     setEditingClausulaId(c.id);
     const initClause = INITIAL_CLAUSULAS.find(init => init.id === c.id);
 
-    const tipo = c.tipoClausula !== undefined ? c.tipoClausula : (initClause?.tipoClausula || 'Geral');
+    const tipo = c.tipoClausula !== undefined ? c.tipoClausula : (initClause?.tipoClausula || '');
     const subtipo = c.subtipo !== undefined ? c.subtipo : (initClause?.subtipo || '');
     const titulo = c.titulo !== undefined ? c.titulo : (initClause?.titulo || composeClausulaTitulo(tipo, subtipo));
     const textoOrig = c.textoOriginal !== undefined ? c.textoOriginal : (initClause?.textoOriginal || c.texto1C1V_pt || initClause?.texto1C1V_pt || '');
     const texto1C1V = c.texto1C1V_pt !== undefined ? c.texto1C1V_pt : (initClause?.texto1C1V_pt || textoOrig);
 
     // Metadados e Notas: respeitar estritamente o valor salvo no card (inclusive vazio / em branco)
-    const contexto = c.contextoUso !== undefined ? c.contextoUso : (initClause?.contextoUso ?? getFallbackContexto(tipo));
-    const pontos = c.pontosAtencao !== undefined ? c.pontosAtencao : (initClause?.pontosAtencao ?? getFallbackPontos(tipo));
-    const definicoes = c.definicoesUtilizadas !== undefined ? c.definicoesUtilizadas : (initClause?.definicoesUtilizadas ?? getFallbackDefinicoes(tipo));
+    const contexto = c.contextoUso !== undefined ? c.contextoUso : (initClause?.contextoUso ?? '');
+    const pontos = c.pontosAtencao !== undefined ? c.pontosAtencao : (initClause?.pontosAtencao ?? '');
+    const definicoes = c.definicoesUtilizadas !== undefined ? c.definicoesUtilizadas : (initClause?.definicoesUtilizadas ?? '');
     const observacao = c.observacao !== undefined ? c.observacao : (initClause?.observacao ?? '');
     const aprovador = c.aprovador !== undefined ? c.aprovador : (initClause?.aprovador ?? '');
     const contribuidor = c.contribuidor !== undefined ? c.contribuidor : (initClause?.contribuidor ?? '');
@@ -1234,16 +1213,18 @@ export default function BancoDeClausulas() {
               </div>
 
               {/* Action: Nova Cláusula */}
-              <div className="flex items-center gap-2 ml-auto">
-                <button
-                  onClick={handleOpenCreate}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00b2ff] text-white hover:brightness-110 font-bold transition-all shadow-xs active:scale-95"
-                  title="Cadastrar uma nova cláusula no banco"
-                >
-                  <Plus size={14} />
-                  <span>Nova Cláusula</span>
-                </button>
-              </div>
+              {canEdit && (
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    onClick={handleOpenCreate}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00b2ff] text-white hover:brightness-110 font-bold transition-all shadow-xs active:scale-95"
+                    title="Cadastrar uma nova cláusula no banco"
+                  >
+                    <Plus size={14} />
+                    <span>Nova Cláusula</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1541,14 +1522,16 @@ export default function BancoDeClausulas() {
 
                       <div className="flex items-center gap-1.5">
                         {/* Edit Button */}
-                        <button
-                          onClick={() => handleOpenEdit(clausula)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-[#b2bab9]/70 hover:border-[#00b2ff] text-[#555555] hover:text-[#00b2ff] bg-white transition-all hover:bg-sky-50/40"
-                          title="Editar os textos, variações e notas desta cláusula"
-                        >
-                          <Edit3 size={13} />
-                          <span>Editar</span>
-                        </button>
+                        {canEdit && (
+                          <button
+                            onClick={() => handleOpenEdit(clausula)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-[#b2bab9]/70 hover:border-[#00b2ff] text-[#555555] hover:text-[#00b2ff] bg-white transition-all hover:bg-sky-50/40"
+                            title="Editar os textos, variações e notas desta cláusula"
+                          >
+                            <Edit3 size={13} />
+                            <span>Editar</span>
+                          </button>
+                        )}
 
                         {/* Single Copy Button (Req. 6) */}
                         <button
@@ -1756,7 +1739,7 @@ export default function BancoDeClausulas() {
         </div>
       )}
       {/* Modal for Edit / Add Clause */}
-      {modalOpen && (
+      {modalOpen && canEdit && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-2xl border border-[#b2bab9]/60 max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             {/* Modal Header */}
