@@ -245,7 +245,7 @@ export default function RedePostsPatrocinadosViewProps({ selectedMonth }: RedePo
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Calendar size={18} className="text-brand-blue" />
-              <span>Cronograma de Campanhas Patrocinadas no LinkedIn</span>
+              <span>Cronograma de Campanhas Patrocinadas</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Planejamento editorial e execução de mídia paga de Junho a Dezembro de 2026
@@ -357,7 +357,7 @@ export default function RedePostsPatrocinadosViewProps({ selectedMonth }: RedePo
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Share2 size={18} className="text-brand-blue" />
-                <span>Base Geral de Posts Patrocinados no LinkedIn</span>
+                <span>Posts Patrocinados no LinkedIn</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {sortedChronologically.length} registros)
                 </span>
