@@ -341,9 +341,6 @@ export default function LexJurisView({ selectedMonth }: LexJurisViewProps) {
               <BarChart3 size={18} className="text-brand-blue" />
               <span>Proporção de Pautas: Lex vs. Juris</span>
             </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Distribuição temática entre novidades legislativas/regulatórias (Lex) e decisões jurisprudenciais (Juris)
-            </p>
           </div>
 
           <div className="flex items-center gap-4 text-xs">
@@ -436,7 +433,7 @@ export default function LexJurisView({ selectedMonth }: LexJurisViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <BookOpen size={18} className="text-brand-blue" />
-                <span>Base de Pautas Lex & Juris</span>
+                <span>Pautas Lex & Juris</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {totalPautas} registros)
                 </span>
