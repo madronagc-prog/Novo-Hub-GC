@@ -102,3 +102,14 @@ export function canEditDashboardIndicadores(email: string | null | undefined): b
   const normalized = email.toLowerCase().trim();
   return DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized);
 }
+
+// Papel do usuário no Dashboard de Indicadores: 'admin' (edição), 'viewer' (somente leitura) ou null (sem acesso)
+export type DashboardIndicadoresRole = 'admin' | 'viewer' | null;
+
+export function getDashboardIndicadoresRole(email: string | null | undefined): DashboardIndicadoresRole {
+  if (!email) return null;
+  const normalized = email.toLowerCase().trim();
+  if (DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized)) return 'admin';
+  if (DASHBOARD_INDICADORES_VIEWERS.some(v => v.toLowerCase() === normalized)) return 'viewer';
+  return null;
+}
