@@ -148,9 +148,25 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "title", "link", "company", "timestamp"]
+    },
+    "Clipping": {
+      "title": "Clipping UN Corporate",
+      "description": "Edições do Clipping UN Corporate e seus conteúdos.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "period": { "type": "string" },
+        "data": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
+    "/clippings/{clippingId}": {
+      "schema": "Clipping",
+      "description": "Edições do Clipping UN Corporate."
+    },
     "/projetosDeLei/{projetoId}": {
       "schema": "ProjetoDeLei",
       "description": "Coleção de projetos de lei monitorados."
