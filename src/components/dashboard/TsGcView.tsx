@@ -176,7 +176,7 @@ export default function TsGcView({ selectedMonth = 'Todos os meses' }: TsGcViewP
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-serif font-bold text-gray-900">
-              Time Sheet • Equipe de Gestão do Conhecimento (TS GC)
+              Timesheet de GC
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
               Rotina operacional, curadoria de conteúdo, projetos de eficiência e gestão contínua executada pela equipe própria de GC
@@ -188,15 +188,6 @@ export default function TsGcView({ selectedMonth = 'Todos os meses' }: TsGcViewP
           <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-xl font-medium border border-gray-200/60">
             Atividades Internas da Área
           </span>
-        </div>
-      </div>
-
-      {/* Banner Informativo (Sem valor monetário em R$ associado) */}
-      <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-4 text-xs text-blue-950 flex items-start gap-3">
-        <Info size={18} className="text-brand-blue flex-shrink-0 mt-0.5" />
-        <div className="leading-relaxed">
-          <strong className="text-brand-navy">Gestão Interna de Tempo e Atividades:</strong> Esta sub-aba consolida exclusivamente a carga horária de dedicação, acompanhamento e curadoria realizada pelos membros da equipe própria de GC. 
-          <span className="font-semibold ml-1">Esta seção não possui valor monetário em R$ associado</span>, por se tratar de atividades estruturais, consultivas e administrativas do setor.
         </div>
       </div>
 
@@ -392,7 +383,7 @@ export default function TsGcView({ selectedMonth = 'Todos os meses' }: TsGcViewP
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <FileText size={18} className="text-brand-blue" />
-                <span>Base Individual de Atividades da Equipe de GC</span>
+                <span>Atividades da Equipe</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {monthFilteredData.length} registros)
                 </span>
