@@ -282,7 +282,7 @@ export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps)
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <BarChart3 size={18} className="text-brand-blue" />
-                <span>Matriz de Clipping por Área e Mês (Heatmap)</span>
+                <span>Clipping por Área e Mês</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   (24 áreas x 12 meses)
                 </span>
