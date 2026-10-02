@@ -303,7 +303,7 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal da Lexter (Janeiro a Agosto de 2026)</span>
+              <span>Evolução do Uso</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Volume total somado de documentos processados e respostas geradas
@@ -379,10 +379,9 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Building size={17} className="text-brand-blue" />
-                  <span>Uso da Lexter por UN (Padronizada)</span>
+                  <span>Uso por UN</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Consolidação com normalizarUN() ({statsPorUn.length} UNs no período)
                 </p>
               </div>
             </div>
@@ -512,7 +511,7 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Bot size={18} className="text-brand-blue" />
-                <span>Base Individual de Uso da Lexter</span>
+                <span>Uso da Lexter</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} registros)
                 </span>
