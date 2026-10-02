@@ -267,7 +267,7 @@ export default function GruposEstudosView({ selectedMonth }: GruposEstudosViewPr
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <TrendingUp size={18} className="text-brand-blue" />
-              <span>Evolução do % de Presença ao Longo dos Meses</span>
+              <span>Presença ao Longo dos Meses</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Acompanhamento comparativo da taxa de adesão dos colaboradores nos encontros do RT Tax e RT Corp
@@ -413,7 +413,7 @@ export default function GruposEstudosView({ selectedMonth }: GruposEstudosViewPr
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Users size={18} className="text-brand-blue" />
-                <span>Base de Encontros de Grupos de Estudos & RT</span>
+                <span>Grupos de Estudos & RT</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {totalEncontros} encontros)
                 </span>
