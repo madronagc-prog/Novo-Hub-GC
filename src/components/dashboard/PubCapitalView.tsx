@@ -254,7 +254,7 @@ export default function PubCapitalView({ selectedMonth }: PubCapitalViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Calendar size={18} className="text-brand-blue" />
-              <span>Cronograma Editorial na Capital Aberto</span>
+              <span>Cronograma</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Acompanhamento mensal de temas, áreas participantes e evolução das publicações
