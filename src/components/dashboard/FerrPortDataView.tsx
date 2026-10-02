@@ -300,7 +300,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal do Gasto com PortData (Janeiro a Setembro de 2026)</span>
+              <span>Evolução Mensal do Gasto</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Valores faturados em consultas de suporte às operações jurídicas
@@ -373,7 +373,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Building size={17} className="text-brand-blue" />
-                  <span>Consumo por UN (Padronizada)</span>
+                  <span>Consumo por UN</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Consolidação com normalizarUN() (ex.: Corporativo vs Corporativa)
@@ -503,7 +503,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Database size={18} className="text-brand-blue" />
-                <span>Base Individual de Consultas PortData</span>
+                <span>Consultas na PortData</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} registros)
                 </span>
