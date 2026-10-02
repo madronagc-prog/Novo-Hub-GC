@@ -241,7 +241,7 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal: Participantes vs. Convidados (Janeiro a Setembro de 2026)</span>
+              <span>Participantes vs. Convidados</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Valores consolidados por mês somando todas as sessões e turmas realizadas
@@ -343,7 +343,7 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <GraduationCap size={18} className="text-brand-blue" />
-                <span>Histórico Individual de Sessões de Treinamento iM</span>
+                <span>Sessões de Treinamento iM</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {normalizedData.length} sessões)
                 </span>
