@@ -270,7 +270,7 @@ export default function FerrCopilotView({ selectedMonth }: FerrCopilotViewProps)
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal de Prompts (Abril a Agosto de 2026)</span>
+              <span>Evolução de Interações</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Volume total somado de interações no Microsoft Copilot entre todos os colaboradores
@@ -344,7 +344,7 @@ export default function FerrCopilotView({ selectedMonth }: FerrCopilotViewProps)
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Award size={18} className="text-brand-blue" />
-              <span>Top 10 Usuários por Volume de Prompts</span>
+              <span>Top 10 Usuários por Volume de Interações</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Colaboradores com maior adoção de Inteligência Artificial generativa no período de{' '}
@@ -396,7 +396,7 @@ export default function FerrCopilotView({ selectedMonth }: FerrCopilotViewProps)
                         {u.dias} dias ativos
                       </span>
                       <span className="font-bold text-gray-900 text-sm">
-                        {u.prompts.toLocaleString('pt-BR')} prompts
+                        {u.prompts.toLocaleString('pt-BR')} interações
                       </span>
                     </div>
                   </div>
@@ -426,7 +426,7 @@ export default function FerrCopilotView({ selectedMonth }: FerrCopilotViewProps)
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Cpu size={18} className="text-brand-blue" />
-                <span>Base Individual de Uso do Copilot</span>
+                <span>Uso do Copilot</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {monthFilteredData.length} registros)
                 </span>
