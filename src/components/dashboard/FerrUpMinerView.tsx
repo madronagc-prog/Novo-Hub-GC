@@ -318,7 +318,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal do Consumo upMiner (Janeiro a Agosto de 2026)</span>
+              <span>Evolução do Consumo</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Total de créditos e pesquisas consumidas mês a mês em BD e CT
@@ -527,7 +527,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <FileText size={18} className="text-brand-blue" />
-                <span>Base Individual de Lançamentos upMiner</span>
+                <span>Lançamentos upMiner</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {normalizedData.length} registros)
                 </span>
