@@ -289,7 +289,7 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Publicações por Área Principal (Ordem Decrescente)</span>
+              <span>Publicações por Área</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Volume total de produção e artigos distribuídos por prática jurídica ({statsPorAreaPrincipal.length} áreas mapeadas)
@@ -358,7 +358,7 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <FileText size={18} className="text-brand-blue" />
-                <span>Base de Controle de Publicações</span>
+                <span>Controle de Publicações</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {totalPublicacoes} registros)
                 </span>
