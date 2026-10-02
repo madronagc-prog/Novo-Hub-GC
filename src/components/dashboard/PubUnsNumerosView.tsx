@@ -208,7 +208,7 @@ export default function PubUnsNumerosView() {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Distribuição de Conteúdo por Área e Categoria</span>
+              <span>Distribuição Área e Categoria</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Barras empilhadas mostrando a composição de cada área (exclui o Total Geral)
@@ -275,7 +275,7 @@ export default function PubUnsNumerosView() {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Award size={18} className="text-brand-blue" />
-              <span>Ranking Geral de Áreas em Produção de Conteúdo</span>
+              <span>Ranking de Produção de Conteúdo</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Normalização com normalizarUN() aplicada para áreas "UN" (demais categorias mantidas)
@@ -352,7 +352,7 @@ export default function PubUnsNumerosView() {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <FileText size={18} className="text-brand-blue" />
-                <span>Matriz Completa de Publicações por Área e Categoria</span>
+                <span>Matriz de Publicações por Área e Categoria</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} áreas)
                 </span>
