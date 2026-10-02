@@ -286,7 +286,7 @@ export default function FerrSagaView() {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Building size={17} className="text-brand-blue" />
-                  <span>Utilização por UN (Padronizada)</span>
+                  <span>Utilização por UN</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Volume de peças geradas e licenças alocadas por prática
@@ -505,7 +505,7 @@ export default function FerrSagaView() {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Wrench size={18} className="text-brand-blue" />
-                <span>Base Individual de Licenças Saga</span>
+                <span>Licenças Saga</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {normalizedData.length} colaboradores)
                 </span>
