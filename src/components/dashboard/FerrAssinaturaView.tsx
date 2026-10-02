@@ -236,7 +236,7 @@ export default function FerrAssinaturaView() {
                     {certisign?.fornecedor || 'Certisign'}
                   </h3>
                   <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    Sob Demanda (On-Demand)
+                    Sob Demanda
                   </span>
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                     Sem Custo Fixo
@@ -363,7 +363,7 @@ export default function FerrAssinaturaView() {
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                   Certisign
                 </td>
-                <td className="py-3.5 px-4 text-gray-700">Créditos sob demanda (on-demand)</td>
+                <td className="py-3.5 px-4 text-gray-700">Créditos sob demanda</td>
                 <td className="py-3.5 px-4 text-gray-600">Sem vencimento fixo</td>
                 <td className="py-3.5 px-4 text-center text-gray-400">—</td>
                 <td className="py-3.5 px-4 text-center text-gray-500">Faturado por uso</td>
