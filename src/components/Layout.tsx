@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Search, LayoutDashboard, Info, Menu, X, FileText, Scale,
+  Search, LayoutDashboard, Info, Menu, X, FileText,
   ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical, BarChart3
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
@@ -92,12 +92,6 @@ export default function Layout() {
         subItems: [
           { path: '/projetos-de-lei',          label: 'Acompanhamento legislativo' },
           { path: '/monitoramento-de-empresas', label: 'Monitoramento de Empresas' },
-        ],
-      },
-      {
-        label: 'Jurisprudência',
-        icon: Scale,
-        subItems: [
           { path: '/precedentes/temas-repetitivos', label: 'Temas repetitivos do STJ' },
           { path: '/precedentes/controversias',     label: 'Controvérsias do STJ' },
           { path: '/precedentes/repercussao-geral', label: 'Repercussão Geral STF' },
