@@ -293,7 +293,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
           </div>
           <div>
             <h2 className="text-base font-serif font-bold text-gray-900">
-              Timesheet & Contribuição Técnica (TS CT)
+              Timesheet e Contribuição Técnica
             </h2>
             <p className="text-xs text-gray-500">
               Apontamentos por frentes de conhecimento, valor financeiro e tempo investido
@@ -412,7 +412,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                   <BarChart3 size={18} className="text-brand-blue" />
-                  <span>Evolução Mensal do Investimento em TS CT (Janeiro a Setembro)</span>
+                  <span>Evolução do Investimento</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Comparativo de valor financeiro investido (R$) e horas dedicadas
@@ -544,7 +544,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
                   <div>
                     <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                       <Building size={17} className="text-brand-blue" />
-                      <span>Investimento por UN (Padronizada)</span>
+                      <span>Investimento por UN</span>
                     </h3>
                     <p className="text-xs text-gray-500 mt-0.5">
                       Práticas jurídicas que mais investem em contribuição técnica
@@ -708,7 +708,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
                 <div>
                   <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                     <FileText size={18} className="text-brand-blue" />
-                    <span>Base Individual de Apontamentos Técnicos</span>
+                    <span>Apontamentos Técnicos</span>
                     <span className="text-xs font-sans font-normal text-gray-500">
                       ({displayRecords.length} de {monthFiltered.length} registros)
                     </span>
