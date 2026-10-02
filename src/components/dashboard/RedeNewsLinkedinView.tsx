@@ -210,7 +210,7 @@ export default function RedeNewsLinkedinView({ selectedMonth }: RedeNewsLinkedin
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal da Newsletter no LinkedIn (Janeiro a Agosto de 2026)</span>
+              <span>Evolução Mensal da Newsletter no LinkedIn</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Acompanhamento comparativo de visualizações, novos inscritos e curtidas
@@ -296,7 +296,7 @@ export default function RedeNewsLinkedinView({ selectedMonth }: RedeNewsLinkedin
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Share2 size={18} className="text-brand-blue" />
-                <span>Edições da Newsletter do LinkedIn</span>
+                <span>Edições da Newsletter</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {sortedChronologically.length} edições)
                 </span>
