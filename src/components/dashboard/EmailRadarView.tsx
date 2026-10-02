@@ -272,7 +272,7 @@ export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal: Taxa de Abertura vs. Taxa de Cliques (Janeiro a Agosto de 2026)</span>
+              <span>Taxa de Abertura vs. Taxa de Cliques</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Comparativo das métricas de performance do Radar Tributário mês a mês
@@ -462,7 +462,7 @@ export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Mail size={18} className="text-brand-blue" />
-                <span>Base Individual de Edições do Radar Tributário</span>
+                <span>Edições do Radar Tributário</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {normalizedData.length} disparos)
                 </span>
