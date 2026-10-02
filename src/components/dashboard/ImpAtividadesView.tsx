@@ -375,7 +375,7 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Distribuição e Alcance de Imprensa</span>
+              <span>Distribuição e Alcance</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Acompanhamento de status das pautas, formatos de mídia e evolução mensal
@@ -601,7 +601,7 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Calendar size={18} className="text-brand-blue" />
-                <span>Registro de Atividades de Imprensa</span>
+                <span>Registro de Atividades</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} {displayRecords.length === 1 ? 'registro' : 'registros'})
                 </span>
