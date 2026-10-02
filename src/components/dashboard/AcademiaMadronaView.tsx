@@ -269,7 +269,7 @@ export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaVi
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Análise Visual de Participação</span>
+              <span>Análise de Participação</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Distribuição e alcance das capacitações da Academia Madrona
