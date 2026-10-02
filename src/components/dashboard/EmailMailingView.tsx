@@ -277,7 +277,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução do Mailing Geral (Janeiro a Agosto de 2026)</span>
+              <span>Evolução do Mailing Geral</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Total de inscritos únicos desduplicados no mailing corporativo (linha "Todos")
@@ -362,7 +362,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Users size={18} className="text-brand-blue" />
-              <span>Inscritos por Área em {mesAtivoLabel} (Ordem Decrescente)</span>
+              <span>Inscritos por Área em {mesAtivoLabel}</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Distribuição setorial do mailing com percentual relativo sobre a maior base
@@ -430,7 +430,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Mail size={18} className="text-brand-blue" />
-                <span>Base Histórica Completa do Mailing por Segmento</span>
+                <span>Histórico do Mailing por Segmento</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   (23 listas monitoradas)
                 </span>
