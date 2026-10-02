@@ -365,7 +365,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal do Uso do iManage (Janeiro a Agosto de 2026)</span>
+              <span>Evolução do Uso</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Total de interações somadas entre todos os usuários do escritório
@@ -442,7 +442,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Users size={17} className="text-brand-blue" />
-                  <span>Uso por Unidade de Negócio (UN)</span>
+                  <span>Uso por UN</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Padronizado com normalizarUN() ({statsPorUn.length} UNs ativas no período)
@@ -576,7 +576,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <FolderGit2 size={18} className="text-brand-blue" />
-                <span>Base Individual de Atividades no iManage</span>
+                <span>Atividades no iManage</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length.toLocaleString('pt-BR')} registros)
                 </span>
