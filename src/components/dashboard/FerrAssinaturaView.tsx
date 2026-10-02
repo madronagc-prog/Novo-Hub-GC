@@ -320,7 +320,7 @@ export default function FerrAssinaturaView() {
         <div className="p-4 sm:p-5 border-b border-gray-100 bg-[#fafbfc]">
           <h4 className="text-sm font-serif font-bold text-gray-900 flex items-center gap-2">
             <Layers size={16} className="text-brand-blue" />
-            <span>Quadro Comparativo de Plataformas de Assinatura</span>
+            <span>Quadro Comparativo</span>
           </h4>
         </div>
 
