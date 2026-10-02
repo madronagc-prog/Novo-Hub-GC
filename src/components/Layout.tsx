@@ -1,13 +1,14 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, LayoutDashboard, Info, Menu, X, FileText, Scale,
-  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical
+  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical, BarChart3
 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { auth, signIn, logOut } from '../firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import AuthErrorModal from './AuthErrorModal';
 import { CATEGORIES } from '../data/servicesGCData';
+import { canAccessDashboardIndicadores } from '../constants';
 
 export default function Layout() {
   const location = useLocation();
@@ -59,51 +60,70 @@ export default function Layout() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navItems = [
-    { path: '/sobre', label: 'Sobre o Hub', icon: Info },
-    
-    {
-      label: 'Madrona Lab',
-      path: '/madrona-lab',
-      icon: FlaskConical,
-    },
-    {
-      label: 'Serviços de GC',
-      path: '/servicos-gc',
-      icon: Briefcase,
-      subItems: CATEGORIES.map(cat => ({
-        path: `/servicos-gc#cat-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-        label: cat
-      }))
-    },
+  const hasAccessIndicadores = canAccessDashboardIndicadores(user?.email);
 
-    {
-      label: 'Monitoramentos',
-      icon: LayoutDashboard,
-      subItems: [
-        { path: '/projetos-de-lei',          label: 'Acompanhamento legislativo' },
-        { path: '/monitoramento-de-empresas', label: 'Monitoramento de Empresas' },
-      ],
-    },
-    {
-      label: 'Jurisprudência',
-      icon: Scale,
-      subItems: [
-        { path: '/precedentes/temas-repetitivos', label: 'Temas repetitivos do STJ' },
-        { path: '/precedentes/controversias',     label: 'Controvérsias do STJ' },
-        { path: '/precedentes/repercussao-geral', label: 'Repercussão Geral STF' },
-      ],
-    },
-    {
-  label: 'Curadoria',
-  icon: BookOpen,
-  subItems: [
-    { path: '/banco-de-clausulas',   label: 'Banco de Cláusulas' },
-    { path: '/explorador',          label: 'Fontes de informação' },
-    { path: '/clipping-corporativo', label: 'Clipping de Corporativo' },
-  ],
-},
-  ];
+  const navItems = useMemo(() => {
+    const items: Array<{
+      path?: string;
+      label: string;
+      icon: any;
+      subItems?: Array<{ path: string; label: string }>;
+    }> = [
+      { path: '/sobre', label: 'Sobre o Hub', icon: Info },
+      
+      {
+        label: 'Madrona Lab',
+        path: '/madrona-lab',
+        icon: FlaskConical,
+      },
+      {
+        label: 'Serviços de GC',
+        path: '/servicos-gc',
+        icon: Briefcase,
+        subItems: CATEGORIES.map(cat => ({
+          path: `/servicos-gc#cat-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+          label: cat
+        }))
+      },
+
+      {
+        label: 'Monitoramentos',
+        icon: LayoutDashboard,
+        subItems: [
+          { path: '/projetos-de-lei',          label: 'Acompanhamento legislativo' },
+          { path: '/monitoramento-de-empresas', label: 'Monitoramento de Empresas' },
+        ],
+      },
+      {
+        label: 'Jurisprudência',
+        icon: Scale,
+        subItems: [
+          { path: '/precedentes/temas-repetitivos', label: 'Temas repetitivos do STJ' },
+          { path: '/precedentes/controversias',     label: 'Controvérsias do STJ' },
+          { path: '/precedentes/repercussao-geral', label: 'Repercussão Geral STF' },
+        ],
+      },
+      {
+        label: 'Curadoria',
+        icon: BookOpen,
+        subItems: [
+          { path: '/banco-de-clausulas',   label: 'Banco de Cláusulas' },
+          { path: '/explorador',          label: 'Fontes de informação' },
+          { path: '/clipping-corporativo', label: 'Clipping de Corporativo' },
+        ],
+      },
+    ];
+
+    if (hasAccessIndicadores) {
+      items.push({
+        path: '/dashboard-indicadores',
+        label: 'Indicadores GC & COM',
+        icon: BarChart3,
+      });
+    }
+
+    return items;
+  }, [hasAccessIndicadores]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
