@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   BookOpen, Calendar, ChevronRight, Search, ExternalLink, CheckCircle2, 
-  Plus, X, Trash2, Loader2, Sparkles, AlertCircle 
+  Plus, X, Trash2, Loader2, Sparkles, AlertCircle, FileText 
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -74,7 +74,7 @@ export default function ClippingCorporativo() {
   const [newTitle, setNewTitle] = useState('');
   const [newPeriod, setNewPeriod] = useState('');
   const [newSlug, setNewSlug] = useState('');
-  const [templateOption, setTemplateOption] = useState<'empty' | 'clone_5'>('clone_5');
+  const [templateOption, setTemplateOption] = useState<'empty' | 'clone_5' | 'clone_4'>('clone_5');
   const [isCreating, setIsCreating] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -182,6 +182,8 @@ export default function ClippingCorporativo() {
 
       if (templateOption === 'clone_5') {
         initialData = JSON.parse(JSON.stringify(defaultClippingEdicao5Data));
+      } else if (templateOption === 'clone_4') {
+        initialData = JSON.parse(JSON.stringify(defaultClippingJulhoData));
       } else {
         // Modelo inicial com 1 item exemplo em cada para facilitar a edição
         initialData = {
@@ -219,7 +221,16 @@ export default function ClippingCorporativo() {
               link: ''
             }
           ],
-          relatorios: []
+          relatorios: [
+            {
+              id: 'rel_1',
+              tag: 'Estudo / Pesquisa',
+              title: 'Primeiro Relatório ou Pesquisa',
+              paragraphs: ['Destaque e resumo dos principais achados do relatório ou pesquisa de mercado.'],
+              link: ''
+            }
+          ],
+          outrosNormativos: []
         };
       }
 
@@ -432,7 +443,7 @@ export default function ClippingCorporativo() {
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                   Conteúdo Inicial
                 </label>
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                   <button
                     type="button"
                     onClick={() => setTemplateOption('clone_5')}
@@ -447,7 +458,25 @@ export default function ClippingCorporativo() {
                       Clonar 5ª Edição
                     </span>
                     <span className="text-[11px] text-gray-500 mt-1">
-                      Preenche com blocos estruturados da última edição para editar.
+                      Modelo completo da última edição (Agosto 2026).
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setTemplateOption('clone_4')}
+                    className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      templateOption === 'clone_4' 
+                        ? 'border-brand-grafite bg-slate-50 font-medium text-brand-grafite ring-1 ring-brand-grafite' 
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="font-bold flex items-center gap-1.5">
+                      <FileText size={14} className="text-rose-500" />
+                      Clonar 4ª Edição
+                    </span>
+                    <span className="text-[11px] text-gray-500 mt-1">
+                      Inclui seção de Relatórios e Pesquisas (Julho 2026).
                     </span>
                   </button>
 
@@ -465,7 +494,7 @@ export default function ClippingCorporativo() {
                       Modelo Padrão
                     </span>
                     <span className="text-[11px] text-gray-500 mt-1">
-                      Começa com 1 item em cada seção para você preencher do zero.
+                      1 exemplo em cada seção (incluindo Relatórios).
                     </span>
                   </button>
                 </div>

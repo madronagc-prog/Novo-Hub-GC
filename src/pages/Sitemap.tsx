@@ -82,6 +82,25 @@ export default function Sitemap() {
             </p>
           </Link>
 
+          {/* Card: Banco de Cláusulas */}
+          <Link
+            to="/banco-de-clausulas"
+            className="group block p-6 border-2 border-brand-blue/30 rounded-xl hover:border-brand-blue hover:shadow-md transition-all bg-white"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-blue-50 p-2 rounded-lg group-hover:bg-brand-blue transition-colors">
+                <FileText className="w-6 h-6 text-brand-blue group-hover:text-white transition-colors" />
+              </div>
+              <h2 className="text-xl font-semibold text-brand-grafite flex items-center gap-2">
+                Banco de Cláusulas
+                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-medium">Novo</span>
+              </h2>
+            </div>
+            <p className="text-brand-grafite text-sm">
+              Hub institucional com minutas de cláusulas contratuais, variações por partes (1C 1V, 1C 2V, 2C 1V, 2C 2V), bilíngue (PT/EN) e cópia rápida.
+            </p>
+          </Link>
+
           {/* Card: Precedentes */}
           <div className="p-6 border border-gray-200 rounded-xl bg-white">
             <div className="flex items-center gap-4 mb-4">
