@@ -253,7 +253,7 @@ export default function RedeSociaisView({ selectedMonth }: RedeSociaisViewProps)
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução de Seguidores: LinkedIn vs. Instagram (Janeiro a Agosto)</span>
+              <span>Evolução de Seguidores: LinkedIn vs. Instagram</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Trajetória de expansão da audiência digital institucional nos canais oficiais
@@ -263,11 +263,11 @@ export default function RedeSociaisView({ selectedMonth }: RedeSociaisViewProps)
           <div className="flex items-center gap-4 text-xs flex-wrap">
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-brand-blue"></span>
-              <span className="font-semibold text-gray-700">LinkedIn (Eixo esquerdo: 51k a 54k)</span>
+              <span className="font-semibold text-gray-700">LinkedIn</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-rose-500"></span>
-              <span className="font-semibold text-gray-700">Instagram (Eixo direito: 3.8k a 4.4k)</span>
+              <span className="font-semibold text-gray-700">Instagram</span>
             </div>
           </div>
         </div>
@@ -447,7 +447,7 @@ export default function RedeSociaisView({ selectedMonth }: RedeSociaisViewProps)
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Share2 size={18} className="text-brand-blue" />
-                <span>Base Histórica Completa de Redes Sociais e Portais</span>
+                <span>Histórico de Redes Sociais e Portais</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   (12 meses • 2026)
                 </span>
