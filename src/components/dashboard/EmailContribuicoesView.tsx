@@ -239,7 +239,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução da Taxa de Abertura por Edição (Jornal B&F)</span>
+              <span>Evolução da Taxa de Abertura</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Percentual de abertura do e-mail marketing corporativo para as edições de 2026
@@ -321,7 +321,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Mail size={18} className="text-brand-blue" />
-                <span>Contribuições Publicadas no Jornal B&F</span>
+                <span>Contribuições Publicadas</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} {displayRecords.length === 1 ? 'artigo' : 'artigos'})
                 </span>
