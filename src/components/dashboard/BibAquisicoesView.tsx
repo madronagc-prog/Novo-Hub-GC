@@ -295,7 +295,7 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
           <div>
             <h4 className="text-sm font-serif font-bold text-gray-900 flex items-center gap-1.5">
               <Building size={16} className="text-brand-blue" />
-              <span>Investimento Consolidado por Área (UN / AN)</span>
+              <span>Investimento por Área)</span>
             </h4>
             <p className="text-xs text-gray-500 mt-0.5">
               Volume financeiro e obras solicitadas por cada unidade de negócio
@@ -349,7 +349,7 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Análise Visual de Gastos</span>
+              <span>Análise de Gastos</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Comparativo financeiro por área demandante, praça (SP x BH x E-book) e evolução mensal
@@ -552,7 +552,7 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Calendar size={18} className="text-brand-blue" />
-                <span>Histórico de Obras Adquiridas</span>
+                <span>Histórico de Aquisições</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} {displayRecords.length === 1 ? 'registro' : 'registros'})
                 </span>
