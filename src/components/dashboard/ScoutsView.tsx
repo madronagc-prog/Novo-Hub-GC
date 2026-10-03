@@ -284,10 +284,10 @@ export default function ScoutsView({ selectedMonth }: ScoutsViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal de Scouts (Janeiro a Setembro de 2026)</span>
+              <span>Evolução de Scouts</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
-              Frequência de mapeamento e inteligência comercial setorial
+              Frequência do mapeamento
             </p>
           </div>
 
@@ -431,7 +431,7 @@ export default function ScoutsView({ selectedMonth }: ScoutsViewProps) {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Building size={17} className="text-brand-blue" />
-                  <span>Distribuição por UN Beneficiada</span>
+                  <span>Distribuição por UN </span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Mapeamentos correlacionados com práticas jurídicas (ignora sem UN)
@@ -488,7 +488,7 @@ export default function ScoutsView({ selectedMonth }: ScoutsViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Compass size={18} className="text-brand-blue" />
-                <span>Base Individual de Monitoramentos de Scouts</span>
+                <span>Monitoramentos de Scouts</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {monthFilteredData.length} registros)
                 </span>
