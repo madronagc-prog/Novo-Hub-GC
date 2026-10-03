@@ -399,7 +399,6 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
                   <span>Consumo por Área e Destinação</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  UNs padronizadas com normalizarUN(); "EXPANSÃO" e "CLIENTE/CASO" preservados
                 </p>
               </div>
             </div>
