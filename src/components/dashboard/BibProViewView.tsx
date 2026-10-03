@@ -248,7 +248,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal de Acessos ProView (Janeiro a Agosto de 2026)</span>
+              <span>Evolução de Acessos</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Total consolidado de acessos somado entre todas as práticas jurídicas
@@ -318,7 +318,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <Building size={18} className="text-brand-blue" />
-              <span>Acessos por UN (Padronizada) • Ordem Decrescente</span>
+              <span>Acessos por UN</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Consolidação de leituras com normalizarUN() em {selectedMonth}
@@ -400,7 +400,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <Library size={18} className="text-brand-blue" />
-                <span>Base Completa de Registros ProView</span>
+                <span>Histórico de Acessos</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {normalizedData.length} registros)
                 </span>
