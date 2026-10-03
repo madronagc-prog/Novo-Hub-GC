@@ -290,10 +290,10 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
           <div>
             <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
               <BarChart3 size={18} className="text-brand-blue" />
-              <span>Evolução Mensal de Acessos (Janeiro a Agosto de 2026)</span>
+              <span>Evolução de Acessos</span>
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
-              Total consolidado de consultas à biblioteca digital MB ao longo dos meses
+              Total consolidado de consultas à biblioteca digital Minha Biblioteca ao longo dos meses
             </p>
           </div>
 
@@ -366,7 +366,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Building size={17} className="text-brand-blue" />
-                  <span>Acessos por UN (Padronizada)</span>
+                  <span>Acessos por UN</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Consolidação com normalizarUN() ({statsPorUn.length} UNs mapeadas)
@@ -419,7 +419,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
               <div>
                 <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
                   <Award size={17} className="text-brand-blue" />
-                  <span>Top 10 Leitores mais Ativos</span>
+                  <span>Top 10 Leitores</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Colaboradores com maior volume de acessos na biblioteca em {selectedMonth}
@@ -495,7 +495,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <BookOpen size={18} className="text-brand-blue" />
-                <span>Base Individual de Acessos à Biblioteca MB</span>
+                <span>Acessos à Biblioteca MB</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} registros)
                 </span>
