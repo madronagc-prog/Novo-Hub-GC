@@ -306,7 +306,7 @@ export default function PesquisasView({ selectedMonth }: PesquisasViewProps) {
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                   <BarChart3 size={18} className="text-brand-blue" />
-                  <span>Evolução Mensal: Pesquisas e Horas Investidas</span>
+                  <span>Evolução de Pesquisas e Horas Investidas</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Volume de demandas técnicas e tempo total dedicado (Janeiro a Setembro)
@@ -433,7 +433,7 @@ export default function PesquisasView({ selectedMonth }: PesquisasViewProps) {
             <div>
               <h3 className="text-base sm:text-lg font-serif font-bold text-gray-900 flex items-center gap-2">
                 <BookOpen size={18} className="text-brand-blue" />
-                <span>Base Individual de Pesquisas Jurídicas & Técnicas</span>
+                <span>Pesquisas Jurídicas</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
                   ({displayRecords.length} de {totalPesquisas} pesquisas)
                 </span>
