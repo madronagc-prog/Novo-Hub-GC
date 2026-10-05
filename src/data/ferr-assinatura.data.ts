@@ -20,8 +20,8 @@ export const ferrAssinaturaData: AssinaturaEletronicaContrato[] = [
     inicio_contrato: "Janeiro/2026",
     fim_contrato: "Janeiro/2027",
     envelopes_contratados: 7500,
-    envelopes_usados: 2984,
-    envelopes_disponiveis: 4516,
-    percentual_uso: 39.8
+    envelopes_usados: 3258,
+    envelopes_disponiveis: 4242,
+    percentual_uso: 43.4
   }
 ];
