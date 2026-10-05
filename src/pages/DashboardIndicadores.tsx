@@ -355,7 +355,6 @@ export default function DashboardIndicadores() {
                 Dashboard de Indicadores
               </h1>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                Gestão do Conhecimento & Comunicação — Monitoramento estratégico de métricas, entregas e engajamento.
               </p>
             </div>
           </div>
