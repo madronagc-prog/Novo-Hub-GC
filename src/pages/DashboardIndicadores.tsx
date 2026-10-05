@@ -351,26 +351,7 @@ export default function DashboardIndicadores() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-blue bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100 flex items-center gap-1">
-                  <BarChart3 size={13} />
-                  Hub GC & COM
-                </span>
-
-                {/* Badge de Nível de Permissão */}
-                {role === 'admin' ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <ShieldCheck size={13} className="text-emerald-600" />
-                    ADMIN (Leitura e Edição)
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                    <Eye size={13} className="text-slate-500" />
-                    VIEWER (Somente Leitura)
-                  </span>
-                )}
-              </div>
-
+              <div>
               <h1 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 tracking-tight">
                 Dashboard de Indicadores
               </h1>
@@ -378,15 +359,7 @@ export default function DashboardIndicadores() {
                 Gestão do Conhecimento & Comunicação — Monitoramento estratégico de métricas, entregas e engajamento.
               </p>
             </div>
-
-            {/* Quick stats or identity snippet */}
-            <div className="flex items-center gap-2 self-start md:self-auto text-xs text-gray-500 bg-gray-50 px-3 py-2 rounded-xl border border-gray-200/60">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Conectado como:</span>
-              <strong className="text-gray-800">{currentUser?.email}</strong>
-            </div>
           </div>
-        </div>
 
         {/* ================================================================== */}
         {/* Nível 1: Navegação Principal em Duas Linhas Fixas (7 abas / linha) */}
