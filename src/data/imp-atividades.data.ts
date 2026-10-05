@@ -1553,5 +1553,33 @@ export const impAtividadesData: AtividadeImprensaRegistro[] = [
     link: "https://legismap.com.br/conteudos/artigos-e-noticias/protecao-patrimonial-mutualista-o-salto-rumo-a-maturidade-regulatoria-e-solvencia",
     obs: "Este artigo foi resultado da webinar realizada por Ronaldo G. Gallo em 30/07, conforme planejado",
     un: ""
-  }
+  },
+    {
+    mes: "Setembro",
+    area: "Infraestrutura e Direito Público",
+    area2: "Project Finance",
+    tema: "Free Flow: da discussão sobre validade aos desafios de implementação",
+    porta_voz: "Rodrigo Barata e Fernanda Garcia",
+    proposto_por: "Madrona",
+    atividade: "Artigo de opinião",
+    status: "Em andamento",
+    pauta_convertida: "Em andamento",
+    link: "",
+    obs: "",
+    un: ""
+  },
+  {
+    mes: "Setembro",
+    area: "Infraestrutura e Direito Público",
+    area2: "",
+    tema: "Nova norma da ANA pode ampliar fiscalização sobre concessionárias privadas",
+    porta_voz: "Anderson Novais",
+    proposto_por: "Madrona",
+    atividade: "Sugestão de pauta",
+    status: "Declinado",
+    pauta_convertida: "Não",
+    link: "",
+    obs: "",
+    un: ""
+  },
 ];
