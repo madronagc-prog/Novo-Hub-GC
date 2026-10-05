@@ -27,27 +27,6 @@ export const pubCapitalAbertoData: CapitalAbertoRegistro[] = [
     status: "Entrevista marcado",
     tema: "Marcas e patentes - intangíveis no mercado de capitais",
     views_site_ca: null
-  },
-  {
-    mes: "Outubro",
-    areas: "Tributário e Wealth",
-    status: "Tema enviado para avaliação",
-    tema: "",
-    views_site_ca: null
-  },
-  {
-    mes: "Novembro",
-    areas: "Contencioso, Mediação e Arbitragem",
-    status: "",
-    tema: "",
-    views_site_ca: null
-  },
-  {
-    mes: "Dezembro",
-    areas: "Mercado de Capitais, Fundos de Investimento e Banking",
-    status: "",
-    tema: "",
-    views_site_ca: null
   }
 ];
 
