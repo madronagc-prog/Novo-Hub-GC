@@ -183,8 +183,7 @@ export const ferrLexterData: LexterRegistro[] = [
   { mes: "Julho", usuario: "Kyu Kim", documentos: 1, respostas: 1, un: "UN Mercap" },
   { mes: "Julho", usuario: "Gabriel Felipe Vieira", documentos: 94, respostas: 2350, un: "UN Corporativo" },
   { mes: "Agosto", usuario: "Anne Beatriz Mesquita Cavalcanti", documentos: 47, respostas: 1081, un: "UN Corporativo" },
-  { mes: "Agosto", usuario: "Anne Beatriz Mesquita Cavalcanti", documentos: 22, respostas: 22, un: "UN Corporativo" },
-    {
+  { mes: "Agosto", usuario: "Anne Beatriz Mesquita Cavalcanti", documentos: 22, respostas: 22, un: "UN Corporativo" },  {
     mes: "Setembro",
     usuario: "Ana Carolina Barbosa dos Santos",
     documentos: 1,
