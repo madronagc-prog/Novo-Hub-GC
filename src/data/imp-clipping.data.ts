@@ -20,7 +20,7 @@ export const impClippingComData: ClippingComRegistro[] = [
   { area: "UN Contencioso", janeiro: 0, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 0, julho: 0, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "UN Corporativo", janeiro: 1, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 0, julho: 0, agosto: 0, setembro: 2, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "UN Mercap", janeiro: 0, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 0, julho: 1, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
-  { area: "UN Infraestrutura", janeiro: 0, fevereiro: 0, marco: 1, abril: 0, maio: 1, junho: 0, julho: 2, agosto: 0, setembro: 2, outubro: 0, novembro: 0, dezembro: 0 },
+  { area: "UN Infraestrutura", janeiro: 0, fevereiro: 0, marco: 1, abril: 0, maio: 1, junho: 0, julho: 2, agosto: 0, setembro: 1, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "Propriedade Intelectual, Tecnologia e Inovação", janeiro: 0, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 0, julho: 0, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "Sportainment", janeiro: 0, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 1, julho: 0, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "UN Tributário", janeiro: 0, fevereiro: 0, marco: 0, abril: 0, maio: 0, junho: 0, julho: 0, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
