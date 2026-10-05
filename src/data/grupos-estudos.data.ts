@@ -119,5 +119,15 @@ export const gruposEstudosData: GrupoEstudoRegistro[] = [
     participantes: 28,
     meta: 20,
     percentual_presenca: 82
-  }
+  },
+    {
+    mes: "Setembro",
+    titulo: "RT Tax",
+    apresentado_por: "Leandro Vieira, Ana Beatriz, Leonardo, Rafael",
+    resultado: "Discussão interna",
+    convidados: 34,
+    participantes: 28,
+    meta: 20,
+    percentual_presenca: 82
+  },
 ];
