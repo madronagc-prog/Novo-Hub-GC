@@ -184,4 +184,39 @@ export const ferrLexterData: LexterRegistro[] = [
   { mes: "Julho", usuario: "Gabriel Felipe Vieira", documentos: 94, respostas: 2350, un: "UN Corporativo" },
   { mes: "Agosto", usuario: "Anne Beatriz Mesquita Cavalcanti", documentos: 47, respostas: 1081, un: "UN Corporativo" },
   { mes: "Agosto", usuario: "Anne Beatriz Mesquita Cavalcanti", documentos: 22, respostas: 22, un: "UN Corporativo" },
+    {
+    mes: "Setembro",
+    usuario: "Ana Carolina Barbosa dos Santos",
+    documentos: 1,
+    respostas: 45,
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Ana Carolina Barbosa dos Santos",
+    documentos: 1,
+    respostas: 268,
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Murilo Bertoldi Filho",
+    documentos: 23,
+    respostas: 161,
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Marcus Korossy",
+    documentos: 5,
+    respostas: 55,
+    un: "UN Contencioso"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Hênio Teixeira da Silva Filho",
+    documentos: 1,
+    respostas: 21,
+    un: "UN Imobiliário"
+  },
 ];
