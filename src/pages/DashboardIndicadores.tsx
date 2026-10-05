@@ -690,5 +690,6 @@ export default function DashboardIndicadores() {
         )}
       </div>
     </div>
+    </div>
   );
 }
