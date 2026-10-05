@@ -33,6 +33,13 @@ import AcadTreinamentoImView from '../components/dashboard/AcadTreinamentoImView
 import PubUnsNumerosView from '../components/dashboard/PubUnsNumerosView';
 import FerrUpMinerView from '../components/dashboard/FerrUpMinerView';
 import TsGcView from '../components/dashboard/TsGcView';
+import VisaoGeralView from '../components/dashboard/VisaoGeralView';
+import PubResumoView from '../components/dashboard/PubResumoView';
+import RedeResumoView from '../components/dashboard/RedeResumoView';
+import EmailMktResumoView from '../components/dashboard/EmailMktResumoView';
+import ImpResumoView from '../components/dashboard/ImpResumoView';
+import AcademiaResumoView from '../components/dashboard/AcademiaResumoView';
+import TsResumoView from '../components/dashboard/TsResumoView';
 import { normalizarUN, normalizarPosicao, normalizarMes } from '../utils/padronizacao';
 import {
   BarChart3,
@@ -530,7 +537,21 @@ export default function DashboardIndicadores() {
         {/* ================================================================== */}
         {/* Renderização de Conteúdo: Específico ou Container Vazio            */}
         {/* ================================================================== */}
-        {activeMainTab === 'academia-treinamentos' && activeSubTab === 'academia-madrona' ? (
+        {activeMainTab === 'visao-geral' ? (
+          <VisaoGeralView activeSubTab={activeSubTab} selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'publicacoes' && activeSubTab === 'resumo' ? (
+          <PubResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'redes' && activeSubTab === 'resumo' ? (
+          <RedeResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'email-mkt' && activeSubTab === 'resumo' ? (
+          <EmailMktResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'imprensa' && activeSubTab === 'resumo' ? (
+          <ImpResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'resumo' ? (
+          <AcademiaResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'time-sheet' && activeSubTab === 'resumo' ? (
+          <TsResumoView selectedMonth={selectedMonth} />
+        ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'academia-madrona' ? (
           <AcademiaMadronaView selectedMonth={selectedMonth} />
         ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'treinamento-im' ? (
           <AcadTreinamentoImView selectedMonth={selectedMonth} />
