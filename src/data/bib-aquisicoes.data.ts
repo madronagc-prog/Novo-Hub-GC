@@ -189,7 +189,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     titulo: "Direito Publicitário - Comentários ao Código Brasileiro de Autorregulamentação Publicitária (CBAP) e sua recente jurisprudência",
     un_an: "UN Digital, Comex e PI",
     tipo: "Livro físico",
-    valor: 227.00
+    valor: 227.00,
     localidade: "SP"
   },
 ];
