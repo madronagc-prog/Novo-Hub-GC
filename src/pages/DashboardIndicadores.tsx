@@ -351,7 +351,6 @@ export default function DashboardIndicadores() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div>
               <h1 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 tracking-tight">
                 Dashboard de Indicadores
               </h1>
