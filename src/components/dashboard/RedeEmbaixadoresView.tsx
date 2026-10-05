@@ -317,17 +317,17 @@ export default function RedeEmbaixadoresView({ selectedMonth }: RedeEmbaixadores
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-4 w-12 text-center">#</th>
-                <th className="py-3 px-4 w-28">Mês</th>
-                <th className="py-3 px-4 w-32">Grupo</th>
-                <th className="py-3 px-4 min-w-[200px]">Embaixador(a)</th>
-                <th className="py-3 px-4 min-w-[320px]">Tema da Publicação</th>
-                <th className="py-3 px-4 text-center w-36">Status</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[40px] text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-4 w-12 text-center">#</th>
+                <th className="py-2.5 px-4 w-28">Mês</th>
+                <th className="py-2.5 px-4 w-32">Grupo</th>
+                <th className="py-2.5 px-4 min-w-[200px]">Embaixador(a)</th>
+                <th className="py-2.5 px-4 min-w-[320px]">Tema da Publicação</th>
+                <th className="py-2.5 px-4 text-center w-36">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -349,22 +349,22 @@ export default function RedeEmbaixadoresView({ selectedMonth }: RedeEmbaixadores
                   return (
                     <tr
                       key={`${item.nome}-${item.mes}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
+                      className="hover:bg-blue-50/20 transition-colors h-[44px]"
                     >
                       {/* Numeração */}
-                      <td className="py-3.5 px-4 text-center text-gray-400 text-xs">
+                      <td className="py-2.5 px-4 text-center text-gray-400 text-xs">
                         {idx + 1}
                       </td>
 
                       {/* Mês */}
-                      <td className="py-3.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
+                      <td className="py-2.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-medium">
                           {item.mes}
                         </span>
                       </td>
 
                       {/* Grupo */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
+                      <td className="py-2.5 px-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold border ${grupoBadge.bg} ${grupoBadge.text} ${grupoBadge.border}`}
                         >
@@ -373,17 +373,17 @@ export default function RedeEmbaixadoresView({ selectedMonth }: RedeEmbaixadores
                       </td>
 
                       {/* Nome */}
-                      <td className="py-3.5 px-4 font-semibold text-gray-900 whitespace-nowrap">
+                      <td className="py-2.5 px-4 font-semibold text-gray-900 whitespace-nowrap">
                         {item.nome}
                       </td>
 
                       {/* Tema */}
-                      <td className="py-3.5 px-4 text-gray-800 font-medium leading-relaxed">
+                      <td className="py-2.5 px-4 text-gray-800 font-medium leading-relaxed">
                         {item.tema}
                       </td>
 
                       {/* Status */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap">
                         {isPublicado ? (
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>

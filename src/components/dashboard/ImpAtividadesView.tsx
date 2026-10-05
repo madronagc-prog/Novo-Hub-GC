@@ -652,126 +652,109 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-3.5 w-24">Mês</th>
-                <th className="py-3 px-3.5 w-36">Área / UN</th>
-                <th className="py-3 px-3.5 min-w-[260px]">Tema da Pauta</th>
-                <th className="py-3 px-3.5 w-40">Porta-voz</th>
-                <th className="py-3 px-3.5 w-32">Atividade</th>
-                <th className="py-3 px-3.5 text-center w-28">Status</th>
-                <th className="py-3 px-3.5 text-center w-28">Convertida</th>
-                <th className="py-3 px-3.5 w-28">Link</th>
-                <th className="py-3 px-3.5 min-w-[200px]">Observações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {displayRecords.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-gray-400">
-                    Nenhuma atividade encontrada para os critérios selecionados.
-                  </td>
-                </tr>
-              ) : (
-                displayRecords.map((item, idx) => {
-                  const statusStyle = STATUS_CONFIG[item.status] || STATUS_CONFIG['Outros'];
-                  const isConvertida = item.pauta_convertida === 'Sim';
+        {/* Lista de Atividades com Rolagem Interna (5 linhas completas) */}
+        <div className="p-4 sm:p-5">
+          {displayRecords.length === 0 ? (
+            <div className="py-12 text-center text-gray-400">
+              <p className="text-sm">Nenhuma atividade encontrada para os critérios selecionados.</p>
+            </div>
+          ) : (
+            <div
+              className="space-y-2 overflow-y-auto pr-1.5 scrollbar-thin"
+              style={{ height: '352px' }}
+            >
+              {displayRecords.map((item, idx) => {
+                const statusStyle = STATUS_CONFIG[item.status] || STATUS_CONFIG['Outros'];
+                const isConvertida = item.pauta_convertida === 'Sim';
 
-                  return (
-                    <tr
-                      key={`${item.tema}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
-                    >
-                      {/* Mês */}
-                      <td className="py-3 px-3.5 font-semibold text-gray-700 whitespace-nowrap">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-medium">
+                return (
+                  <div
+                    key={`${item.tema}-${idx}`}
+                    className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors flex flex-col justify-between h-[64px]"
+                  >
+                    {/* Linha 1: Numeração, Mês, Status, Atividade, Convertida, Tema e Link */}
+                    <div className="flex items-center justify-between gap-2 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-5 h-5 rounded-md bg-white border border-gray-200 flex items-center justify-center font-bold text-[10px] text-gray-600 flex-shrink-0">
+                          {idx + 1}
+                        </span>
+                        <span className="text-[11px] font-semibold text-gray-700 bg-white border border-gray-200 px-1.5 py-0.5 rounded flex-shrink-0">
                           {item.mes}
                         </span>
-                      </td>
-
-                      {/* Área & UN */}
-                      <td className="py-3 px-3.5">
-                        <div className="font-semibold text-gray-900 text-xs">
-                          {item.area || '—'}
-                        </div>
-                        {item.area2 && (
-                          <div className="text-[11px] text-gray-500">
-                            + {item.area2}
-                          </div>
-                        )}
-                        {item.un && item.un !== item.area && (
-                          <span className="inline-block mt-0.5 text-[10px] bg-slate-100 px-1.5 py-0.2 rounded text-slate-700 border border-slate-200">
-                            {item.un}
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Tema */}
-                      <td className="py-3 px-3.5 font-medium text-gray-900 leading-snug">
-                        {item.tema}
-                        {item.proposto_por && (
-                          <span className="block text-[11px] text-gray-400 mt-0.5 font-normal">
-                            Proposto por: <strong>{item.proposto_por}</strong>
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Porta-voz */}
-                      <td className="py-3 px-3.5 text-gray-700 text-xs">
-                        {item.porta_voz || '—'}
-                      </td>
-
-                      {/* Atividade */}
-                      <td className="py-3 px-3.5 text-gray-600 text-xs whitespace-nowrap">
-                        {item.atividade || '—'}
-                      </td>
-
-                      {/* Status */}
-                      <td className="py-3 px-3.5 text-center whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border flex-shrink-0 ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}
                         >
                           {item.status || 'Não especificado'}
                         </span>
-                      </td>
-
-                      {/* Pauta Convertida */}
-                      <td className="py-3 px-3.5 text-center whitespace-nowrap">
-                        {isConvertida ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                            <CheckCircle2 size={12} />
-                            Sim
-                          </span>
-                        ) : item.pauta_convertida === 'Não' ? (
-                          <span className="inline-flex items-center gap-1 text-xs text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
-                            <XCircle size={12} />
-                            Não
-                          </span>
-                        ) : (
-                          <span className="text-xs text-gray-400">
-                            {item.pauta_convertida || '—'}
+                        {item.atividade && (
+                          <span className="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 flex-shrink-0">
+                            {item.atividade}
                           </span>
                         )}
-                      </td>
+                        {isConvertida ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200 flex-shrink-0">
+                            <CheckCircle2 size={11} />
+                            Convertida
+                          </span>
+                        ) : item.pauta_convertida === 'Não' ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded-full border border-rose-200 flex-shrink-0">
+                            <XCircle size={11} />
+                            Não convertida
+                          </span>
+                        ) : null}
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm truncate" title={item.tema}>
+                          {item.tema}
+                        </span>
+                      </div>
 
-                      {/* Link Clicável */}
-                      <td className="py-3 px-3.5 whitespace-nowrap">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {renderLink(item.link)}
-                      </td>
+                      </div>
+                    </div>
 
-                      {/* Observações */}
-                      <td className="py-3 px-3.5 text-xs text-gray-500 leading-relaxed">
-                        {item.obs || '—'}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                    {/* Linha 2: Metadados (Área, UN, Porta-voz, Proposto por, Observações) */}
+                    <div className="flex items-center gap-2 text-[11px] text-gray-500 pl-7 truncate">
+                      <span className="font-medium text-gray-700">
+                        Área: <strong>{item.area || '—'}</strong>{item.area2 ? ` + ${item.area2}` : ''}
+                      </span>
+                      {item.un && item.un !== item.area && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="bg-slate-100 text-slate-700 px-1.5 py-0.2 rounded text-[10px] font-medium border border-slate-200">
+                            {item.un}
+                          </span>
+                        </>
+                      )}
+                      {item.porta_voz && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="text-gray-600">
+                            Porta-voz: <strong className="text-gray-800">{item.porta_voz}</strong>
+                          </span>
+                        </>
+                      )}
+                      {item.proposto_por && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="text-gray-500">
+                            Proposto por: {item.proposto_por}
+                          </span>
+                        </>
+                      )}
+                      {item.obs && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="text-gray-400 italic truncate max-w-[320px]" title={item.obs}>
+                            Obs: {item.obs}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Rodapé da Tabela com Totais */}

@@ -40,3 +40,5 @@ export const impClippingComData: ClippingComRegistro[] = [
   { area: "Reestruturação e insolvência", janeiro: 2, fevereiro: 1, marco: 2, abril: 0, maio: 1, junho: 0, julho: 2, agosto: 2, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
   { area: "Institucional", janeiro: 0, fevereiro: 0, marco: 6, abril: 7, maio: 1, junho: 0, julho: 1, agosto: 0, setembro: 0, outubro: 0, novembro: 0, dezembro: 0 },
 ];
+
+export const impClippingData = impClippingComData;

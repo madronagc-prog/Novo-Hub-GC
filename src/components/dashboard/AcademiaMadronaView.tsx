@@ -510,18 +510,18 @@ export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaVi
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna (10 linhas completas) */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-4 w-28">Mês</th>
-                <th className="py-3 px-4">Título da Sessão</th>
-                <th className="py-3 px-4 w-44">Pilar</th>
-                <th className="py-3 px-4">Apresentado por</th>
-                <th className="py-3 px-4 text-center w-28">Participantes</th>
-                <th className="py-3 px-4 text-center w-24">Convidados</th>
-                <th className="py-3 px-4 text-center w-28">Adesão</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[40px] text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-4 w-28">Mês</th>
+                <th className="py-2.5 px-4">Título da Sessão</th>
+                <th className="py-2.5 px-4 w-44">Pilar</th>
+                <th className="py-2.5 px-4">Apresentado por</th>
+                <th className="py-2.5 px-4 text-center w-28">Participantes</th>
+                <th className="py-2.5 px-4 text-center w-24">Convidados</th>
+                <th className="py-2.5 px-4 text-center w-28">Adesão</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -543,22 +543,22 @@ export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaVi
                   return (
                     <tr
                       key={`${item.titulo}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
+                      className="hover:bg-blue-50/20 transition-colors h-[44px]"
                     >
                       {/* Mês */}
-                      <td className="py-3.5 px-4 font-semibold text-gray-700 whitespace-nowrap">
+                      <td className="py-2.5 px-4 font-semibold text-gray-700 whitespace-nowrap">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-medium">
                           {item.mes}
                         </span>
                       </td>
 
                       {/* Título da Sessão */}
-                      <td className="py-3.5 px-4 font-medium text-gray-900">
+                      <td className="py-2.5 px-4 font-medium text-gray-900">
                         {item.titulo}
                       </td>
 
                       {/* Pilar */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
+                      <td className="py-2.5 px-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${pilarStyle.bg} ${pilarStyle.text} ${pilarStyle.border}`}
                         >
@@ -567,22 +567,22 @@ export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaVi
                       </td>
 
                       {/* Apresentado por */}
-                      <td className="py-3.5 px-4 text-gray-600">
+                      <td className="py-2.5 px-4 text-gray-600">
                         {item.apresentado_por}
                       </td>
 
                       {/* Participantes */}
-                      <td className="py-3.5 px-4 text-center font-bold text-gray-900">
+                      <td className="py-2.5 px-4 text-center font-bold text-gray-900">
                         {item.participantes}
                       </td>
 
                       {/* Convidados */}
-                      <td className="py-3.5 px-4 text-center text-gray-500">
+                      <td className="py-2.5 px-4 text-center text-gray-500">
                         {item.convidados}
                       </td>
 
                       {/* Taxa de Adesão */}
-                      <td className="py-3.5 px-4 text-center">
+                      <td className="py-2.5 px-4 text-center">
                         <div className="inline-flex items-center gap-1.5">
                           <span className="font-semibold text-emerald-700 text-xs">
                             {taxa}%

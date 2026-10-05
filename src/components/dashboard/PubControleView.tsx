@@ -428,124 +428,104 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-3.5 w-24">Mês</th>
-                <th className="py-3 px-3.5 min-w-[280px]">Título da Publicação</th>
-                <th className="py-3 px-3.5 w-36">Classificação</th>
-                <th className="py-3 px-3.5 w-44">Área Principal</th>
-                <th className="py-3 px-3.5 w-36">Área Secundária</th>
-                <th className="py-3 px-3.5 w-36">UN</th>
-                <th className="py-3 px-3.5 min-w-[200px]">Autor(es)</th>
-                <th className="py-3 px-3.5 text-center w-24">Link</th>
-                <th className="py-3 px-3.5 text-center w-24">Views</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {displayRecords.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-gray-400">
-                    Nenhuma publicação encontrada para os filtros selecionados.
-                  </td>
-                </tr>
-              ) : (
-                displayRecords.map((item, idx) => {
-                  const badge = CLASSIFICACAO_BADGES[item.classificacao] || {
-                    bg: 'bg-gray-100',
-                    text: 'text-gray-700',
-                    border: 'border-gray-200'
-                  };
-                  const hasLink = item.link && (item.link.startsWith('http://') || item.link.startsWith('https://'));
+        {/* Lista com Rolagem Interna (Padrão de cards do dashboard) */}
+        <div className="p-4 sm:p-5">
+          {displayRecords.length === 0 ? (
+            <div className="py-12 text-center text-gray-400">
+              <p className="text-sm">Nenhuma publicação encontrada para os filtros selecionados.</p>
+            </div>
+          ) : (
+            <div
+              className="space-y-2 overflow-y-auto pr-1.5 scrollbar-thin"
+              style={{ height: '712px' }}
+            >
+              {displayRecords.map((item, idx) => {
+                const badge = CLASSIFICACAO_BADGES[item.classificacao] || {
+                  bg: 'bg-gray-100',
+                  text: 'text-gray-700',
+                  border: 'border-gray-200'
+                };
+                const hasLink = item.link && (item.link.startsWith('http://') || item.link.startsWith('https://'));
 
-                  return (
-                    <tr
-                      key={`${item.titulo}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
-                    >
-                      {/* Mês */}
-                      <td className="py-3 px-3.5 font-semibold text-gray-700 whitespace-nowrap text-xs">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-medium">
+                return (
+                  <div
+                    key={`${item.titulo}-${idx}`}
+                    className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors flex flex-col justify-between h-[64px]"
+                  >
+                    {/* Linha 1: Número, Mês, Classificação, Título e Métricas/Link */}
+                    <div className="flex items-center justify-between gap-2 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-5 h-5 rounded-md bg-white border border-gray-200 flex items-center justify-center font-bold text-[10px] text-gray-600 flex-shrink-0">
+                          {idx + 1}
+                        </span>
+                        <span className="text-[11px] font-semibold text-gray-700 bg-white border border-gray-200 px-1.5 py-0.5 rounded flex-shrink-0">
                           {item.mes}
                         </span>
-                      </td>
-
-                      {/* Título */}
-                      <td className="py-3 px-3.5 font-medium text-gray-900 leading-snug">
-                        {item.titulo}
-                      </td>
-
-                      {/* Classificação */}
-                      <td className="py-3 px-3.5 whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}
+                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border flex-shrink-0 ${badge.bg} ${badge.text} ${badge.border}`}
                         >
                           {item.classificacao}
                         </span>
-                      </td>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm truncate" title={item.titulo}>
+                          {item.titulo}
+                        </span>
+                      </div>
 
-                      {/* Área Principal */}
-                      <td className="py-3 px-3.5 font-semibold text-gray-800 text-xs">
-                        {item.area_principal || '—'}
-                      </td>
-
-                      {/* Área Secundária */}
-                      <td className="py-3 px-3.5 text-gray-500 text-xs">
-                        {item.area_secundaria || '—'}
-                      </td>
-
-                      {/* UN */}
-                      <td className="py-3 px-3.5 whitespace-nowrap">
-                        {item.un ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
-                            {item.un}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {item.views !== null && (
+                          <span className="font-bold text-emerald-800 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded text-[11px] whitespace-nowrap flex items-center gap-1">
+                            <Eye size={12} className="text-emerald-600" />
+                            {item.views.toLocaleString('pt-BR')} views
                           </span>
-                        ) : (
-                          <span className="text-gray-300">—</span>
                         )}
-                      </td>
-
-                      {/* Autores */}
-                      <td className="py-3 px-3.5 text-gray-700 text-xs leading-relaxed">
-                        {item.autores || '—'}
-                      </td>
-
-                      {/* Link */}
-                      <td className="py-3 px-3.5 text-center whitespace-nowrap">
-                        {hasLink ? (
+                        {hasLink && (
                           <a
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-brand-blue hover:underline font-semibold"
-                            title="Acessar publicação no LinkedIn ou portal"
+                            className="inline-flex items-center gap-1 text-[11px] text-brand-blue hover:underline font-semibold bg-white border border-blue-200 px-2 py-0.5 rounded flex-shrink-0"
+                            title="Acessar publicação"
                           >
                             <span>Link</span>
-                            <ExternalLink size={12} />
+                            <ExternalLink size={11} />
                           </a>
-                        ) : (
-                          <span className="text-gray-300">—</span>
                         )}
-                      </td>
+                      </div>
+                    </div>
 
-                      {/* Views */}
-                      <td className="py-3 px-3.5 text-center whitespace-nowrap font-mono text-xs">
-                        {item.views !== null ? (
-                          <span className="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
-                            {item.views.toLocaleString('pt-BR')}
+                    {/* Linha 2: Metadados (Área Principal, Secundária, UN, Autores) */}
+                    <div className="flex items-center gap-2 text-[11px] text-gray-500 pl-7 truncate">
+                      <span className="font-medium text-gray-700">
+                        Área: <strong>{item.area_principal || '—'}</strong>
+                      </span>
+                      {item.area_secundaria && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span>Secundária: {item.area_secundaria}</span>
+                        </>
+                      )}
+                      {item.un && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="bg-slate-100 text-slate-700 px-1.5 py-0.2 rounded text-[10px] font-medium border border-slate-200">
+                            {item.un}
                           </span>
-                        ) : (
-                          <span className="text-gray-400 font-sans">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                        </>
+                      )}
+                      {item.autores && (
+                        <>
+                          <span className="text-gray-300">•</span>
+                          <span className="text-gray-500 truncate">
+                            Autor(es): {item.autores}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Rodapé da Tabela */}

@@ -50,3 +50,5 @@ export const pubCapitalAbertoData: CapitalAbertoRegistro[] = [
     views_site_ca: null
   }
 ];
+
+export const pubCapitalData = pubCapitalAbertoData;

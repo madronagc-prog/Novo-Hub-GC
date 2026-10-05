@@ -379,17 +379,17 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna (10 linhas completas) */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-4 w-12 text-center">#</th>
-                <th className="py-3 px-4 w-32">Mês</th>
-                <th className="py-3 px-4 min-w-[200px]">Identificação da Sessão</th>
-                <th className="py-3 px-4 text-center w-40 font-bold text-emerald-800">Participantes Presentes</th>
-                <th className="py-3 px-4 text-center w-40 font-bold text-blue-900">Convidados Convocados</th>
-                <th className="py-3 px-4 text-center w-36">Taxa de Adesão</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[40px] text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-4 w-12 text-center">#</th>
+                <th className="py-2.5 px-4 w-32">Mês</th>
+                <th className="py-2.5 px-4 min-w-[200px]">Identificação da Sessão</th>
+                <th className="py-2.5 px-4 text-center w-40 font-bold text-emerald-800">Participantes Presentes</th>
+                <th className="py-2.5 px-4 text-center w-40 font-bold text-blue-900">Convidados Convocados</th>
+                <th className="py-2.5 px-4 text-center w-36">Taxa de Adesão</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -409,22 +409,22 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
                   return (
                     <tr
                       key={`${item.mes}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
+                      className="hover:bg-blue-50/20 transition-colors h-[44px]"
                     >
                       {/* Numeração */}
-                      <td className="py-3.5 px-4 text-center text-gray-400 text-xs">
+                      <td className="py-2.5 px-4 text-center text-gray-400 text-xs">
                         {idx + 1}
                       </td>
 
                       {/* Mês */}
-                      <td className="py-3.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
+                      <td className="py-2.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-semibold">
                           {item.mes}
                         </span>
                       </td>
 
                       {/* Sessão */}
-                      <td className="py-3.5 px-4 font-medium text-gray-900 whitespace-nowrap">
+                      <td className="py-2.5 px-4 font-medium text-gray-900 whitespace-nowrap">
                         <span className="inline-flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-brand-blue"></span>
                           <span>Treinamento e Capacitação iM (Turma {idx + 1})</span>
@@ -432,7 +432,7 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
                       </td>
 
                       {/* Participantes */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap">
                         {hasData ? (
                           <span className="font-serif font-bold text-emerald-700 text-sm bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
                             {item.participantes} {item.participantes === 1 ? 'participante' : 'participantes'}
@@ -445,14 +445,14 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
                       </td>
 
                       {/* Convidados */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap">
                         <span className="font-serif font-bold text-blue-900 text-sm bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
                           {item.convidados} {item.convidados === 1 ? 'convidado' : 'convidados'}
                         </span>
                       </td>
 
                       {/* Taxa de Adesão */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap">
                         {taxaAdesao !== null ? (
                           <span className="text-xs font-semibold text-gray-800 bg-gray-100 px-2 py-0.5 rounded font-mono">
                             {taxaAdesao}%

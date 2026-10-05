@@ -498,17 +498,17 @@ export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna (5 linhas completas) */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '260px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-4 w-12 text-center">#</th>
-                <th className="py-3 px-4 w-28">Mês</th>
-                <th className="py-3 px-4 min-w-[340px]">Tema da Edição</th>
-                <th className="py-3 px-4 text-center w-36 font-bold text-brand-navy">Taxa de Abertura</th>
-                <th className="py-3 px-4 text-center w-36 font-semibold text-emerald-800">Taxa de Cliques</th>
-                <th className="py-3 px-4 text-center w-36 font-semibold text-purple-900">Views no Site</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[40px] text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-4 w-12 text-center">#</th>
+                <th className="py-2.5 px-4 w-28">Mês</th>
+                <th className="py-2.5 px-4 min-w-[340px]">Tema da Edição</th>
+                <th className="py-2.5 px-4 text-center w-36 font-bold text-brand-navy">Taxa de Abertura</th>
+                <th className="py-2.5 px-4 text-center w-36 font-semibold text-emerald-800">Taxa de Cliques</th>
+                <th className="py-2.5 px-4 text-center w-36 font-semibold text-purple-900">Views no Site</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -523,41 +523,41 @@ export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
                   return (
                     <tr
                       key={`${item.tema}-${item.mes}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
+                      className="hover:bg-blue-50/20 transition-colors h-[44px]"
                     >
                       {/* Numeração */}
-                      <td className="py-3.5 px-4 text-center text-gray-400 text-xs">
+                      <td className="py-2.5 px-4 text-center text-gray-400 text-xs">
                         {idx + 1}
                       </td>
 
                       {/* Mês */}
-                      <td className="py-3.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
+                      <td className="py-2.5 px-4 font-semibold text-gray-700 whitespace-nowrap text-xs">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-xs font-medium">
                           {item.mes}
                         </span>
                       </td>
 
                       {/* Tema */}
-                      <td className="py-3.5 px-4 font-medium text-gray-900 leading-snug">
+                      <td className="py-2.5 px-4 font-medium text-gray-900 leading-snug">
                         {item.tema}
                       </td>
 
                       {/* Taxa de Abertura */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap font-serif font-bold text-brand-navy text-sm">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap font-serif font-bold text-brand-navy text-sm">
                         <span className="bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100">
                           {item.taxa_abertura.toFixed(2).replace('.', ',')}%
                         </span>
                       </td>
 
                       {/* Taxa de Cliques */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap font-serif font-bold text-emerald-800 text-sm">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap font-serif font-bold text-emerald-800 text-sm">
                         <span className="bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
                           {item.taxa_cliques.toFixed(2).replace('.', ',')}%
                         </span>
                       </td>
 
                       {/* Views no Site */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap font-serif font-bold text-purple-900 text-sm">
+                      <td className="py-2.5 px-4 text-center whitespace-nowrap font-serif font-bold text-purple-900 text-sm">
                         <span className="bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
                           {item.views_site.toLocaleString('pt-BR')}
                         </span>

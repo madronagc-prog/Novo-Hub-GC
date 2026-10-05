@@ -374,19 +374,19 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '560px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-3.5 w-24">Edição</th>
-                <th className="py-3 px-3.5 w-24">Mês</th>
-                <th className="py-3 px-3.5 min-w-[260px]">Tema do Artigo</th>
-                <th className="py-3 px-3.5 w-44">UN / Área</th>
-                <th className="py-3 px-3.5 w-44">Autor(es)</th>
-                <th className="py-3 px-3.5 text-center w-28">Taxa Abertura</th>
-                <th className="py-3 px-3.5 text-center w-28">Views Site</th>
-                <th className="py-3 px-3.5 text-center w-28">Link</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[40px] text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-3.5 w-24">Edição</th>
+                <th className="py-2.5 px-3.5 w-24">Mês</th>
+                <th className="py-2.5 px-3.5 min-w-[260px]">Tema do Artigo</th>
+                <th className="py-2.5 px-3.5 w-44">UN / Área</th>
+                <th className="py-2.5 px-3.5 w-44">Autor(es)</th>
+                <th className="py-2.5 px-3.5 text-center w-28">Taxa Abertura</th>
+                <th className="py-2.5 px-3.5 text-center w-28">Views Site</th>
+                <th className="py-2.5 px-3.5 text-center w-28">Link</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -408,10 +408,10 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
                   return (
                     <tr
                       key={`${item.tema}-${idx}`}
-                      className="hover:bg-blue-50/20 transition-colors"
+                      className="hover:bg-blue-50/20 transition-colors h-[52px]"
                     >
                       {/* Edição */}
-                      <td className="py-3.5 px-3.5 whitespace-nowrap">
+                      <td className="py-2 px-3.5 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold border ${badge.bg} ${badge.text} ${badge.border}`}
                         >
@@ -420,24 +420,24 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
                       </td>
 
                       {/* Mês */}
-                      <td className="py-3.5 px-3.5 font-semibold text-gray-700 whitespace-nowrap text-xs">
+                      <td className="py-2 px-3.5 font-semibold text-gray-700 whitespace-nowrap text-xs">
                         {item.mes}
                       </td>
 
                       {/* Tema do Artigo */}
-                      <td className="py-3.5 px-3.5 font-medium text-gray-900 leading-snug">
+                      <td className="py-2 px-3.5 font-medium text-gray-900 leading-snug">
                         {item.tema}
                       </td>
 
                       {/* UN */}
-                      <td className="py-3.5 px-3.5 whitespace-nowrap">
+                      <td className="py-2 px-3.5 whitespace-nowrap">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
                           {item.un}
                         </span>
                       </td>
 
                       {/* Autores */}
-                      <td className="py-3.5 px-3.5 text-gray-700 text-xs">
+                      <td className="py-2 px-3.5 text-gray-700 text-xs">
                         <div className="font-semibold text-gray-900">{item.autor1}</div>
                         {item.autor2 && (
                           <div className="text-[11px] text-gray-500 mt-0.5">+ {item.autor2}</div>
@@ -445,7 +445,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
                       </td>
 
                       {/* Taxa de Abertura */}
-                      <td className="py-3.5 px-3.5 text-center whitespace-nowrap font-serif font-bold text-gray-900">
+                      <td className="py-2 px-3.5 text-center whitespace-nowrap font-serif font-bold text-gray-900">
                         {item.taxa_abertura !== null ? (
                           <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md text-xs border border-emerald-100">
                             {item.taxa_abertura}%
@@ -456,7 +456,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
                       </td>
 
                       {/* Views no Site */}
-                      <td className="py-3.5 px-3.5 text-center whitespace-nowrap font-mono text-xs">
+                      <td className="py-2 px-3.5 text-center whitespace-nowrap font-mono text-xs">
                         {item.views_no_site !== null ? (
                           <span className="font-bold text-gray-800">
                             {item.views_no_site}
@@ -467,7 +467,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
                       </td>
 
                       {/* Link */}
-                      <td className="py-3.5 px-3.5 text-center whitespace-nowrap">
+                      <td className="py-2 px-3.5 text-center whitespace-nowrap">
                         {hasLink ? (
                           <a
                             href={item.link}

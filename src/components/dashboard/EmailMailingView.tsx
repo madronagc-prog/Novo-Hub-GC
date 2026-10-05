@@ -374,49 +374,55 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {rankingAreas.map((item, index) => {
-            const hasData = item.inscritos !== null;
-            const valor = item.inscritos || 0;
-            const barWidth = hasData && maxInscritosArea > 0 ? (valor / maxInscritosArea) * 100 : 0;
+        {/* Ranking com Rolagem Interna (5 linhas completas) */}
+        <div
+          className="overflow-y-auto pr-1.5 scrollbar-thin"
+          style={{ height: '328px' }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {rankingAreas.map((item, index) => {
+              const hasData = item.inscritos !== null;
+              const valor = item.inscritos || 0;
+              const barWidth = hasData && maxInscritosArea > 0 ? (valor / maxInscritosArea) * 100 : 0;
 
-            return (
-              <div
-                key={item.area}
-                className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors"
-              >
-                <div className="flex items-center justify-between text-xs mb-1.5 gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-[11px] font-bold text-gray-400 w-5">
-                      #{index + 1}
-                    </span>
-                    <span className="font-semibold text-gray-900 truncate">
-                      {item.area}
-                    </span>
+              return (
+                <div
+                  key={item.area}
+                  className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors h-[56px] flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between text-xs mb-1.5 gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[11px] font-bold text-gray-400 w-5">
+                        #{index + 1}
+                      </span>
+                      <span className="font-semibold text-gray-900 truncate">
+                        {item.area}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {hasData ? (
+                        <span className="font-serif font-bold text-gray-900 text-sm">
+                          {valor.toLocaleString('pt-BR')}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-gray-400 italic">
+                          Dados a carregar
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {hasData ? (
-                      <span className="font-serif font-bold text-gray-900 text-sm">
-                        {valor.toLocaleString('pt-BR')}
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-gray-400 italic">
-                        Dados a carregar
-                      </span>
-                    )}
+                  <div className="w-full bg-gray-200/80 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-brand-blue to-purple-600 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${barWidth}%` }}
+                    ></div>
                   </div>
                 </div>
-
-                <div className="w-full bg-gray-200/80 rounded-full h-2 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-brand-blue to-purple-600 h-full rounded-full transition-all duration-500"
-                    style={{ width: `${barWidth}%` }}
-                  ></div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -466,18 +472,18 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna (5 linhas completas) */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '238px' }}>
           <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-3.5 min-w-[200px] sticky left-0 bg-gray-50/95 backdrop-blur-xs z-10 shadow-r">
+            <thead className="sticky top-0 z-20 bg-gray-50/95 border-b border-gray-200/80">
+              <tr className="h-[38px] text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-3.5 min-w-[200px] sticky left-0 bg-gray-50 z-30 shadow-r">
                   Segmento / Área
                 </th>
                 {MESES_COLUNAS.map((col) => (
                   <th
                     key={col.key}
-                    className={`py-3 px-2.5 text-center whitespace-nowrap ${
+                    className={`py-2.5 px-2.5 text-center whitespace-nowrap ${
                       col.key === mesAtivoKey ? 'bg-blue-100/60 text-brand-blue font-bold' : ''
                     }`}
                   >
@@ -493,7 +499,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
                 return (
                   <tr
                     key={item.area}
-                    className={`transition-colors ${
+                    className={`transition-colors h-[40px] ${
                       isTotalGeral
                         ? 'bg-blue-50/70 font-bold border-y-2 border-brand-blue/30 text-brand-navy'
                         : 'hover:bg-blue-50/20'
@@ -501,8 +507,8 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
                   >
                     {/* Nome da Área */}
                     <td
-                      className={`py-3 px-3.5 whitespace-nowrap sticky left-0 z-10 shadow-r ${
-                        isTotalGeral ? 'bg-blue-50/90 font-bold text-brand-navy text-sm' : 'bg-white font-medium text-gray-900'
+                      className={`py-2.5 px-3.5 whitespace-nowrap sticky left-0 z-10 shadow-r ${
+                        isTotalGeral ? 'bg-blue-50 font-bold text-brand-navy text-sm' : 'bg-white font-medium text-gray-900'
                       }`}
                     >
                       <div className="flex items-center gap-2">
@@ -525,7 +531,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
                       return (
                         <td
                           key={col.key}
-                          className={`py-3 px-2.5 text-center whitespace-nowrap ${
+                          className={`py-2 px-2.5 text-center whitespace-nowrap ${
                             isAtivo ? 'bg-blue-50/40 font-semibold' : ''
                           }`}
                         >

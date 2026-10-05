@@ -225,15 +225,18 @@ export default function PubUnsNumerosView() {
           </div>
         </div>
 
-        {/* Barras Empilhadas por Área */}
-        <div className="space-y-3.5">
+        {/* Barras Empilhadas por Área com Rolagem Interna */}
+        <div
+          className="space-y-3 overflow-y-auto pr-1.5 scrollbar-thin"
+          style={{ height: '348px' }}
+        >
           {rankingAreas.map((item) => {
             const barWidthPercent = (item.total / maxTotalArea) * 100;
 
             return (
               <div
                 key={item.area}
-                className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors"
+                className="bg-gray-50/70 p-3 rounded-xl border border-gray-200/60 hover:bg-gray-100/70 transition-colors h-[60px] flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between text-xs mb-1.5 gap-2">
                   <span className="font-semibold text-gray-900 truncate">
@@ -388,23 +391,23 @@ export default function PubUnsNumerosView() {
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '418px' }}>
           <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-                <th className="py-3 px-3 w-10 text-center">#</th>
-                <th className="py-3 px-3.5 min-w-[200px]">Área / UN</th>
-                <th className="py-3 px-2.5 text-center">Madrona Lab</th>
-                <th className="py-3 px-2.5 text-center">Energy News</th>
-                <th className="py-3 px-2.5 text-center">Imprensa</th>
-                <th className="py-3 px-2.5 text-center">Imp. Inglês</th>
-                <th className="py-3 px-2.5 text-center">Radar Trib.</th>
-                <th className="py-3 px-2.5 text-center">Tema Frio</th>
-                <th className="py-3 px-2.5 text-center">Art. Inglês</th>
-                <th className="py-3 px-2.5 text-center">Webinars</th>
-                <th className="py-3 px-2.5 text-center">Jornal Int.</th>
-                <th className="py-3 px-3 text-center font-bold text-gray-900 bg-gray-100/70">Total</th>
+            <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200/80">
+              <tr className="h-[38px] text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="py-2.5 px-3 w-10 text-center">#</th>
+                <th className="py-2.5 px-3.5 min-w-[200px]">Área / UN</th>
+                <th className="py-2.5 px-2.5 text-center">Madrona Lab</th>
+                <th className="py-2.5 px-2.5 text-center">Energy News</th>
+                <th className="py-2.5 px-2.5 text-center">Imprensa</th>
+                <th className="py-2.5 px-2.5 text-center">Imp. Inglês</th>
+                <th className="py-2.5 px-2.5 text-center">Radar Trib.</th>
+                <th className="py-2.5 px-2.5 text-center">Tema Frio</th>
+                <th className="py-2.5 px-2.5 text-center">Art. Inglês</th>
+                <th className="py-2.5 px-2.5 text-center">Webinars</th>
+                <th className="py-2.5 px-2.5 text-center">Jornal Int.</th>
+                <th className="py-2.5 px-3 text-center font-bold text-gray-900 bg-gray-100/70">Total</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -412,7 +415,7 @@ export default function PubUnsNumerosView() {
                 return (
                   <tr
                     key={item.area}
-                    className="hover:bg-blue-50/20 transition-colors"
+                    className="hover:bg-blue-50/20 transition-colors h-[38px]"
                   >
                     <td className="py-2.5 px-3 text-center text-gray-400 text-xs">
                       {idx + 1}
@@ -468,19 +471,19 @@ export default function PubUnsNumerosView() {
 
             {/* Linha de Total Geral no Rodapé da Tabela */}
             <tfoot>
-              <tr className="border-t-2 border-gray-300 bg-blue-900 text-white font-bold">
-                <td className="py-3 px-3 text-center text-blue-200">Σ</td>
-                <td className="py-3 px-3.5 uppercase tracking-wider text-xs">Total Geral</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.art_madrona_lab}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.energy_news}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.imprensa}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.imprensa_ingles}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.radar_tributario}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.tema_frio}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.art_ingles}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.webinars}</td>
-                <td className="py-3 px-2.5 text-center font-mono">{registroTotalGeral.jornal_int}</td>
-                <td className="py-3 px-3 text-center font-serif text-emerald-300 text-sm bg-blue-950">
+              <tr className="border-t-2 border-gray-300 bg-blue-900 text-white font-bold h-[38px]">
+                <td className="py-2.5 px-3 text-center text-blue-200">Σ</td>
+                <td className="py-2.5 px-3.5 uppercase tracking-wider text-xs">Total Geral</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.art_madrona_lab}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.energy_news}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.imprensa}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.imprensa_ingles}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.radar_tributario}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.tema_frio}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.art_ingles}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.webinars}</td>
+                <td className="py-2.5 px-2.5 text-center font-mono">{registroTotalGeral.jornal_int}</td>
+                <td className="py-2.5 px-3 text-center font-serif text-emerald-300 text-sm bg-blue-950">
                   {registroTotalGeral.total}
                 </td>
               </tr>

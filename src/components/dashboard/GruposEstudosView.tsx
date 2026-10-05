@@ -357,7 +357,11 @@ export default function GruposEstudosView({ selectedMonth }: GruposEstudosViewPr
             <span className="text-gray-400 font-normal">Meta média de presença: ~70%</span>
           </div>
 
-          <div className="space-y-3">
+          {/* Barras com Rolagem Interna (5 linhas completas) */}
+          <div
+            className="space-y-3 overflow-y-auto pr-1.5 scrollbar-thin"
+            style={{ height: '428px' }}
+          >
             {chartPoints
               .filter((p) => p.tax !== null || p.corp !== null)
               .map((p) => (
