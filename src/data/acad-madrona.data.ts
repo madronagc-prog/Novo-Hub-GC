@@ -192,6 +192,6 @@ export const acadMadronaData: AcadMadronaRegistro[] = [
     participantes: 86,
     convidados: 230
   }
-  {mes: "Setembro", titulo: "Governança e Gestão de IA", pilar: "Madrona Lab", apresentado_por: "Ione e Clarissa", participantes: 89, convidados: 230},
-  {mes: "Setembro", titulo: "Resultados SAGA", pilar: "Madrona Lab", apresentado_por: "Ione, Filipi, Caio, Amanda Figueirôa, Murilo Arrais", participantes: 79, convidados: 230},
+  { mes: "Setembro", titulo: "Governança e Gestão de IA", pilar: "Madrona Lab", apresentado_por: "Ione e Clarissa", participantes: 89, convidados: 230 },
+  { mes: "Setembro", titulo: "Resultados SAGA", pilar: "Madrona Lab", apresentado_por: "Ione, Filipi, Caio, Amanda Figueirôa, Murilo Arrais", participantes: 79, convidados: 230 },
 ];
