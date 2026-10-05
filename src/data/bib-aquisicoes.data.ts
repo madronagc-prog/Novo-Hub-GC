@@ -132,7 +132,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "O mercado de special situations",
     un_an: "UN Corporativo",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 164.98,
     localidade: "SP"
   },
@@ -140,7 +140,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "Formação econômica do Brasil",
     un_an: "UN Tributário",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 65.03,
     localidade: "SP"
   },
@@ -148,7 +148,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "Formação econômica do Brasil",
     un_an: "UN Tributário",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 65.03,
     localidade: "BH"
   },
@@ -156,7 +156,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "Processo societário v. 5",
     un_an: "UN Corporativo",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 262.00,
     localidade: "SP"
   },
@@ -164,7 +164,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "O direito de fiscalização dos acionistas",
     un_an: "UN Corporativo",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 186.00,
     localidade: "SP"
   },
@@ -172,7 +172,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "Processo societário v. 4",
     un_an: "UN Corporativo",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 308.00,
     localidade: "SP"
   },
@@ -180,7 +180,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     mes: "Agosto",
     titulo: "CNRD - Dos Regulamentos do Futebol à Lei de Arbitragem (2026)",
     un_an: "AN Sportainment e Entretenimento",
-    tipo: "",
+    tipo: "Livro físico",
     valor: 89.90,
     localidade: "SP"
   },
@@ -189,7 +189,7 @@ export const bibAquisicoesData: AquisicoesRegistro[] = [
     titulo: "Direito Publicitário - Comentários ao Código Brasileiro de Autorregulamentação Publicitária (CBAP) e sua recente jurisprudência",
     un_an: "UN Digital, Comex e PI",
     tipo: "Livro físico",
-    valor: 227,
+    valor: 227.00
     localidade: "SP"
   },
 ];
