@@ -500,7 +500,7 @@ export default function LexJurisView({ selectedMonth }: LexJurisViewProps) {
         </div>
 
         {/* Tabela de Dados com Rolagem Interna */}
-        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '238px' }}>
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '560px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead className="sticky top-0 z-10 bg-gray-50/70 border-b border-gray-200/80 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
               <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
