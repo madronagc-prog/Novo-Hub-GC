@@ -29,8 +29,29 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
     return emailMailingData.find((d) => d.area !== 'Todos' && normalizarUN(d.area) === selectedUn);
   }, [isAllUns, selectedUn]);
 
-  // Total de inscritos no mês mais recente disponível (Agosto)
-  const totalInscritosAgosto = todosRow?.agosto || 0;
+  // Último mês com dado apurado na linha ativa (calculado a partir da base, não fixo no código)
+  const MESES_COLUNAS = [
+    { key: 'janeiro', label: 'Janeiro' }, { key: 'fevereiro', label: 'Fevereiro' },
+    { key: 'marco', label: 'Março' }, { key: 'abril', label: 'Abril' },
+    { key: 'maio', label: 'Maio' }, { key: 'junho', label: 'Junho' },
+    { key: 'julho', label: 'Julho' }, { key: 'agosto', label: 'Agosto' },
+    { key: 'setembro', label: 'Setembro' }, { key: 'outubro', label: 'Outubro' },
+    { key: 'novembro', label: 'Novembro' }, { key: 'dezembro', label: 'Dezembro' }
+  ] as const;
+
+  const ultimoMesApurado = useMemo(() => {
+    if (!todosRow) return MESES_COLUNAS[0];
+    let ultimo = MESES_COLUNAS[0];
+    MESES_COLUNAS.forEach((col) => {
+      if ((todosRow as any)[col.key] !== null && (todosRow as any)[col.key] !== undefined) {
+        ultimo = col;
+      }
+    });
+    return ultimo;
+  }, [todosRow]);
+
+  // Total de inscritos no mês mais recente disponível (calculado, não fixo)
+  const totalInscritosAgosto = todosRow ? ((todosRow as any)[ultimoMesApurado.key] || 0) : 0;
 
   // 2. Edições do Jornal B&F (respeitando o filtro de UN, já que essa base tem campo "un")
   const contribuicoesFiltradas = useMemo(() => {
@@ -54,7 +75,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
     return (sum / valid.length).toFixed(2);
   }, []);
 
-  // 5. Evolução mensal de inscritos (Janeiro a Agosto)
+  // 5. Evolução mensal de inscritos (Janeiro a Dezembro; meses sem dado ainda ficam de fora, não travam no mais recente apurado)
   const mesesEvolucaoMailing = useMemo(() => {
     const meses = [
       { mes: 'Janeiro', valor: todosRow?.janeiro },
@@ -64,7 +85,11 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
       { mes: 'Maio', valor: todosRow?.maio },
       { mes: 'Junho', valor: todosRow?.junho },
       { mes: 'Julho', valor: todosRow?.julho },
-      { mes: 'Agosto', valor: todosRow?.agosto }
+      { mes: 'Agosto', valor: todosRow?.agosto },
+      { mes: 'Setembro', valor: todosRow?.setembro },
+      { mes: 'Outubro', valor: todosRow?.outubro },
+      { mes: 'Novembro', valor: todosRow?.novembro },
+      { mes: 'Dezembro', valor: todosRow?.dezembro }
     ];
 
     // Exclui meses nulos
@@ -154,7 +179,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
               {totalInscritosAgosto.toLocaleString('pt-BR')}
             </div>
             <div className="text-[11px] text-gray-500 mt-0.5 truncate">
-              {isAllUns ? 'dado de Agosto • linha Todos' : 'dado de Agosto'} (+{crescimentoInscritos.toLocaleString('pt-BR')} no ano)
+              {isAllUns ? `dado de ${ultimoMesApurado.label} • linha Todos` : `dado de ${ultimoMesApurado.label}`} (+{crescimentoInscritos.toLocaleString('pt-BR')} no ano)
             </div>
           </div>
         </div>
@@ -218,7 +243,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
       {/* 2. GRÁFICOS ANALÍTICOS (EVOLUÇÃO DE INSCRITOS + TAXA DE ABERTURA)     */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gráfico 1: Evolução Mensal de Inscritos (Janeiro a Agosto) */}
+        {/* Gráfico 1: Evolução Mensal de Inscritos (Janeiro a Dezembro) */}
         <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
@@ -228,7 +253,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
                   <span>Evolução de Inscritos no Mailing</span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Crescimento da base geral de contatos ativos (Janeiro a Agosto)
+                  Crescimento da base geral de contatos ativos (Janeiro a Dezembro)
                 </p>
               </div>
 
@@ -237,8 +262,8 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
               </span>
             </div>
 
-            {/* Grid dos 8 meses de Janeiro a Agosto */}
-            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 my-4">
+            {/* Grid em linhas de 6 meses */}
+            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2.5 my-4">
               {mesesEvolucaoMailing.map((item) => {
                 const isSelected = selectedMonth === item.mes;
                 const heightPct = Math.max(
@@ -287,7 +312,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', s
           </div>
 
           <div className="p-3 bg-gray-50 rounded-xl border border-gray-200/60 text-xs text-gray-600 flex items-center justify-between">
-            <span>Meses monitorados: <strong>Janeiro a Agosto/2026</strong></span>
+            <span>Meses monitorados: <strong>Janeiro a Dezembro/2026</strong></span>
             <span className="text-brand-navy font-semibold">
               Taxa de crescimento: +{((crescimentoInscritos / (minInscritos || 1)) * 100).toFixed(1)}%
             </span>
