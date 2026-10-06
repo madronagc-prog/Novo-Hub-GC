@@ -56,10 +56,12 @@ const MES_PROP_MAP: Record<string, keyof Omit<MailingRegistro, 'area'>> = {
 
 interface EmailMailingViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function EmailMailingView({ selectedMonth }: EmailMailingViewProps) {
+export default function EmailMailingView({ selectedMonth, selectedUn }: EmailMailingViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const isAllUns = selectedUn === 'Todas as UNs';
 
   // Identificar registro de "Todos" (Mailing Geral desduplicado)
   const registroTodos = useMemo(() => {
@@ -68,8 +70,17 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
 
   // Registros setoriais (excluindo a linha agregadora "Todos")
   const registrosSetoriais = useMemo(() => {
-    return emailMailingData.filter((d) => d.area !== 'Todos');
-  }, []);
+    const todos = emailMailingData.filter((d) => d.area !== 'Todos');
+    if (isAllUns) return todos;
+    return todos.filter((d) => normalizarUN(d.area) === selectedUn);
+  }, [isAllUns, selectedUn]);
+
+  // Linha usada nos cards/gráfico do topo: a UN selecionada (quando houver match) ou a linha "Todos"
+  const linhaAtiva = useMemo(() => {
+    if (isAllUns) return registroTodos;
+    const match = emailMailingData.find((d) => d.area !== 'Todos' && normalizarUN(d.area) === selectedUn);
+    return match || null;
+  }, [isAllUns, selectedUn, registroTodos]);
 
   // Mês de referência atual (se selecionado, ou 'Agosto' como padrão do mês mais recente)
   const mesAtivoKey: keyof Omit<MailingRegistro, 'area'> = useMemo(() => {
@@ -86,10 +97,10 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
     return 'Agosto (mais recente)';
   }, [selectedMonth]);
 
-  // Totais principais
-  const totalInscritosAtivo = registroTodos ? registroTodos[mesAtivoKey] : null;
-  const totalJan = registroTodos?.janeiro ?? 18538;
-  const totalAgo = registroTodos?.agosto ?? 20389;
+  // Totais principais (seguem a linha ativa: "Todos" ou a UN selecionada)
+  const totalInscritosAtivo = linhaAtiva ? linhaAtiva[mesAtivoKey] : null;
+  const totalJan = linhaAtiva?.janeiro ?? 0;
+  const totalAgo = linhaAtiva?.agosto ?? 0;
 
   // Variação absoluta e percentual Jan -> Ago
   const variacaoAbsolutaJanAgo = totalAgo - totalJan;
@@ -109,11 +120,11 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
       agosto: 'Ago'
     };
 
-    if (!registroTodos) return [];
+    if (!linhaAtiva) return [];
 
     return mesesApurados.map((mKey, idx) => {
-      const valor = (registroTodos[mKey] as number) || 0;
-      const valorAnterior = idx > 0 ? (registroTodos[mesesApurados[idx - 1]] as number) || valor : valor;
+      const valor = (linhaAtiva[mKey] as number) || 0;
+      const valorAnterior = idx > 0 ? (linhaAtiva[mesesApurados[idx - 1]] as number) || valor : valor;
       const diff = valor - valorAnterior;
       const diffPct = valorAnterior > 0 ? ((diff / valorAnterior) * 100).toFixed(1) : '0';
 
@@ -126,7 +137,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
         diffPct
       };
     });
-  }, [registroTodos]);
+  }, [linhaAtiva]);
 
   const minEvolucao = Math.min(...evolucaoGeral.map((e) => e.valor), 18000);
   const maxEvolucao = Math.max(...evolucaoGeral.map((e) => e.valor), 21000);
@@ -152,9 +163,13 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
   const maiorArea = rankingAreas[0] || null;
   const maxInscritosArea = maiorArea?.inscritos || 1;
 
-  // Filtragem da tabela geral
+  // Filtragem da tabela geral (busca + UN; a linha "Todos" sempre aparece como referência)
   const displayTableData = useMemo(() => {
-    return emailMailingData.filter((d) => {
+    let base = emailMailingData;
+    if (!isAllUns) {
+      base = base.filter((d) => d.area === 'Todos' || normalizarUN(d.area) === selectedUn);
+    }
+    return base.filter((d) => {
       if (!searchTerm.trim()) return true;
       const term = searchTerm.toLowerCase();
       return (
@@ -162,7 +177,7 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
         normalizarUN(d.area).toLowerCase().includes(term)
       );
     });
-  }, [searchTerm]);
+  }, [searchTerm, isAllUns, selectedUn]);
 
   // Exportar Excel
   const handleExportExcel = () => {
@@ -202,13 +217,13 @@ export default function EmailMailingView({ selectedMonth }: EmailMailingViewProp
           </div>
           <div>
             <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-              Total Geral de Inscritos
+              {isAllUns ? 'Total Geral de Inscritos' : `Inscritos — ${selectedUn}`}
             </div>
             <div className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 mt-0.5">
               {totalInscritosAtivo !== null ? totalInscritosAtivo.toLocaleString('pt-BR') : 'Dados a carregar'}
             </div>
             <div className="text-[11px] text-gray-500 mt-0.5">
-              Base desduplicada ({mesAtivoLabel})
+              {isAllUns ? 'Base desduplicada' : 'Lista do segmento'} ({mesAtivoLabel})
             </div>
           </div>
         </div>
