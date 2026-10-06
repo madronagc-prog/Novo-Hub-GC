@@ -106,8 +106,13 @@ export function getStatusBadge(rawStatus: string | undefined | null) {
 
 interface PubCapitalViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
+// Observação: a base de Capital Aberto não tem um campo de UN padronizado
+// (o campo "areas" é texto livre, às vezes com várias áreas juntas).
+// Por isso selectedUn é recebido para manter o padrão das demais sub-abas,
+// mas não é aplicado como filtro aqui.
 export default function PubCapitalView({ selectedMonth }: PubCapitalViewProps) {
   const [viewMode, setViewMode] = useState<'timeline' | 'tabela'>('timeline');
 
