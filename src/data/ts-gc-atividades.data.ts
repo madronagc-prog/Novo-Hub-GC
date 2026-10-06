@@ -8,7 +8,7 @@ export interface TSGCAtividadeRegistro {
 }
 
 export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
-  {
+    {
     nome: "Amanda",
     mes: "Agosto",
     atividade: "Acompanhamento Legislativo",
@@ -1595,7 +1595,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Inovação e Eficiência Geral",
+    atividade: "",
     categoria: "Inovação e Eficiência",
     tempo_investido: "00:00:00",
     tempo_investido_minutos: 0
@@ -1603,7 +1603,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Coordenação Academia Madrona",
+    atividade: "",
     categoria: "Academia Madrona",
     tempo_investido: "21:00:00",
     tempo_investido_minutos: 1260
@@ -1611,7 +1611,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Gestão e Liderança de Equipes",
+    atividade: "",
     categoria: "Gestão de Equipes",
     tempo_investido: "21:00:00",
     tempo_investido_minutos: 1260
@@ -1619,7 +1619,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Demandas Operacionais de GC",
+    atividade: "",
     categoria: "Demandas operacionais",
     tempo_investido: "11:00:00",
     tempo_investido_minutos: 660
@@ -1627,7 +1627,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Projetos de Eficiência e Inovação",
+    atividade: "",
     categoria: "Inovação e Eficiência",
     tempo_investido: "16:00:00",
     tempo_investido_minutos: 960
@@ -1635,7 +1635,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Clarissa",
     mes: "Agosto",
-    atividade: "Gestão Administrativa e Orçamentária",
+    atividade: "",
     categoria: "Gestão Administrativa e Financeira",
     tempo_investido: "11:00:00",
     tempo_investido_minutos: 660
@@ -1643,7 +1643,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Raquel",
     mes: "Agosto",
-    atividade: "Projetos de Inovação",
+    atividade: "",
     categoria: "Inovação e Eficiência",
     tempo_investido: "02:30:00",
     tempo_investido_minutos: 150
@@ -1651,7 +1651,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Raquel",
     mes: "Agosto",
-    atividade: "Suporte Academia Madrona",
+    atividade: "",
     categoria: "Academia Madrona",
     tempo_investido: "05:20:00",
     tempo_investido_minutos: 320
@@ -1659,7 +1659,7 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Raquel",
     mes: "Agosto",
-    atividade: "Atendimento e Relacionamento com Áreas",
+    atividade: "",
     categoria: "Atendimento e Relacionamento Interno",
     tempo_investido: "22:45:00",
     tempo_investido_minutos: 1365
@@ -1667,9 +1667,121 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
   {
     nome: "Raquel",
     mes: "Agosto",
-    atividade: "Alinhamento e Gestão de Equipe",
+    atividade: "",
     categoria: "Gestão de Equipes",
     tempo_investido: "16:40:00",
     tempo_investido_minutos: 1000
+  },
+  {
+    nome: "Raquel",
+    mes: "Agosto",
+    atividade: "",
+    categoria: "Inovação e Eficiência",
+    tempo_investido: "98:30:00",
+    tempo_investido_minutos: 5910
+  },
+  {
+    nome: "Raquel",
+    mes: "Agosto",
+    atividade: "",
+    categoria: "Academia Madrona",
+    tempo_investido: "29:20:00",
+    tempo_investido_minutos: 1760
+  },
+  {
+    nome: "Raquel",
+    mes: "Agosto",
+    atividade: "",
+    categoria: "Atendimento e Relacionamento Interno",
+    tempo_investido: "22:45:00",
+    tempo_investido_minutos: 1365
+  },
+  {
+    nome: "Raquel",
+    mes: "Agosto",
+    atividade: "",
+    categoria: "Gestão de Equipes",
+    tempo_investido: "16:40:00",
+    tempo_investido_minutos: 1000
+  },
+  {
+    nome: "Raquel",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Inovação e Eficiência",
+    tempo_investido: "88:00:00",
+    tempo_investido_minutos: 5280
+  },
+  {
+    nome: "Raquel",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Atendimento e Relacionamento Interno",
+    tempo_investido: "44:00:00",
+    tempo_investido_minutos: 2640
+  },
+  {
+    nome: "Raquel",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Academia Madrona",
+    tempo_investido: "17:36:00",
+    tempo_investido_minutos: 1056
+  },
+  {
+    nome: "Raquel",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Gestão de Equipes",
+    tempo_investido: "17:36:00",
+    tempo_investido_minutos: 1056
+  },
+  {
+    nome: "Raquel",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Demandas operacionais",
+    tempo_investido: "8:48:00",
+    tempo_investido_minutos: 528
+  },
+  {
+    nome: "Filipi",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Academia Madrona",
+    tempo_investido: "3:00:00",
+    tempo_investido_minutos: 180
+  },
+  {
+    nome: "Filipi",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Comunicação e imprensa",
+    tempo_investido: "6:00:00",
+    tempo_investido_minutos: 360
+  },
+  {
+    nome: "Filipi",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Atendimento e Relacionamento Interno",
+    tempo_investido: "5:30:00",
+    tempo_investido_minutos: 330
+  },
+  {
+    nome: "Filipi",
+    mes: "Setembro",
+    atividade: "Análise DOU e Legislativo",
+    categoria: "Curadoria e Distribuição de Conteúdo",
+    tempo_investido: "40:00:00",
+    tempo_investido_minutos: 2400
+  },
+    {
+    nome: "Filipi",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Inovação e Eficiência",
+    tempo_investido: "110:00:00",
+    tempo_investido_minutos: 6600
   },
 ];
