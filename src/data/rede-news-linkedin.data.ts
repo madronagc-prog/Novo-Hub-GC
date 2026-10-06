@@ -62,5 +62,12 @@ export const redeNewsLinkedinData: NewsLinkedinRegistro[] = [
     curtidas: 24,
     views: 2540,
     novos_assinantes: 82
-  }
+  },
+    {
+    mes: "Setembro",
+    areas_participantes: "Ambiental, Proteção de Dados, Tributário, Contecioso, Propriedade Intelectual",
+    curtidas: 13,
+    views: 0,
+    novos_assinantes: 0
+  },
 ];
