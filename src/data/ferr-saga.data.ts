@@ -329,7 +329,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Gustavo Magalhaes",
-    posicao: "Advogado(a) Senior 4",
+    posicao: "Sócio(a) Capital",
     un: "UN Infraestrutura",
     criado: "07/04/2026",
     dias_de_uso: 176,
@@ -341,7 +341,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Gustavo Rocha Uchiyama",
-    posicao: "Estagiário(a) 4° ano",
+    posicao: "Sócio(a) Receita",
     un: "UN Infraestrutura",
     criado: "03/09/2026",
     dias_de_uso: 27,
@@ -353,7 +353,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Henrique Maluta",
-    posicao: "Advogado(a) Pleno 1",
+    posicao: "Advogado(a) Senior 3",
     un: "UN Corporativa",
     criado: "02/12/2025",
     dias_de_uso: 302,
@@ -401,7 +401,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Izabela Albano",
-    posicao: "Advogado(a) Junior 4",
+    posicao: "Advogado(a) Senior 1",
     un: "UN Corporativa",
     criado: "30/03/2026",
     dias_de_uso: 184,
@@ -425,7 +425,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "João Guizardi",
-    posicao: "Advogado(a) Junior 3",
+    posicao: "Sócio(a) Receita",
     un: "UN Wealth",
     criado: "27/03/2026",
     dias_de_uso: 187,
@@ -437,7 +437,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Julia Avelar",
-    posicao: "Advogado(a) Pleno 1",
+    posicao: "Advogado(a) Senior 4",
     un: "UN Infraestrutura",
     criado: "03/09/2026",
     dias_de_uso: 27,
@@ -473,7 +473,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Kelma Collier",
-    posicao: "Advogado(a) Junior 2",
+    posicao: "Sócio(a) Receita",
     un: "UN Trabalhista e Sindical",
     criado: "01/07/2026",
     dias_de_uso: 91,
@@ -509,7 +509,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Letícia Andreghetto Cuoghi",
-    posicao: "Advogado(a) Pleno 1",
+    posicao: "Advogado(a) Junior 2",
     un: "UN Corporativa",
     criado: "01/08/2026",
     dias_de_uso: 60,
@@ -545,7 +545,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Luis Nagalli",
-    posicao: "Estagiário(a) 5° ano",
+    posicao: "Sócio(a) Capital",
     un: "UN Concorrencial",
     criado: "06/04/2026",
     dias_de_uso: 177,
@@ -617,7 +617,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Marina Vieira Freire",
-    posicao: "Advogado(a) Junior 2",
+    posicao: "Sócio(a) Receita",
     un: "UN Ambiental",
     criado: "16/09/2026",
     dias_de_uso: 14,
@@ -653,7 +653,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Murilo de Souza Arrais",
-    posicao: "Advogado(a) Junior 2",
+    posicao: "Advogado(a) Pleno 4",
     un: "UN Digital, LGPD e Propriedade Intelectual",
     criado: "24/06/2026",
     dias_de_uso: 98,
@@ -677,7 +677,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Nathália Mendonça de Oliveira Pinto",
-    posicao: "Advogado(a) Junior 4",
+    posicao: "Advogado(a) Junior 3",
     un: "UN Corporativa",
     criado: "24/08/2026",
     dias_de_uso: 37,
@@ -725,7 +725,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Pedro Ordine",
-    posicao: "Estagiário(a) 3° ano",
+    posicao: "Advogado(a) Senior 3",
     un: "UN Contencioso",
     criado: "02/12/2025",
     dias_de_uso: 302,
@@ -737,7 +737,7 @@ export const ferrSagaData: SagaRegistro[] = [
   },
   {
     nome: "Rafael M. Malheiro",
-    posicao: "Estagiário(a) 5° ano",
+    posicao: "Sócio(a) Capital",
     un: "UN Tributária",
     criado: "30/03/2026",
     dias_de_uso: 184,
