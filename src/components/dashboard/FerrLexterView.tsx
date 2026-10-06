@@ -317,8 +317,8 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
           </div>
         </div>
 
-        {/* Grid de Barras Mensais (8 Meses) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+{/* Grid de Barras Mensais (em linhas de 6 meses) */}
+<div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.round((item.totalDocs / maxEvolucaoDocs) * 100);
             const isCurrentMonth = selectedMonth === item.mes;
