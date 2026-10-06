@@ -36,7 +36,7 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_EVOLUCAO = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro'];
+const MESES_EVOLUCAO = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function formatarMinutos(minutos: number): string {
   if (!minutos || minutos <= 0) return '0h 00min';
@@ -51,9 +51,10 @@ function formatarMoeda(val: number): string {
 
 interface TsCtViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
-export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewProps) {
+export default function TsCtView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: TsCtViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFrente, setSelectedFrente] = useState('todas');
   const [localMonth, setLocalMonth] = useState('todos');
@@ -101,9 +102,21 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
     return data;
   }, [normalizedData, selectedMonth, localMonth]);
 
-  // Filtro de frente e busca textual para a tabela e rankings
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFiltered;
+    return monthFiltered.filter((d) => d.un === selectedUn);
+  }, [monthFiltered, selectedUn]);
+
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtro de frente e busca textual para a tabela e rankings (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFiltered.filter((d) => {
+    return filteredData.filter((d) => {
       if (selectedFrente !== 'todas' && d.frente !== selectedFrente) return false;
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
@@ -116,31 +129,31 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
       }
       return true;
     });
-  }, [monthFiltered, selectedFrente, searchTerm]);
+  }, [filteredData, selectedFrente, searchTerm]);
 
-  // Totais do Resumo (no período filtrado)
+  // Totais do Resumo (no período e UN filtrados)
   const totalValor = useMemo(
-    () => monthFiltered.reduce((acc, d) => acc + d.valorSeguro, 0),
-    [monthFiltered]
+    () => filteredData.reduce((acc, d) => acc + d.valorSeguro, 0),
+    [filteredData]
   );
 
   const totalMinutos = useMemo(
-    () => monthFiltered.reduce((acc, d) => acc + d.tempoMinutosSeguro, 0),
-    [monthFiltered]
+    () => filteredData.reduce((acc, d) => acc + d.tempoMinutosSeguro, 0),
+    [filteredData]
   );
 
-  const totalApontamentos = monthFiltered.length;
+  const totalApontamentos = filteredData.length;
 
   const colaboradoresUnicos = useMemo(() => {
     const set = new Set<string>();
-    monthFiltered.forEach((d) => set.add(d.nome.trim().toLowerCase()));
+    filteredData.forEach((d) => set.add(d.nome.trim().toLowerCase()));
     return set.size;
-  }, [monthFiltered]);
+  }, [filteredData]);
 
-  // Evolução Mensal (Janeiro a Setembro)
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_EVOLUCAO.map((m) => {
-      const itens = normalizedData.filter((d) => d.mes === m);
+      const itens = unFilteredAllMonths.filter((d) => d.mes === m);
       const valor = itens.reduce((acc, d) => acc + d.valorSeguro, 0);
       const minutos = itens.reduce((acc, d) => acc + d.tempoMinutosSeguro, 0);
       const apontamentos = itens.length;
@@ -153,7 +166,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
         apontamentos
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   const maxEvolucaoValor = Math.max(...evolucaoMensal.map((e) => e.valor), 1);
   const maxEvolucaoHoras = Math.max(...evolucaoMensal.map((e) => e.horas), 1);
@@ -162,7 +175,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
   const statsPorFrente = useMemo(() => {
     const map: Record<string, { valor: number; minutos: number; count: number; users: Set<string> }> = {};
 
-    monthFiltered.forEach((d) => {
+    filteredData.forEach((d) => {
       const f = d.frente || 'Não informada';
       if (!map[f]) {
         map[f] = { valor: 0, minutos: 0, count: 0, users: new Set() };
@@ -183,7 +196,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
         pctValor: totalValor > 0 ? (s.valor / totalValor) * 100 : 0
       }))
       .sort((a, b) => b.valor - a.valor);
-  }, [monthFiltered, totalValor]);
+  }, [filteredData, totalValor]);
 
   const maxFrenteValor = statsPorFrente[0]?.valor || 1;
 
@@ -191,7 +204,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
   const statsPorUn = useMemo(() => {
     const map: Record<string, { valor: number; minutos: number; count: number; users: Set<string> }> = {};
 
-    monthFiltered.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { valor: 0, minutos: 0, count: 0, users: new Set() };
@@ -212,7 +225,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
         pctValor: totalValor > 0 ? (s.valor / totalValor) * 100 : 0
       }))
       .sort((a, b) => b.valor - a.valor);
-  }, [monthFiltered, totalValor]);
+  }, [filteredData, totalValor]);
 
   const maxUnValor = statsPorUn[0]?.valor || 1;
 
@@ -220,7 +233,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
   const top15Colaboradores = useMemo(() => {
     const map: Record<string, { nome: string; un: string; valor: number; minutos: number; apontamentos: number }> = {};
 
-    monthFiltered.forEach((d) => {
+    filteredData.forEach((d) => {
       const chave = d.nome.trim().toLowerCase();
       if (!map[chave]) {
         map[chave] = {
@@ -250,7 +263,7 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
         return b.minutos - a.minutos;
       })
       .slice(0, 15);
-  }, [monthFiltered, rankingMetric, refColaboradores]);
+  }, [filteredData, rankingMetric, refColaboradores]);
 
   const maxRankingVal = top15Colaboradores[0]
     ? rankingMetric === 'valor'
@@ -431,8 +444,8 @@ export default function TsCtView({ selectedMonth = 'Todos os meses' }: TsCtViewP
               </div>
             </div>
 
-            {/* Grid de Barras Mensais (9 Meses) */}
-            <div className="grid grid-cols-3 sm:grid-cols-9 gap-2">
+            {/* Grid de Barras Mensais (em linhas de 6 meses) */}
+            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2">
               {evolucaoMensal.map((item) => {
                 const heightPct = Math.max(15, Math.round((item.valor / maxEvolucaoValor) * 100));
                 const isSelected = selectedMonth === item.mes || localMonth === item.mes;
