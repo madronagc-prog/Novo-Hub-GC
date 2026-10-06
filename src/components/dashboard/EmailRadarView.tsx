@@ -38,7 +38,7 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_RADAR = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto'];
+const MESES_RADAR = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 interface EmailRadarViewProps {
   selectedMonth: string;
@@ -427,7 +427,7 @@ export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
         </div>
 
         {/* Cards Resumo Mensais */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 mt-4 pt-4 border-t border-gray-100">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2.5 mt-4 pt-4 border-t border-gray-100">
           {evolucaoMensal.map((item) => {
             const isSelected = selectedMonth === item.mes;
 
