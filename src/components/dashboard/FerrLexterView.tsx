@@ -76,11 +76,21 @@ export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexter
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Filtros combinados da tabela (busca + UN)
-  const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'Todas as UNs' && d.un !== selectedUn) return false;
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
 
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtro de busca textual da tabela (mês e UN já vêm aplicados em filteredData)
+  const displayRecords = useMemo(() => {
+    return filteredData.filter((d) => {
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
         const match =
@@ -91,37 +101,37 @@ export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexter
       }
       return true;
     });
-  }, [monthFilteredData, selectedUn, searchTerm]);
+  }, [filteredData, searchTerm]);
 
-  // Totais do Resumo (no período filtrado)
+  // Totais do Resumo (no período e UN filtrados)
   const somaDocumentos = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.documentos, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.documentos, 0),
+    [filteredData]
   );
 
   const somaRespostas = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.respostas, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.respostas, 0),
+    [filteredData]
   );
 
   const usuariosUnicosSet = useMemo(() => {
     const set = new Set<string>();
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (d.documentos > 0 || d.respostas > 0) {
         set.add(d.usuario);
       }
     });
     return set;
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   const totalUsuariosUnicos = usuariosUnicosSet.size;
 
   const mediaRespostasPorDoc = somaDocumentos > 0 ? (somaRespostas / somaDocumentos).toFixed(1) : '0';
 
-  // Evolução Mensal (Janeiro a Agosto) - Base Consolidada Global
+  // Evolução Mensal (Janeiro a Dezembro) - respeitando o filtro de UN
   const evolucaoMensal = useMemo(() => {
     return MESES_LEXTER.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const totalDocs = itensDoMes.reduce((acc, d) => acc + d.documentos, 0);
       const totalResp = itensDoMes.reduce((acc, d) => acc + d.respostas, 0);
       const ativosCount = new Set(itensDoMes.filter((d) => d.documentos > 0 || d.respostas > 0).map((d) => d.usuario)).size;
@@ -133,13 +143,13 @@ export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexter
         ativosCount
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   // Agrupamento por UN (no período filtrado)
   const statsPorUn = useMemo(() => {
     const map: Record<string, { docs: number; respostas: number; users: Set<string> }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { docs: 0, respostas: 0, users: new Set() };
@@ -160,13 +170,13 @@ export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexter
         percentualDocs: somaDocumentos > 0 ? (data.docs / somaDocumentos) * 100 : 0
       }))
       .sort((a, b) => b.docs - a.docs);
-  }, [monthFilteredData, somaDocumentos]);
+  }, [filteredData, somaDocumentos]);
 
-  // Ranking Top 10 Usuários por Documentos Processados (no período filtrado)
+  // Ranking Top 10 Usuários por Documentos Processados (no período e UN filtrados)
   const topUsuarios = useMemo(() => {
     const map: Record<string, { docs: number; respostas: number; un: string }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (!map[d.usuario]) {
         map[d.usuario] = { docs: 0, respostas: 0, un: d.un };
       }
@@ -184,7 +194,7 @@ export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexter
       .filter((u) => u.docs > 0 || u.respostas > 0)
       .sort((a, b) => b.docs - a.docs)
       .slice(0, 10);
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   // Exportar Excel
   const handleExportExcel = () => {
