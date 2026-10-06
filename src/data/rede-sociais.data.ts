@@ -19,7 +19,7 @@ export const redeSociaisData: RedesSociaisRegistro[] = [
   { mes: "Junho", linkedin_seguidores: 52854, linkedin_crescimento: 0.69, insta_seguidores: 4259, insta_crescimento: 0.92, site_views: 13131, site_users: 6520, intra_views: 21862, intra_views_exclusivos: 308 },
   { mes: "Julho", linkedin_seguidores: 53097, linkedin_crescimento: 0.45, insta_seguidores: 4273, insta_crescimento: 0.33, site_views: 14351, site_users: 7025, intra_views: 20080, intra_views_exclusivos: 333 },
   { mes: "Agosto", linkedin_seguidores: 53312, linkedin_crescimento: 0.4, insta_seguidores: 4333, insta_crescimento: 1.4, site_views: 16156, site_users: 7697, intra_views: 23711, intra_views_exclusivos: 323 },
-  { mes: "Setembro", linkedin_seguidores: null, linkedin_crescimento: null, insta_seguidores: null, insta_crescimento: null, site_views: null, site_users: null, intra_views: null, intra_views_exclusivos: null },
+  { mes: "Setembro", linkedin_seguidores: 53561, linkedin_crescimento: 0.47, insta_seguidores: 4384, insta_crescimento: 1.18, site_views: 17684, site_users: 9514, intra_views: null, intra_views_exclusivos: null },
   { mes: "Outubro", linkedin_seguidores: null, linkedin_crescimento: null, insta_seguidores: null, insta_crescimento: null, site_views: null, site_users: null, intra_views: null, intra_views_exclusivos: null },
   { mes: "Novembro", linkedin_seguidores: null, linkedin_crescimento: null, insta_seguidores: null, insta_crescimento: null, site_views: null, site_users: null, intra_views: null, intra_views_exclusivos: null },
   { mes: "Dezembro", linkedin_seguidores: null, linkedin_crescimento: null, insta_seguidores: null, insta_crescimento: null, site_views: null, site_users: null, intra_views: null, intra_views_exclusivos: null },
