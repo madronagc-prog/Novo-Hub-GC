@@ -69,19 +69,30 @@ export default function PubUnsNumerosView({ selectedUn = 'Todas as UNs' }: PubUn
     };
   }, []);
 
-  // Registros das áreas (excluindo a linha de Total Geral), respeitando o filtro de UN do cabeçalho
-  const areasData = useMemo(() => {
-    let data = pubUNsEmNumerosData
+  // Todas as áreas (sem filtro de UN), usada para localizar a linha da UN selecionada no card do topo
+  const allAreasData = useMemo(() => {
+    return pubUNsEmNumerosData
       .filter((d) => d.area !== 'Total Geral')
       .map((d) => ({
         ...d,
         areaNormalizada: normalizarNomeArea(d.area)
       }));
+  }, []);
+
+  // Registros das áreas (excluindo a linha de Total Geral), respeitando o filtro de UN do cabeçalho
+  const areasData = useMemo(() => {
     if (selectedUn !== 'Todas as UNs') {
-      data = data.filter((d) => d.areaNormalizada === selectedUn);
+      return allAreasData.filter((d) => d.areaNormalizada === selectedUn);
     }
-    return data;
-  }, [selectedUn]);
+    return allAreasData;
+  }, [allAreasData, selectedUn]);
+
+  // Linha usada no card de resumo do topo: a UN selecionada quando houver filtro, ou o Total Geral
+  const resumoTopo = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return registroTotalGeral;
+    const linhaDaUn = allAreasData.find((d) => d.areaNormalizada === selectedUn);
+    return linhaDaUn || { ...registroTotalGeral, area: selectedUn, total: 0, art_madrona_lab: 0, energy_news: 0, imprensa: 0, imprensa_ingles: 0, radar_tributario: 0, tema_frio: 0, art_ingles: 0, webinars: 0, jornal_int: 0 };
+  }, [selectedUn, allAreasData, registroTotalGeral]);
 
   // Filtro de busca textual
   const displayRecords = useMemo(() => {
@@ -173,9 +184,11 @@ export default function PubUnsNumerosView({ selectedUn = 'Todas as UNs' }: PubUn
 
           <div className="flex items-center gap-3">
             <div className="bg-white/10 backdrop-blur-xs px-4 py-2 rounded-xl border border-white/15 text-center">
-              <span className="text-[10px] text-blue-200 uppercase tracking-wider block">Total Geral</span>
+              <span className="text-[10px] text-blue-200 uppercase tracking-wider block">
+                {selectedUn === 'Todas as UNs' ? 'Total Geral' : selectedUn}
+              </span>
               <span className="text-2xl sm:text-3xl font-serif font-bold text-emerald-400">
-                {registroTotalGeral.total}
+                {resumoTopo.total}
               </span>
               <span className="text-[10px] text-blue-200 block">conteúdos gerados</span>
             </div>
@@ -185,8 +198,8 @@ export default function PubUnsNumerosView({ selectedUn = 'Todas as UNs' }: PubUn
         {/* Grid das 9 Categorias de Publicação */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2.5">
           {CATEGORIAS_DEF.map((cat) => {
-            const val = (registroTotalGeral as any)[cat.key] || 0;
-            const pct = ((val / registroTotalGeral.total) * 100).toFixed(0);
+            const val = (resumoTopo as any)[cat.key] || 0;
+            const pct = resumoTopo.total > 0 ? ((val / resumoTopo.total) * 100).toFixed(0) : '0';
 
             return (
               <div
