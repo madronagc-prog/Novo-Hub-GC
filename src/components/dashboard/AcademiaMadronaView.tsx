@@ -59,8 +59,12 @@ const PILAR_COLORS: Record<string, { bg: string; text: string; border: string; b
 
 interface AcademiaMadronaViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
+// Observação: a base de Academia Madrona não tem campo de UN (são sessões
+// gerais, não divididas por área). selectedUn é recebido para manter o
+// padrão das demais sub-abas, mas não é aplicado como filtro aqui.
 export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [chartView, setChartView] = useState<'pilar' | 'sessao' | 'mes'>('pilar');
@@ -422,7 +426,7 @@ export default function AcademiaMadronaView({ selectedMonth }: AcademiaMadronaVi
           </div>
         ) : (
           /* Visualização Evolução Mensal */
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
             {statsPorMes.map((m) => {
               const maxMonthly = Math.max(...statsPorMes.map((s) => s.participantes));
               const heightPct = Math.round((m.participantes / maxMonthly) * 100);
