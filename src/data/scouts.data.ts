@@ -177,8 +177,64 @@ export const scoutsData: ScoutRegistro[] = [
   { mes: "Agosto", cliente: "Minerva Foods", un: "UN Tributário" },
   { mes: "Agosto", cliente: "VLI Multimodal", un: "UN Corporativo" },
   { mes: "Agosto", cliente: "VLI Multimodal", un: "UN Tributário" },
-  { mes: "Setembro", cliente: "Gerdau", un: "UN Corporativo" },
-  { mes: "Setembro", cliente: "CTG", un: "UN Corporativo" },
-  { mes: "Setembro", cliente: "Ambev", un: "UN Digital, Comex e PI" },
-  { mes: "Setembro", cliente: "Axia/Eletrobrás", un: "UN Seguros" },
+  {
+    mes: "Setembro",
+    cliente: "CTG",
+    un: "UN Corporativo"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Ambev",
+    un: "UN Digital, Comex e PI"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Axia/Eletrobrás",
+    un: "UN Seguros"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Embraer",
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Vivo",
+    un: "UN Seguros"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Klabin",
+    un: "UN Tributário"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Axia/Eletrobrás",
+    un: "UN Seguros"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Ambev",
+    un: "UN Digital, Comex e PI"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Reag Investimentos",
+    un: "UN Contencioso"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Gerdau",
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Banco Inter",
+    un: "UN Digital, Comex e PI"
+  },
+  {
+    mes: "Setembro",
+    cliente: "Minerva Foods",
+    un: "UN Tributário"
+  },
 ];
