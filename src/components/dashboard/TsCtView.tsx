@@ -59,7 +59,6 @@ export default function TsCtView({ selectedMonth = 'Todos os meses', selectedUn 
   const [selectedFrente, setSelectedFrente] = useState('todas');
   const [localMonth, setLocalMonth] = useState('todos');
   const [rankingMetric, setRankingMetric] = useState<'valor' | 'tempo'>('valor');
-  const [activeTabSection, setActiveTabSection] = useState<'analise' | 'referencia'>('analise');
 
   // Mapa de referência rápida de colaboradores (Nome -> Cadastro)
   const refColaboradores = useMemo(() => {
@@ -314,32 +313,8 @@ export default function TsCtView({ selectedMonth = 'Todos os meses', selectedUn 
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTabSection('analise')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeTabSection === 'analise'
-                ? 'bg-brand-navy text-white shadow-xs'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            Análise de Apontamentos
-          </button>
-          <button
-            onClick={() => setActiveTabSection('referencia')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeTabSection === 'referencia'
-                ? 'bg-brand-navy text-white shadow-xs'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            Base Referencial ({tsCtData.length} colaboradores)
-          </button>
-        </div>
       </div>
-
-      {activeTabSection === 'analise' ? (
-        <>
+      <>
           {/* ================================================================ */}
           {/* 1. CARDS DE RESUMO (TOTAIS DO PERÍODO)                           */}
           {/* ================================================================ */}
@@ -890,56 +865,6 @@ export default function TsCtView({ selectedMonth = 'Todos os meses', selectedUn 
             )}
           </div>
         </>
-      ) : (
-        /* ================================================================ */
-        /* ABA SECUNDÁRIA: BASE REFERENCIAL DE COLABORADORES (TS-CT.DATA.TS)*/
-        /* ================================================================ */
-        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden p-6">
-          <div className="mb-4 pb-3 border-b border-gray-100 flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-serif font-bold text-gray-900 flex items-center gap-2">
-                <Users size={18} className="text-brand-blue" />
-                <span>Base Cadastral Referencial de Colaboradores</span>
-              </h3>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Base institucional para cruzamento de cargos, áreas e posições (392 colaboradores cadastrados)
-              </p>
-            </div>
-            <span className="text-xs bg-slate-100 text-slate-800 px-3 py-1 rounded-xl font-semibold">
-              {tsCtData.length} registros
-            </span>
-          </div>
-
-          <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead className="sticky top-0 z-10 bg-gray-50">
-                <tr className="border-b border-gray-200/80 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  <th className="py-2.5 px-3 w-12 text-center">#</th>
-                  <th className="py-2.5 px-3">Nome Completo</th>
-                  <th className="py-2.5 px-3">UN / Área</th>
-                  <th className="py-2.5 px-3">Posição</th>
-                  <th className="py-2.5 px-3">Data de Entrada</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {tsCtData.map((c, i) => (
-                  <tr key={i} className="hover:bg-gray-50/60">
-                    <td className="py-2 px-3 text-center text-gray-400">{i + 1}</td>
-                    <td className="py-2 px-3 font-semibold text-gray-900">{c.nome}</td>
-                    <td className="py-2 px-3 text-gray-700">{normalizarUN(c.un)}</td>
-                    <td className="py-2 px-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-brand-blue border border-blue-100 font-medium">
-                        {normalizarPosicao(c.posicao)}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-gray-500 font-mono">{c.entrada}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
