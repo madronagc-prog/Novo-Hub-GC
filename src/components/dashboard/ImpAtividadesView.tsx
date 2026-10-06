@@ -75,9 +75,10 @@ const STATUS_CONFIG: Record<
 
 interface ImpAtividadesViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewProps) {
+export default function ImpAtividadesView({ selectedMonth, selectedUn }: ImpAtividadesViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('todos');
   const [chartView, setChartView] = useState<'status' | 'atividade' | 'mes'>('status');
@@ -109,9 +110,15 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
     return sortedData.filter((d) => d.mes === selectedMonth);
   }, [sortedData, selectedMonth]);
 
-  // Filtro de status + busca textual
+  // Filtro de UN (do seletor superior) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
+  // Filtro de status + busca textual (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
+    return filteredData.filter((d) => {
       // Filtro de status rápido
       if (statusFilter !== 'todos') {
         const itemStatus = d.status || 'Outros';
@@ -137,16 +144,16 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
 
       return true;
     });
-  }, [monthFilteredData, statusFilter, searchTerm]);
+  }, [filteredData, statusFilter, searchTerm]);
 
   // ========================================================================
   // Totais do Resumo
   // ========================================================================
-  const totalPautas = monthFilteredData.length;
+  const totalPautas = filteredData.length;
 
   const totalConvertidas = useMemo(
-    () => monthFilteredData.filter((d) => d.pauta_convertida === 'Sim').length,
-    [monthFilteredData]
+    () => filteredData.filter((d) => d.pauta_convertida === 'Sim').length,
+    [filteredData]
   );
 
   const taxaConversao =
@@ -159,7 +166,7 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
     let declinados = 0;
     let outros = 0;
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const s = (d.status || '').trim();
       if (s === 'Publicado') publicados++;
       else if (s === 'Em andamento') andamento++;
@@ -177,12 +184,12 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
       pctDeclinados: totalPautas > 0 ? (declinados / totalPautas) * 100 : 0,
       pctOutros: totalPautas > 0 ? (outros / totalPautas) * 100 : 0
     };
-  }, [monthFilteredData, totalPautas]);
+  }, [filteredData, totalPautas]);
 
   // Distribuição por Atividade
   const statsAtividade = useMemo(() => {
     const map: Record<string, number> = {};
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const ativ = d.atividade || 'Não especificada';
       map[ativ] = (map[ativ] || 0) + 1;
     });
@@ -194,12 +201,13 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
         pct: totalPautas > 0 ? (qtd / totalPautas) * 100 : 0
       }))
       .sort((a, b) => b.qtd - a.qtd);
-  }, [monthFilteredData, totalPautas]);
+  }, [filteredData, totalPautas]);
 
   // Evolução Mensal (Janeiro a Agosto)
   const statsPorMes = useMemo(() => {
     const map: Record<string, { total: number; convertidas: number; publicados: number }> = {};
-    sortedData.forEach((d) => {
+    const base = selectedUn === 'Todas as UNs' ? sortedData : sortedData.filter((d) => d.un === selectedUn);
+    base.forEach((d) => {
       if (!map[d.mes]) {
         map[d.mes] = { total: 0, convertidas: 0, publicados: 0 };
       }
@@ -216,11 +224,11 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
         publicados: stats.publicados
       }))
       .sort((a, b) => (MONTH_ORDER[a.mes] || 99) - (MONTH_ORDER[b.mes] || 99));
-  }, [sortedData]);
+  }, [sortedData, selectedUn]);
 
   // Exportar para Excel
   const handleExportExcel = () => {
-    const exportData = monthFilteredData.map((d, index) => ({
+    const exportData = filteredData.map((d, index) => ({
       '#': index + 1,
       'Mês': d.mes,
       'Área': d.area,
@@ -549,7 +557,7 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
           </div>
         ) : (
           /* Visualização Evolução Mensal */
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
             {statsPorMes.map((m) => {
               const maxMonthly = Math.max(...statsPorMes.map((s) => s.total));
               const heightPct = Math.round((m.total / maxMonthly) * 100);
@@ -607,7 +615,7 @@ export default function ImpAtividadesView({ selectedMonth }: ImpAtividadesViewPr
                 </span>
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                Ordenado cronologicamente de Janeiro a Agosto de 2026
+                Ordenado cronologicamente, Janeiro a Dezembro de 2026
               </p>
             </div>
 
