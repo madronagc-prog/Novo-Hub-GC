@@ -43,7 +43,11 @@ function normalizarNomeArea(area: string): string {
   return area;
 }
 
-export default function PubUnsNumerosView() {
+interface PubUnsNumerosViewProps {
+  selectedUn?: string;
+}
+
+export default function PubUnsNumerosView({ selectedUn = 'Todas as UNs' }: PubUnsNumerosViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<'total' | 'area'>('total');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -65,15 +69,19 @@ export default function PubUnsNumerosView() {
     };
   }, []);
 
-  // Registros das áreas (excluindo a linha de Total Geral)
+  // Registros das áreas (excluindo a linha de Total Geral), respeitando o filtro de UN do cabeçalho
   const areasData = useMemo(() => {
-    return pubUNsEmNumerosData
+    let data = pubUNsEmNumerosData
       .filter((d) => d.area !== 'Total Geral')
       .map((d) => ({
         ...d,
         areaNormalizada: normalizarNomeArea(d.area)
       }));
-  }, []);
+    if (selectedUn !== 'Todas as UNs') {
+      data = data.filter((d) => d.areaNormalizada === selectedUn);
+    }
+    return data;
+  }, [selectedUn]);
 
   // Filtro de busca textual
   const displayRecords = useMemo(() => {
