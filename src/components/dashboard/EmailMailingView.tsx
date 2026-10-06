@@ -82,56 +82,67 @@ export default function EmailMailingView({ selectedMonth, selectedUn }: EmailMai
     return match || null;
   }, [isAllUns, selectedUn, registroTodos]);
 
-  // Mês de referência atual (se selecionado, ou 'Agosto' como padrão do mês mais recente)
+  // Último mês com dado apurado na linha "Todos" (calculado a partir da base, não fixo no código)
+  const ultimoMesApurado = useMemo(() => {
+    if (!registroTodos) return MESES_COLUNAS[0];
+    let ultimo = MESES_COLUNAS[0];
+    MESES_COLUNAS.forEach((col) => {
+      if (registroTodos[col.key] !== null && registroTodos[col.key] !== undefined) {
+        ultimo = col;
+      }
+    });
+    return ultimo;
+  }, [registroTodos]);
+
+  // Mês de referência atual (o selecionado no filtro, ou o último mês apurado por padrão)
   const mesAtivoKey: keyof Omit<MailingRegistro, 'area'> = useMemo(() => {
     if (selectedMonth && selectedMonth !== 'Todos os meses' && MES_PROP_MAP[selectedMonth]) {
       return MES_PROP_MAP[selectedMonth];
     }
-    return 'agosto'; // Mês mais recente apurado
-  }, [selectedMonth]);
+    return ultimoMesApurado.key;
+  }, [selectedMonth, ultimoMesApurado]);
 
   const mesAtivoLabel = useMemo(() => {
     if (selectedMonth && selectedMonth !== 'Todos os meses') {
       return selectedMonth;
     }
-    return 'Agosto (mais recente)';
-  }, [selectedMonth]);
+    return `${ultimoMesApurado.label} (mais recente)`;
+  }, [selectedMonth, ultimoMesApurado]);
 
   // Totais principais (seguem a linha ativa: "Todos" ou a UN selecionada)
   const totalInscritosAtivo = linhaAtiva ? linhaAtiva[mesAtivoKey] : null;
   const totalJan = linhaAtiva?.janeiro ?? 0;
-  const totalAgo = linhaAtiva?.agosto ?? 0;
+  const totalUltimoMes = (linhaAtiva?.[ultimoMesApurado.key] as number) ?? 0;
 
-  // Variação absoluta e percentual Jan -> Ago
-  const variacaoAbsolutaJanAgo = totalAgo - totalJan;
+  // Variação absoluta e percentual Jan -> último mês apurado
+  const variacaoAbsolutaJanAgo = totalUltimoMes - totalJan;
   const variacaoPctJanAgo = totalJan > 0 ? ((variacaoAbsolutaJanAgo / totalJan) * 100).toFixed(2) : '0';
 
-  // Evolução Mensal da linha "Todos" (Janeiro a Agosto)
+  // Evolução Mensal da linha "Todos" (Janeiro a Dezembro; meses sem dado ainda ficam de fora)
   const evolucaoGeral = useMemo(() => {
-    const mesesApurados = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto'] as const;
     const labelsMap: Record<string, string> = {
-      janeiro: 'Jan',
-      fevereiro: 'Fev',
-      marco: 'Mar',
-      abril: 'Abr',
-      maio: 'Mai',
-      junho: 'Jun',
-      julho: 'Jul',
-      agosto: 'Ago'
+      janeiro: 'Jan', fevereiro: 'Fev', marco: 'Mar', abril: 'Abr',
+      maio: 'Mai', junho: 'Jun', julho: 'Jul', agosto: 'Ago',
+      setembro: 'Set', outubro: 'Out', novembro: 'Nov', dezembro: 'Dez'
     };
 
     if (!linhaAtiva) return [];
 
-    return mesesApurados.map((mKey, idx) => {
+    const mesesComDado = MESES_COLUNAS.filter(
+      (col) => linhaAtiva[col.key] !== null && linhaAtiva[col.key] !== undefined
+    );
+
+    return mesesComDado.map((col, idx) => {
+      const mKey = col.key;
       const valor = (linhaAtiva[mKey] as number) || 0;
-      const valorAnterior = idx > 0 ? (linhaAtiva[mesesApurados[idx - 1]] as number) || valor : valor;
+      const valorAnterior = idx > 0 ? (linhaAtiva[mesesComDado[idx - 1].key] as number) || valor : valor;
       const diff = valor - valorAnterior;
       const diffPct = valorAnterior > 0 ? ((diff / valorAnterior) * 100).toFixed(1) : '0';
 
       return {
         key: mKey,
         label: labelsMap[mKey],
-        mesCompleto: MESES_COLUNAS.find((c) => c.key === mKey)?.label || '',
+        mesCompleto: col.label,
         valor,
         diff,
         diffPct
@@ -235,7 +246,7 @@ export default function EmailMailingView({ selectedMonth, selectedUn }: EmailMai
           </div>
           <div>
             <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-              Crescimento no Ano (Jan a Ago)
+              Crescimento no Ano (Jan a {ultimoMesApurado.label})
             </div>
             <div className="text-2xl sm:text-3xl font-serif font-bold text-emerald-700 mt-0.5 flex items-center gap-1">
               <span>+{variacaoPctJanAgo}%</span>
@@ -301,18 +312,18 @@ export default function EmailMailingView({ selectedMonth, selectedUn }: EmailMai
 
           <div className="flex items-center gap-2">
             <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-xl font-semibold">
-              Salto de {totalJan.toLocaleString('pt-BR')} para {totalAgo.toLocaleString('pt-BR')} contatos
+              Salto de {totalJan.toLocaleString('pt-BR')} para {totalUltimoMes.toLocaleString('pt-BR')} contatos
             </span>
           </div>
         </div>
 
         {/* Grid de Barras Mensais */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoGeral.map((item) => {
             // Normalizar escala visual de 18.000 a 21.000
             const range = maxEvolucao - minEvolucao || 1;
             const heightPct = Math.max(25, Math.round(((item.valor - minEvolucao) / range) * 100));
-            const isSelected = selectedMonth === item.mesCompleto || (selectedMonth === 'Todos os meses' && item.key === 'agosto');
+            const isSelected = selectedMonth === item.mesCompleto || (selectedMonth === 'Todos os meses' && item.key === ultimoMesApurado.key);
 
             return (
               <div
@@ -576,7 +587,7 @@ export default function EmailMailingView({ selectedMonth, selectedUn }: EmailMai
           </span>
           <div className="flex items-center gap-3">
             <span>
-              Total em Agosto: <strong className="text-brand-navy">{totalAgo.toLocaleString('pt-BR')} contatos</strong>
+              Total em {ultimoMesApurado.label}: <strong className="text-brand-navy">{totalUltimoMes.toLocaleString('pt-BR')} contatos</strong>
             </span>
           </div>
         </div>
