@@ -42,8 +42,12 @@ const MESES_RADAR = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
 
 interface EmailRadarViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
+// Observação: a base do Radar Tributário não tem campo de UN (é uma newsletter
+// de tema único, sem segmentação por área). selectedUn é recebido para manter
+// o padrão das demais sub-abas, mas não é aplicado como filtro aqui.
 export default function EmailRadarView({ selectedMonth }: EmailRadarViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
