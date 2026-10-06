@@ -39,9 +39,10 @@ const MESES_COLUNAS: { key: keyof Omit<ClippingComRegistro, 'area'>; label: stri
 
 interface ImpClippingViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps) {
+export default function ImpClippingView({ selectedMonth, selectedUn }: ImpClippingViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [focusSelectedMonthOnly, setFocusSelectedMonthOnly] = useState(false);
 
@@ -53,6 +54,12 @@ export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps)
     }));
   }, []);
 
+  // Filtro de UN (do seletor superior) - cada linha da matriz já é uma área/UN
+  const unFilteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.area === selectedUn);
+  }, [normalizedData, selectedUn]);
+
   // Mapeamento do mês selecionado para a chave correspondente
   const activeMonthKey = useMemo(() => {
     if (selectedMonth === 'Todos os meses') return null;
@@ -63,7 +70,7 @@ export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps)
 
   // Cálculo de totais por linha (área)
   const rowsWithTotals = useMemo(() => {
-    return normalizedData.map((row) => {
+    return unFilteredData.map((row) => {
       const totalAno =
         row.janeiro +
         row.fevereiro +
@@ -87,7 +94,7 @@ export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps)
         isZerado: totalAno === 0
       };
     });
-  }, [normalizedData, activeMonthKey]);
+  }, [unFilteredData, activeMonthKey]);
 
   // Ordenação: áreas com ocorrências primeiro (ordem decrescente de menções), depois as zeradas
   const sortedRows = useMemo(() => {
@@ -490,7 +497,7 @@ export default function ImpClippingView({ selectedMonth }: ImpClippingViewProps)
             </span>
           </div>
           <div>
-            Total de áreas monitoradas: <strong>{normalizedData.length}</strong>
+            Total de áreas monitoradas: <strong>{unFilteredData.length}</strong>
           </div>
         </div>
       </div>
