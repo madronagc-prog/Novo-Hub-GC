@@ -492,11 +492,6 @@ export default function DashboardIndicadores() {
                 <FileCheck size={14} className="text-brand-blue" />
                 <span>Status de Contrato Vigente (Jan/2026 - Jan/2027)</span>
               </div>
-            ) : activeMainTab === 'time-sheet' && activeSubTab === 'ts-ct' ? (
-              <div className="flex items-center gap-2 bg-blue-50/80 border border-blue-200 px-3 py-1.5 rounded-xl text-xs text-brand-blue font-semibold shadow-2xs">
-                <Users size={14} className="text-brand-blue" />
-                <span>Base Cadastral Ativa (Headcount Geral)</span>
-              </div>
             ) : (
               <div className="flex items-center gap-2.5">
                 <label
