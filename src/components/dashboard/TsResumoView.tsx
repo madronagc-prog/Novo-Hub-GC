@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { tsCtDetalhadoData } from '../../data/ts-ct-detalhado.data';
 import { tsGcAtividadesData } from '../../data/ts-gc-atividades.data';
-import { normalizarMes } from '../../utils/padronizacao';
+import { normalizarMes, normalizarUN } from '../../utils/padronizacao';
 import {
   Clock,
   DollarSign,
@@ -15,6 +15,7 @@ import {
 
 interface TsResumoViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
 const MESES_ANALISE = [
@@ -26,7 +27,10 @@ const MESES_ANALISE = [
   'Junho',
   'Julho',
   'Agosto',
-  'Setembro'
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro'
 ];
 
 function formatarMoeda(val: number): string {
@@ -39,14 +43,17 @@ function formatarHorasMinutos(minutos: number): string {
   return `${h}h ${m}min`;
 }
 
-export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsResumoViewProps) {
+export default function TsResumoView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: TsResumoViewProps) {
   const isAllMonths = selectedMonth === 'Todos os meses';
+  const isAllUns = selectedUn === 'Todas as UNs';
 
-  // 1. Filtragem por mês para os dados de TS CT e TS GC
+  // 1. Filtragem por mês e UN para os dados de TS CT (TS GC não tem campo de UN, só filtra por mês)
   const filteredCt = useMemo(() => {
-    if (isAllMonths) return tsCtDetalhadoData;
-    return tsCtDetalhadoData.filter((d) => normalizarMes(d.mes) === selectedMonth);
-  }, [isAllMonths, selectedMonth]);
+    let data = tsCtDetalhadoData;
+    if (!isAllMonths) data = data.filter((d) => normalizarMes(d.mes) === selectedMonth);
+    if (!isAllUns) data = data.filter((d) => normalizarUN(d.un) === selectedUn);
+    return data;
+  }, [isAllMonths, selectedMonth, isAllUns, selectedUn]);
 
   const filteredGc = useMemo(() => {
     if (isAllMonths) return tsGcAtividadesData;
@@ -90,10 +97,11 @@ export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsRes
     }, 0);
   }, [filteredGc]);
 
-  // 2. Gráfico de Evolução Mensal: Valor (R$) e Tempo (horas) em TS CT (Janeiro a Setembro)
+  // 2. Gráfico de Evolução Mensal: Valor (R$) e Tempo (horas) em TS CT (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensalCt = useMemo(() => {
+    const base = isAllUns ? tsCtDetalhadoData : tsCtDetalhadoData.filter((d) => normalizarUN(d.un) === selectedUn);
     return MESES_ANALISE.map((m) => {
-      const itens = tsCtDetalhadoData.filter((d) => normalizarMes(d.mes) === m);
+      const itens = base.filter((d) => normalizarMes(d.mes) === m);
       const valor = itens.reduce((acc, d) => acc + (typeof d.valor === 'number' ? d.valor : 0), 0);
       const minutos = itens.reduce((acc, d) => acc + (typeof d.tempo_minutos === 'number' ? d.tempo_minutos : 0), 0);
       const horas = minutos / 60;
@@ -106,7 +114,7 @@ export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsRes
         horas: Number(horas.toFixed(1))
       };
     });
-  }, []);
+  }, [isAllUns, selectedUn]);
 
   const maxValorMensal = useMemo(() => {
     const maxVal = Math.max(...evolucaoMensalCt.map((e) => e.valor));
@@ -120,10 +128,9 @@ export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsRes
 
   // 3. Gráfico Comparativo: Tempo por Frente em TS CT
   const tempoPorFrenteCt = useMemo(() => {
-    const base = filteredCt.length > 0 ? filteredCt : tsCtDetalhadoData;
     const frentesMap: Record<string, number> = {};
 
-    base.forEach((d) => {
+    filteredCt.forEach((d) => {
       const f = d.frente ? d.frente.replace('GC | ', '').trim() : 'Outros';
       frentesMap[f] = (frentesMap[f] || 0) + (d.tempo_minutos || 0);
     });
@@ -272,8 +279,8 @@ export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsRes
           </div>
         </div>
 
-        {/* Grid com os 9 meses */}
-        <div className="grid grid-cols-3 sm:grid-cols-9 gap-2 my-4">
+        {/* Grid em linhas de 6 meses */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2 my-4">
           {evolucaoMensalCt.map((item) => {
             const isSelected = selectedMonth === item.mes;
             const valorHeight = item.valor > 0 ? Math.max(15, Math.round((item.valor / maxValorMensal) * 100)) : 8;
@@ -337,9 +344,9 @@ export default function TsResumoView({ selectedMonth = 'Todos os meses' }: TsRes
         </div>
 
         <div className="p-3 bg-gray-50 rounded-xl border border-gray-200/60 text-xs text-gray-600 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-          <span>Total acumulado no período: <strong>{formatarMoeda(tsCtDetalhadoData.reduce((acc, d) => acc + (d.valor || 0), 0))}</strong></span>
+          <span>Total acumulado no período: <strong>{formatarMoeda(evolucaoMensalCt.reduce((acc, e) => acc + e.valor, 0))}</strong></span>
           <span className="text-brand-navy font-semibold">
-            {formatarHorasMinutos(tsCtDetalhadoData.reduce((acc, d) => acc + (d.tempo_minutos || 0), 0))} alocados em projetos de GC
+            {formatarHorasMinutos(evolucaoMensalCt.reduce((acc, e) => acc + e.minutos, 0))} alocados em projetos de GC
           </span>
         </div>
       </div>
