@@ -581,7 +581,7 @@ export default function DashboardIndicadores() {
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'im' ? (
           <FerrImView selectedMonth={selectedMonth} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'lexter' ? (
-          <FerrLexterView selectedMonth={selectedMonth} />
+          <FerrLexterView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'portdata' ? (
           <FerrPortDataView selectedMonth={selectedMonth} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'saga' ? (
