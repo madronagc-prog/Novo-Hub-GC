@@ -106,8 +106,19 @@ export default function EmailContribuicoesView({ selectedMonth, selectedUn }: Em
     });
   }, [filteredData, edicaoFilter, searchTerm]);
 
-  // Agrupamento por Edição para a visualização
-  const edicoesDisponiveis = ['Ed. 1', 'Ed. 2', 'Ed. 3', 'Ed. 4', 'Ed. 5'];
+  // Agrupamento por Edição para a visualização - gerado a partir da própria base,
+  // então uma edição nova (Ed. 6 em diante) aparece sozinha assim que entrar nos dados
+  const edicoesDisponiveis = useMemo(() => {
+    const vistas = new Map<string, string>(); // edicao -> mes (para ordenar cronologicamente)
+    normalizedData.forEach((d) => {
+      if (d.edicao && !vistas.has(d.edicao)) {
+        vistas.set(d.edicao, d.mes);
+      }
+    });
+    return Array.from(vistas.entries())
+      .sort((a, b) => (MONTH_ORDER[a[1]] || 99) - (MONTH_ORDER[b[1]] || 99))
+      .map(([edicao]) => edicao);
+  }, [normalizedData]);
 
   // Métricas por Edição (respeitando o filtro de UN; taxa de abertura é por edição, não muda por UN)
   const statsPorEdicao = useMemo(() => {
@@ -126,7 +137,7 @@ export default function EmailContribuicoesView({ selectedMonth, selectedUn }: Em
         totalViews: totalViews > 0 ? totalViews : null
       };
     });
-  }, [normalizedData, selectedUn]);
+  }, [normalizedData, selectedUn, edicoesDisponiveis]);
 
   // Totais Gerais
   const totalArtigosFiltrados = displayRecords.length;
@@ -349,11 +360,11 @@ export default function EmailContribuicoesView({ selectedMonth, selectedUn }: Em
                   className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium"
                 >
                   <option value="todas">Todas as edições</option>
-                  <option value="Ed. 1">Ed. 1 (Fevereiro)</option>
-                  <option value="Ed. 2">Ed. 2 (Março)</option>
-                  <option value="Ed. 3">Ed. 3 (Abril)</option>
-                  <option value="Ed. 4">Ed. 4 (Maio)</option>
-                  <option value="Ed. 5">Ed. 5 (Julho)</option>
+                  {statsPorEdicao.map((item) => (
+                    <option key={item.edicao} value={item.edicao}>
+                      {item.edicao} ({item.mes})
+                    </option>
+                  ))}
                 </select>
               </div>
 
