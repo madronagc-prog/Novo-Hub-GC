@@ -16,6 +16,7 @@ import {
 
 interface PubResumoViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
 const MESES_ANO = [
@@ -33,14 +34,19 @@ const MESES_ANO = [
   'Dezembro'
 ];
 
-export default function PubResumoView({ selectedMonth = 'Todos os meses' }: PubResumoViewProps) {
+export default function PubResumoView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: PubResumoViewProps) {
   const isAllMonths = selectedMonth === 'Todos os meses';
+  const isAllUns = selectedUn === 'Todas as UNs';
 
-  // 1. Filtragem por mês para cards e dados analíticos
+  // 1. Filtragem por mês e UN para cards e dados analíticos
+  // Observação: Capital Aberto não tem campo de UN padronizado (é texto livre em "areas"),
+  // então o filtro de UN não se aplica a essa base — só à de Controle de Publicações.
   const filteredControle = useMemo(() => {
-    if (isAllMonths) return pubControleData;
-    return pubControleData.filter((d) => normalizarMes(d.mes) === selectedMonth);
-  }, [isAllMonths, selectedMonth]);
+    let data = pubControleData;
+    if (!isAllMonths) data = data.filter((d) => normalizarMes(d.mes) === selectedMonth);
+    if (!isAllUns) data = data.filter((d) => normalizarUN(d.un) === selectedUn);
+    return data;
+  }, [isAllMonths, selectedMonth, isAllUns, selectedUn]);
 
   const filteredCapital = useMemo(() => {
     if (isAllMonths) return pubCapitalData;
@@ -96,10 +102,12 @@ export default function PubResumoView({ selectedMonth = 'Todos os meses' }: PubR
     return maxItem;
   }, [filteredControle, isAllMonths]);
 
-  // 2. Gráfico de Evolução Mensal (Janeiro a Dezembro)
+  // 2. Gráfico de Evolução Mensal (Janeiro a Dezembro) - Controle respeita o filtro de UN; Capital não tem UN
   const evolucaoMensal = useMemo(() => {
     return MESES_ANO.map((m) => {
-      const cControle = pubControleData.filter((d) => normalizarMes(d.mes) === m).length;
+      let controleDoMes = pubControleData.filter((d) => normalizarMes(d.mes) === m);
+      if (!isAllUns) controleDoMes = controleDoMes.filter((d) => normalizarUN(d.un) === selectedUn);
+      const cControle = controleDoMes.length;
       const cCapital = pubCapitalData.filter((d) => normalizarMes(d.mes) === m).length;
       const total = cControle + cCapital;
       return {
@@ -109,16 +117,17 @@ export default function PubResumoView({ selectedMonth = 'Todos os meses' }: PubR
         total
       };
     });
-  }, []);
+  }, [isAllUns, selectedUn]);
 
   const maxEvolucaoTotal = useMemo(() => {
     const maxVal = Math.max(...evolucaoMensal.map((e) => e.total));
     return maxVal > 0 ? maxVal : 1;
   }, [evolucaoMensal]);
 
-  // 3. Gráfico de Distribuição por Categoria (pubUNsEmNumerosData sem "Total Geral")
+  // 3. Gráfico de Distribuição por Categoria (pubUNsEmNumerosData sem "Total Geral"), respeitando o filtro de UN
   const distribuicaoCategorias = useMemo(() => {
-    const filteredRows = pubUNsEmNumerosData.filter((d) => d.area !== 'Total Geral');
+    let filteredRows = pubUNsEmNumerosData.filter((d) => d.area !== 'Total Geral');
+    if (!isAllUns) filteredRows = filteredRows.filter((d) => d.area === selectedUn);
 
     const categoriasConfig: Array<{ id: keyof typeof filteredRows[0]; label: string; color: string }> = [
       { id: 'art_madrona_lab', label: 'Art. Madrona Lab', color: 'from-blue-600 to-blue-500' },
@@ -153,7 +162,7 @@ export default function PubResumoView({ selectedMonth = 'Todos os meses' }: PubR
         percentual: totalGeral > 0 ? (c.total / totalGeral) * 100 : 0
       }))
       .sort((a, b) => b.total - a.total);
-  }, []);
+  }, [isAllUns, selectedUn]);
 
   const maxCategoriaTotal = distribuicaoCategorias[0]?.total || 1;
 
