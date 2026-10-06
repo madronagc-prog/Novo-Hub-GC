@@ -15,7 +15,12 @@ import {
 
 interface AcademiaResumoViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
+
+// Observação: nem Academia Madrona nem Treinamento iM têm campo de UN na base
+// (são sessões/contagens gerais, não divididas por área). selectedUn é recebido
+// para manter o padrão das demais sub-abas, mas não é aplicado como filtro aqui.
 
 const MESES_ANALISE = [
   'Janeiro',
@@ -26,7 +31,10 @@ const MESES_ANALISE = [
   'Junho',
   'Julho',
   'Agosto',
-  'Setembro'
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro'
 ];
 
 export default function AcademiaResumoView({ selectedMonth = 'Todos os meses' }: AcademiaResumoViewProps) {
@@ -201,7 +209,7 @@ export default function AcademiaResumoView({ selectedMonth = 'Todos os meses' }:
       {/* 2. GRÁFICOS ANALÍTICOS (EVOLUÇÃO DE SESSÕES + PARTICIPANTES VS CONVIDADOS) */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gráfico 1: Evolução Mensal de Sessões (Janeiro a Setembro) */}
+        {/* Gráfico 1: Evolução Mensal de Sessões (Janeiro a Dezembro) */}
         <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-gray-100">
@@ -227,8 +235,8 @@ export default function AcademiaResumoView({ selectedMonth = 'Todos os meses' }:
               </div>
             </div>
 
-            {/* Grid dos 9 meses */}
-            <div className="grid grid-cols-3 sm:grid-cols-9 gap-2 my-4">
+            {/* Grid dos 12 meses */}
+            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2 my-4">
               {evolucaoSessoes.map((item) => {
                 const isSelected = selectedMonth === item.mes;
                 const heightPct = Math.max(18, Math.round((item.totalSessoes / maxSessoesMes) * 100));
@@ -307,8 +315,8 @@ export default function AcademiaResumoView({ selectedMonth = 'Todos os meses' }:
               </div>
             </div>
 
-            {/* Grid dos 9 meses com colunas comparativas */}
-            <div className="grid grid-cols-3 sm:grid-cols-9 gap-2 my-4">
+            {/* Grid dos 12 meses com colunas comparativas */}
+            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2 my-4">
               {comparativoPublico.map((item) => {
                 const isSelected = selectedMonth === item.mes;
                 const convHeight = Math.max(12, Math.round((item.convidados / maxConvidados) * 100));
