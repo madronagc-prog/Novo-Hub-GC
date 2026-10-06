@@ -77,4 +77,32 @@ export const ferrPortDataData: PortDataRegistro[] = [
   { mes: "Setembro", usuario: "Laura Melo", valor: 662.0, cliente_caso: "5750", un: "UN Corporativo" },
   { mes: "Setembro", usuario: "Murilo Picchion", valor: 662.0, cliente_caso: "5757/1", un: "UN Corporativa" },
   { mes: "Setembro", usuario: "Renan Melo", valor: 1324.0, cliente_caso: "5356/22", un: "UN Contencioso" },
+    {
+    mes: "Setembro",
+    usuario: "Laura Melo",
+    valor: 1655,
+    cliente_caso: "5310/1",
+    un: "UN Corporativo"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Laura Melo",
+    valor: 662,
+    cliente_caso: "5750/1",
+    un: "UN Corporativo"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Murilo Picchion",
+    valor: 662,
+    cliente_caso: "5757/1",
+    un: "UN Corporativa"
+  },
+  {
+    mes: "Setembro",
+    usuario: "Renan Melo",
+    valor: 1324,
+    cliente_caso: "5356/22",
+    un: "UN Contencioso"
+  },
 ];
