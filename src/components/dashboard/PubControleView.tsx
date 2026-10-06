@@ -227,9 +227,7 @@ export default function PubControleView({ selectedMonth, selectedUn }: PubContro
             <div className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 mt-0.5">
               {totalPublicacoes}
             </div>
-            <div className="text-[11px] text-gray-500 mt-0.5">
-              {selectedMonth === 'Todos os meses' ? 'Consolidado Jan a Ago/2026' : `Mês de ${selectedMonth}`}
-            </div>
+            
           </div>
         </div>
 
