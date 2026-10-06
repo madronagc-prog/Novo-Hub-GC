@@ -43,13 +43,20 @@ const MESES_TREINAMENTO = [
   'Junho',
   'Julho',
   'Agosto',
-  'Setembro'
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro'
 ];
 
 interface AcadTreinamentoImViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
+// Observação: a base de Treinamento iM não tem campo de UN (é uma contagem
+// geral de participantes/convidados). selectedUn é recebido para manter o
+// padrão das demais sub-abas, mas não é aplicado como filtro aqui.
 export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamentoImViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -260,8 +267,8 @@ export default function AcadTreinamentoImView({ selectedMonth }: AcadTreinamento
           </div>
         </div>
 
-        {/* Grid de Barras Mensais (9 Meses) */}
-        <div className="grid grid-cols-3 sm:grid-cols-9 gap-2">
+        {/* Grid de Barras Mensais (em linhas de 6 meses) */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2">
           {evolucaoMensal.map((item) => {
             const isSelected = selectedMonth === item.mes;
             const heightConvPct = Math.max(15, Math.round((item.convidados / maxConvidados) * 100));
