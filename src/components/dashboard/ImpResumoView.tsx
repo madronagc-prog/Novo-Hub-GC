@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { impAtividadesData } from '../../data/imp-atividades.data';
 import { impClippingData } from '../../data/imp-clipping.data';
-import { normalizarMes } from '../../utils/padronizacao';
+import { normalizarMes, normalizarUN } from '../../utils/padronizacao';
 import {
   Newspaper,
   CheckCircle2,
@@ -15,6 +15,7 @@ import {
 
 interface ImpResumoViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
 const MESES_ANO = [
@@ -47,21 +48,30 @@ const MESES_CHAVES_CLIPPING = [
   'dezembro'
 ] as const;
 
-export default function ImpResumoView({ selectedMonth = 'Todos os meses' }: ImpResumoViewProps) {
+export default function ImpResumoView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: ImpResumoViewProps) {
   const isAllMonths = selectedMonth === 'Todos os meses';
+  const isAllUns = selectedUn === 'Todas as UNs';
 
-  // 1. Filtragem de atividades por mês
+  // 1. Filtragem de atividades por mês e UN
   const filteredAtividades = useMemo(() => {
-    if (isAllMonths) return impAtividadesData;
-    return impAtividadesData.filter((d) => normalizarMes(d.mes) === selectedMonth);
-  }, [isAllMonths, selectedMonth]);
+    let data = impAtividadesData;
+    if (!isAllMonths) data = data.filter((d) => normalizarMes(d.mes) === selectedMonth);
+    if (!isAllUns) data = data.filter((d) => normalizarUN(d.un) === selectedUn);
+    return data;
+  }, [isAllMonths, selectedMonth, isAllUns, selectedUn]);
+
+  // Clipping filtrado por UN (cada linha já é uma área/UN)
+  const filteredClipping = useMemo(() => {
+    if (isAllUns) return impClippingData;
+    return impClippingData.filter((row) => normalizarUN(row.area) === selectedUn);
+  }, [isAllUns, selectedUn]);
 
   // Card 1: Total de atividades de imprensa
   const totalAtividades = filteredAtividades.length;
 
   // Card 2: Taxa de conversão em pauta (registros com pauta_convertida = "Sim")
   const conversaoPauta = useMemo(() => {
-    const base = filteredAtividades.length > 0 ? filteredAtividades : impAtividadesData;
+    const base = filteredAtividades;
     const convertidas = base.filter((d) => {
       const val = String(d.pauta_convertida || '').toLowerCase().trim();
       return val === 'sim' || val === 'true';
@@ -77,7 +87,7 @@ export default function ImpResumoView({ selectedMonth = 'Todos os meses' }: ImpR
 
   // Card 3: Porta-voz mais atuante
   const portaVozMaisAtuante = useMemo(() => {
-    const base = filteredAtividades.length > 0 ? filteredAtividades : impAtividadesData;
+    const base = filteredAtividades;
     const counts: Record<string, number> = {};
 
     base.forEach((d) => {
@@ -96,36 +106,37 @@ export default function ImpResumoView({ selectedMonth = 'Todos os meses' }: ImpR
     };
   }, [filteredAtividades]);
 
-  // Card 4: Total de clippings no período (soma de todos os meses de todas as áreas)
+  // Card 4: Total de clippings no período (soma de todos os meses de todas as áreas, já filtrado por UN)
   const totalClippingsPeriodo = useMemo(() => {
-    return impClippingData.reduce((acc, row) => {
+    return filteredClipping.reduce((acc, row) => {
       const somaLinha = MESES_CHAVES_CLIPPING.reduce((s, m) => {
         const val = row[m];
         return s + (typeof val === 'number' ? val : 0);
       }, 0);
       return acc + somaLinha;
     }, 0);
-  }, []);
+  }, [filteredClipping]);
 
-  // 2. Gráfico de Evolução Mensal de Atividades (Janeiro a Dezembro)
+  // 2. Gráfico de Evolução Mensal de Atividades (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoAtividades = useMemo(() => {
+    const base = isAllUns ? impAtividadesData : impAtividadesData.filter((d) => normalizarUN(d.un) === selectedUn);
     return MESES_ANO.map((m) => {
-      const count = impAtividadesData.filter((d) => normalizarMes(d.mes) === m).length;
+      const count = base.filter((d) => normalizarMes(d.mes) === m).length;
       return {
         mes: m,
         count
       };
     });
-  }, []);
+  }, [isAllUns, selectedUn]);
 
   const maxAtividadesMes = useMemo(() => {
     const maxVal = Math.max(...evolucaoAtividades.map((e) => e.count));
     return maxVal > 0 ? maxVal : 1;
   }, [evolucaoAtividades]);
 
-  // 3. Gráfico com as 10 áreas com mais clippings no período (ignora filtro de mês)
+  // 3. Gráfico com as 10 áreas com mais clippings no período (ignora filtro de mês; respeita UN)
   const top10AreasClipping = useMemo(() => {
-    const areasTotais = impClippingData.map((row) => {
+    const areasTotais = filteredClipping.map((row) => {
       const somaLinha = MESES_CHAVES_CLIPPING.reduce((s, m) => {
         const val = row[m];
         return s + (typeof val === 'number' ? val : 0);
@@ -141,7 +152,7 @@ export default function ImpResumoView({ selectedMonth = 'Todos os meses' }: ImpR
       .filter((a) => a.total > 0)
       .sort((a, b) => b.total - a.total)
       .slice(0, 10);
-  }, []);
+  }, [filteredClipping]);
 
   const maxClippingArea = top10AreasClipping[0]?.total || 1;
 
@@ -243,7 +254,7 @@ export default function ImpResumoView({ selectedMonth = 'Todos os meses' }: ImpR
               </div>
 
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-brand-blue border border-blue-100">
-                Total: {impAtividadesData.length}
+                Total: {evolucaoAtividades.reduce((a, e) => a + e.count, 0)}
               </span>
             </div>
 
