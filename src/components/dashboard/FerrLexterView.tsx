@@ -43,11 +43,11 @@ const MESES_LEXTER = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'
 
 interface FerrLexterViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
+export default function FerrLexterView({ selectedMonth, selectedUn }: FerrLexterViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState<string>('todas');
 
   // Base normalizada com padronização de UN e Mês
   const normalizedData = useMemo(() => {
@@ -76,19 +76,10 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Opções de UNs para filtro
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
-
   // Filtros combinados da tabela (busca + UN)
   const displayRecords = useMemo(() => {
     return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
+      if (selectedUn !== 'Todas as UNs' && d.un !== selectedUn) return false;
 
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
@@ -522,23 +513,7 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => setSelectedUn(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                   <div className="flex items-center gap-2.5 flex-wrap">
 
               {/* Busca por Nome */}
               <div className="relative">
