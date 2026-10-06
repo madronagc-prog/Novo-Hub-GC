@@ -553,77 +553,77 @@ export default function DashboardIndicadores() {
         {activeMainTab === 'visao-geral' ? (
           <VisaoGeralView activeSubTab={activeSubTab} selectedMonth={selectedMonth} />
         ) : activeMainTab === 'publicacoes' && activeSubTab === 'resumo' ? (
-          <PubResumoView selectedMonth={selectedMonth} />
+          <PubResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'redes' && activeSubTab === 'resumo' ? (
-          <RedeResumoView selectedMonth={selectedMonth} />
+          <RedeResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'email-mkt' && activeSubTab === 'resumo' ? (
-          <EmailMktResumoView selectedMonth={selectedMonth} />
+          <EmailMktResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'imprensa' && activeSubTab === 'resumo' ? (
-          <ImpResumoView selectedMonth={selectedMonth} />
+          <ImpResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'resumo' ? (
-          <AcademiaResumoView selectedMonth={selectedMonth} />
+          <AcademiaResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'time-sheet' && activeSubTab === 'resumo' ? (
-          <TsResumoView selectedMonth={selectedMonth} />
+          <TsResumoView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'academia-madrona' ? (
-          <AcademiaMadronaView selectedMonth={selectedMonth} />
+          <AcademiaMadronaView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'academia-treinamentos' && activeSubTab === 'treinamento-im' ? (
-          <AcadTreinamentoImView selectedMonth={selectedMonth} />
+          <AcadTreinamentoImView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'bibliotecas' && activeSubTab === 'aquisicoes' ? (
-          <BibAquisicoesView selectedMonth={selectedMonth} />
+          <BibAquisicoesView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'bibliotecas' && activeSubTab === 'mb' ? (
-          <BibMbView selectedMonth={selectedMonth} />
+          <BibMbView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'bibliotecas' && activeSubTab === 'proview' ? (
-          <BibProViewView selectedMonth={selectedMonth} />
+          <BibProViewView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'assinatura-eletronica' ? (
-          <FerrAssinaturaView />
+          <FerrAssinaturaView selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'copilot' ? (
-          <FerrCopilotView selectedMonth={selectedMonth} />
+          <FerrCopilotView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'im' ? (
-          <FerrImView selectedMonth={selectedMonth} />
+          <FerrImView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'lexter' ? (
           <FerrLexterView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'portdata' ? (
-          <FerrPortDataView selectedMonth={selectedMonth} />
+          <FerrPortDataView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'saga' ? (
-          <FerrSagaView />
+          <FerrSagaView selectedUn={selectedUn} />
         ) : activeMainTab === 'ferramentas' && activeSubTab === 'upminer' ? (
-          <FerrUpMinerView selectedMonth={selectedMonth} />
+          <FerrUpMinerView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'imprensa' && activeSubTab === 'atividades-imprensa' ? (
-          <ImpAtividadesView selectedMonth={selectedMonth} />
+          <ImpAtividadesView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'time-sheet' && activeSubTab === 'ts-ct' ? (
-          <TsCtView selectedMonth={selectedMonth} />
+          <TsCtView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'time-sheet' && activeSubTab === 'ts-gc' ? (
-          <TsGcView selectedMonth={selectedMonth} />
+          <TsGcView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'publicacoes' && activeSubTab === 'capital-aberto' ? (
-          <PubCapitalView selectedMonth={selectedMonth} />
+          <PubCapitalView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'publicacoes' && activeSubTab === 'controle-publicacoes' ? (
-          <PubControleView selectedMonth={selectedMonth} />
+          <PubControleView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'publicacoes' && activeSubTab === 'uns-em-numeros' ? (
-          <PubUnsNumerosView />
+          <PubUnsNumerosView selectedUn={selectedUn} />
         ) : activeMainTab === 'imprensa' && activeSubTab === 'clipping-com' ? (
-          <ImpClippingView selectedMonth={selectedMonth} />
+          <ImpClippingView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'email-mkt' && (activeSubTab === 'contribuicoes-jornal-bf' || activeSubTab === 'contribuicoes-bf') ? (
-          <EmailContribuicoesView selectedMonth={selectedMonth} />
+          <EmailContribuicoesView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'email-mkt' && activeSubTab === 'mailing' ? (
-          <EmailMailingView selectedMonth={selectedMonth} />
+          <EmailMailingView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'email-mkt' && activeSubTab === 'radar-tributario' ? (
-          <EmailRadarView selectedMonth={selectedMonth} />
+          <EmailRadarView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'redes' && activeSubTab === 'embaixadores' ? (
-          <RedeEmbaixadoresView selectedMonth={selectedMonth} />
+          <RedeEmbaixadoresView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'redes' && activeSubTab === 'news-linkedin' ? (
-          <RedeNewsLinkedinView selectedMonth={selectedMonth} />
+          <RedeNewsLinkedinView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'redes' && activeSubTab === 'posts-patrocinados-linkedin' ? (
-          <RedePostsPatrocinadosView selectedMonth={selectedMonth} />
+          <RedePostsPatrocinadosView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'redes' && activeSubTab === 'redes-sociais' ? (
-          <RedeSociaisView selectedMonth={selectedMonth} />
+          <RedeSociaisView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'grupos-estudos-rt' ? (
-          <GruposEstudosView selectedMonth={selectedMonth} />
+          <GruposEstudosView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'lex-juris' ? (
-          <LexJurisView selectedMonth={selectedMonth} />
+          <LexJurisView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'scouts' ? (
-          <ScoutsView selectedMonth={selectedMonth} />
+          <ScoutsView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : activeMainTab === 'pesquisas' ? (
-          <PesquisasView selectedMonth={selectedMonth} />
+          <PesquisasView selectedMonth={selectedMonth} selectedUn={selectedUn} />
         ) : (
           <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
             {/* Header do Container */}
