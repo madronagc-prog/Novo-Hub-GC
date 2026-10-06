@@ -254,6 +254,25 @@ export const MONTHS = [
   'Novembro',
   'Dezembro'
 ];
+export const UNS = [
+  'Todas as UNs',
+  'UN Ambiental',
+  'UN Bancário',
+  'UN Concorrencial',
+  'UN Contencioso',
+  'UN Corporativo',
+  'UN Digital, Comex e PI',
+  'UN Imobiliário',
+  'UN Infraestrutura',
+  'UN Mercap',
+  'UN Seguros',
+  'UN Trabalhista',
+  'UN Tributário',
+  'UN WC&C',
+  'UN Wealth',
+  'GC',
+  'COM'
+];
 
 export default function DashboardIndicadores() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -263,7 +282,8 @@ export default function DashboardIndicadores() {
   const [activeMainTab, setActiveMainTab] = useState<MainTabId>('visao-geral');
   const [activeSubTab, setActiveSubTab] = useState<string>('gc');
   const [selectedMonth, setSelectedMonth] = useState<string>('Todos os meses');
-
+  const [selectedUn, setSelectedUn] = useState<string>('Todas as UNs');
+  
   // Monitora usuário autenticado
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -496,6 +516,28 @@ export default function DashboardIndicadores() {
                     {MONTHS.map((m) => (
                       <option key={m} value={m}>
                         {m}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <label
+                  htmlFor="un-filter"
+                  className="text-xs font-semibold text-gray-600 flex items-center gap-1.5 flex-shrink-0"
+                >
+                  <Compass size={15} className="text-brand-blue" />
+                  Filtrar por UN:
+                </label>
+                <div className="relative">
+                  <select
+                    id="un-filter"
+                    value={selectedUn}
+                    onChange={(e) => setSelectedUn(e.target.value)}
+                    className="bg-gray-50 border border-gray-200 text-gray-800 text-xs sm:text-sm rounded-xl px-3 py-1.5 pr-8 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent font-medium cursor-pointer"
+                  >
+                    {UNS.map((u) => (
+                      <option key={u} value={u}>
+                        {u}
                       </option>
                     ))}
                   </select>
