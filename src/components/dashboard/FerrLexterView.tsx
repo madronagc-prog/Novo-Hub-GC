@@ -235,7 +235,7 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
               {somaDocumentos.toLocaleString('pt-BR')}
             </div>
             <div className="text-[11px] text-gray-500 mt-0.5">
-              Leituras & análises na Lexter
+              Leituras e análises na Lexter
             </div>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function FerrLexterView({ selectedMonth }: FerrLexterViewProps) {
               {somaRespostas.toLocaleString('pt-BR')}
             </div>
             <div className="text-[11px] text-purple-700 font-medium mt-0.5">
-              Insights & sínteses analíticas
+              Insights e sínteses analíticas
             </div>
           </div>
         </div>
