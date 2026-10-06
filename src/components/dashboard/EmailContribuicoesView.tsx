@@ -48,9 +48,10 @@ const EDICAO_BADGES: Record<string, { bg: string; text: string; border: string }
 
 interface EmailContribuicoesViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function EmailContribuicoesView({ selectedMonth }: EmailContribuicoesViewProps) {
+export default function EmailContribuicoesView({ selectedMonth, selectedUn }: EmailContribuicoesViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [edicaoFilter, setEdicaoFilter] = useState<string>('todas');
 
@@ -80,9 +81,15 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
     return sortedData.filter((d) => d.mes === selectedMonth);
   }, [sortedData, selectedMonth]);
 
-  // Filtros combinados da tabela (busca + edição)
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
+  // Filtros combinados da tabela (busca + edição; mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
+    return filteredData.filter((d) => {
       if (edicaoFilter !== 'todas' && d.edicao !== edicaoFilter) return false;
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
@@ -97,15 +104,16 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
       }
       return true;
     });
-  }, [monthFilteredData, edicaoFilter, searchTerm]);
+  }, [filteredData, edicaoFilter, searchTerm]);
 
   // Agrupamento por Edição para a visualização
   const edicoesDisponiveis = ['Ed. 1', 'Ed. 2', 'Ed. 3', 'Ed. 4', 'Ed. 5'];
 
-  // Métricas por Edição
+  // Métricas por Edição (respeitando o filtro de UN; taxa de abertura é por edição, não muda por UN)
   const statsPorEdicao = useMemo(() => {
+    const base = selectedUn === 'Todas as UNs' ? normalizedData : normalizedData.filter((d) => d.un === selectedUn);
     return edicoesDisponiveis.map((ed) => {
-      const itens = normalizedData.filter((d) => d.edicao === ed);
+      const itens = base.filter((d) => d.edicao === ed);
       const taxaValida = itens.find((i) => i.taxa_abertura !== null)?.taxa_abertura ?? null;
       const totalViews = itens.reduce((acc, i) => acc + (i.views_no_site || 0), 0);
       const mesEdicao = itens[0]?.mes || '';
@@ -118,7 +126,7 @@ export default function EmailContribuicoesView({ selectedMonth }: EmailContribui
         totalViews: totalViews > 0 ? totalViews : null
       };
     });
-  }, [normalizedData]);
+  }, [normalizedData, selectedUn]);
 
   // Totais Gerais
   const totalArtigosFiltrados = displayRecords.length;
