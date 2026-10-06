@@ -66,9 +66,10 @@ const BAR_COLORS = [
 
 interface PubControleViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function PubControleView({ selectedMonth }: PubControleViewProps) {
+export default function PubControleView({ selectedMonth, selectedUn }: PubControleViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClassificacao, setSelectedClassificacao] = useState<string>('todas');
   const [selectedArea, setSelectedArea] = useState<string>('todas');
@@ -99,6 +100,12 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
     return sortedData.filter((d) => d.mes === selectedMonth);
   }, [sortedData, selectedMonth]);
 
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
   // Opções para os filtros dropdown
   const classificacaoOptions = useMemo(() => {
     const set = new Set<string>();
@@ -117,9 +124,9 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
     return Array.from(set).sort();
   }, [normalizedData]);
 
-  // Filtros combinados da tabela (busca + classificação + área principal)
+  // Filtros combinados da tabela (busca + classificação + área principal; mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
+    return filteredData.filter((d) => {
       if (selectedClassificacao !== 'todas' && d.classificacao !== selectedClassificacao) return false;
       const area = (d.area_principal || 'Não informada').trim();
       if (selectedArea !== 'todas' && area !== selectedArea) return false;
@@ -138,26 +145,26 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
       }
       return true;
     });
-  }, [monthFilteredData, selectedClassificacao, selectedArea, searchTerm]);
+  }, [filteredData, selectedClassificacao, selectedArea, searchTerm]);
 
-  // Totais do Resumo (considerando o mês filtrado)
-  const totalPublicacoes = monthFilteredData.length;
+  // Totais do Resumo (considerando o mês e a UN filtrados)
+  const totalPublicacoes = filteredData.length;
 
   const somaViews = useMemo(() => {
-    return monthFilteredData.reduce((acc, curr) => {
+    return filteredData.reduce((acc, curr) => {
       return curr.views !== null ? acc + curr.views : acc;
     }, 0);
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   const publicacoesComViews = useMemo(() => {
-    return monthFilteredData.filter((d) => d.views !== null).length;
-  }, [monthFilteredData]);
+    return filteredData.filter((d) => d.views !== null).length;
+  }, [filteredData]);
 
   // Agrupamento por ÁREA PRINCIPAL para o gráfico de barras horizontais
   const statsPorAreaPrincipal = useMemo(() => {
     const map: Record<string, { count: number; views: number }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const area = (d.area_principal && d.area_principal.trim()) ? d.area_principal.trim() : 'Institucional / Geral';
       if (!map[area]) {
         map[area] = { count: 0, views: 0 };
@@ -176,7 +183,7 @@ export default function PubControleView({ selectedMonth }: PubControleViewProps)
         percentual: totalPublicacoes > 0 ? (data.count / totalPublicacoes) * 100 : 0
       }))
       .sort((a, b) => b.count - a.count);
-  }, [monthFilteredData, totalPublicacoes]);
+  }, [filteredData, totalPublicacoes]);
 
   // Área líder
   const areaLider = statsPorAreaPrincipal[0] || null;
