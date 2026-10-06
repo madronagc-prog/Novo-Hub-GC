@@ -216,4 +216,13 @@ export const pesquisasData: PesquisaRegistro[] = [
     tempo_investido: "02:30:00",
     tempo_investido_minutos: 150
   },
+    {
+    mes: "Setembro",
+    titulo: "Opção de Compra e Venda; Contrato de Opção; Put e Call; Opção em Acordo de Sócios",
+    un_an: "UN Corporativa",
+    solicitante: "Murilo Bertoldi",
+    tipo: "Pesquisa geral",
+    tempo_investido: "02:30:00",
+    tempo_investido_minutos: 150
+  },
 ];
