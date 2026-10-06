@@ -17,5 +17,5 @@ export const acadTreinamentoIMData: TreinamentoIMRegistro[] = [
   { mes: "Julho", participantes: 1, convidados: 1 },
   { mes: "Agosto", participantes: 41, convidados: 230 },
   { mes: "Agosto", participantes: 20, convidados: 230 },
-  { mes: "Setembro", participantes: null, convidados: 73 }
+  { mes: "Setembro", participantes: 39, convidados: 39 }
 ];
