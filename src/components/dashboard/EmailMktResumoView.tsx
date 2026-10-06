@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { emailMailingData } from '../../data/email-mailing.data';
 import { emailContribuicoesData } from '../../data/email-contribuicoes.data';
 import { emailRadarData } from '../../data/email-radar.data';
-import { normalizarMes } from '../../utils/padronizacao';
+import { normalizarMes, normalizarUN } from '../../utils/padronizacao';
 import {
   Mail,
   BookOpen,
@@ -16,21 +16,31 @@ import {
 
 interface EmailMktResumoViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
-export default function EmailMktResumoView({ selectedMonth = 'Todos os meses' }: EmailMktResumoViewProps) {
-  // 1. Linha "Todos" do emailMailingData
+export default function EmailMktResumoView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: EmailMktResumoViewProps) {
+  const isAllUns = selectedUn === 'Todas as UNs';
+
+  // 1. Linha ativa do emailMailingData: "Todos", ou a UN selecionada quando houver correspondência
+  // (Mailing não tem campo de UN padronizado, usa o próprio "area"; Radar Tributário não tem UN)
   const todosRow = useMemo(() => {
-    return emailMailingData.find((d) => d.area === 'Todos');
-  }, []);
+    if (isAllUns) return emailMailingData.find((d) => d.area === 'Todos');
+    return emailMailingData.find((d) => d.area !== 'Todos' && normalizarUN(d.area) === selectedUn);
+  }, [isAllUns, selectedUn]);
 
   // Total de inscritos no mês mais recente disponível (Agosto)
-  const totalInscritosAgosto = todosRow?.agosto || 20389;
+  const totalInscritosAgosto = todosRow?.agosto || 0;
 
-  // 2. Edições do Jornal B&F
-  const edicoesJornalBF = emailContribuicoesData.length;
+  // 2. Edições do Jornal B&F (respeitando o filtro de UN, já que essa base tem campo "un")
+  const contribuicoesFiltradas = useMemo(() => {
+    if (isAllUns) return emailContribuicoesData;
+    return emailContribuicoesData.filter((d) => normalizarUN(d.un) === selectedUn);
+  }, [isAllUns, selectedUn]);
 
-  // 3. Edições do Radar Tributário
+  const edicoesJornalBF = contribuicoesFiltradas.length;
+
+  // 3. Edições do Radar Tributário (sem UN na base, não filtra)
   const edicoesRadar = emailRadarData.length;
 
   // 4. Taxa de abertura média do Radar Tributário
@@ -91,11 +101,11 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses' }:
     }));
   }, []);
 
-  // Jornal B&F (agrupado por edição para pegar a taxa não nula de cada edição)
+  // Jornal B&F (agrupado por edição para pegar a taxa não nula de cada edição; respeita o filtro de UN)
   const jornalBFEdicoesTaxas = useMemo(() => {
     const edicoesMap = new Map<string, { edicao: string; mes: string; taxa: number }>();
 
-    emailContribuicoesData.forEach((d) => {
+    contribuicoesFiltradas.forEach((d) => {
       const edKey = d.edicao || d.mes;
       if (typeof d.taxa_abertura === 'number' && !edicoesMap.has(edKey)) {
         edicoesMap.set(edKey, {
@@ -114,7 +124,7 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses' }:
       tema: `Edição de ${d.mes}`,
       taxa: d.taxa
     }));
-  }, []);
+  }, [contribuicoesFiltradas]);
 
   const maxTaxaGeral = useMemo(() => {
     const todasTaxas = [
@@ -138,13 +148,13 @@ export default function EmailMktResumoView({ selectedMonth = 'Todos os meses' }:
           </div>
           <div className="min-w-0">
             <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider truncate">
-              Total de Inscritos
+              {isAllUns ? 'Total de Inscritos' : `Inscritos — ${selectedUn}`}
             </div>
             <div className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 mt-0.5">
               {totalInscritosAgosto.toLocaleString('pt-BR')}
             </div>
             <div className="text-[11px] text-gray-500 mt-0.5 truncate">
-              dado de Agosto • linha Todos (+{crescimentoInscritos.toLocaleString('pt-BR')} no ano)
+              {isAllUns ? 'dado de Agosto • linha Todos' : 'dado de Agosto'} (+{crescimentoInscritos.toLocaleString('pt-BR')} no ano)
             </div>
           </div>
         </div>
