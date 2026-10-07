@@ -24,6 +24,14 @@ export const DASHBOARD_INDICADORES_ADMINS = [
   "deborah.lindau@madronaadvogados.com.br",
   "filipi.oliveira@madronaadvogados.com.br",
   "amanda.correa@madronaadvogados.com.br",
+  "carnivalofdisgustblog@gmail.com",
+  "gc.madronafialho@gmail.com",
+  "andrezzasoares08@gmail.com",
+  "amandacarvaleite@gmail.com",
+  "madrona.gc@gmail.com",
+  "clarissa.machado@madronaadvogados.com.br",
+  "ione.moraes@madronaadvogados.com.br",
+  "raquel.marques@madronaadvogados.com.br",
 ];
 
 // E-mails com permissão de VISUALIZAÇÃO (somente leitura) no Dashboard de Indicadores
@@ -120,10 +128,53 @@ export function getDashboardIndicadoresRole(email: string | null | undefined): D
 // ============================================================================
 // Permissões do Painel de Inovação
 // ============================================================================
-// Compartilha exatamente a mesma lista e os mesmos papéis do Dashboard de Indicadores:
-// Administradores com edição: Andrezza, Deborah, Filipi e Amanda (+ ADMIN_EMAILS)
-// Demais pessoas: apenas visualização
-export const canAccessPainelInovacao = canAccessDashboardIndicadores;
-export const canEditPainelInovacao = canEditDashboardIndicadores;
-export type PainelInovacaoRole = DashboardIndicadoresRole;
-export const getPainelInovacaoRole = getDashboardIndicadoresRole;
+// Lista própria, independente do Dashboard de Indicadores.
+
+// E-mails com permissão de EDIÇÃO no Painel de Inovação
+export const PAINEL_INOVACAO_ADMINS = [
+  "andrezza.soares@madronaadvogados.com.br",
+  "deborah.lindau@madronaadvogados.com.br",
+  "filipi.oliveira@madronaadvogados.com.br",
+  "amanda.correa@madronaadvogados.com.br",
+  "carnivalofdisgustblog@gmail.com",
+  "gc.madronafialho@gmail.com",
+  "andrezzasoares08@gmail.com",
+  "amandacarvaleite@gmail.com",
+  "madrona.gc@gmail.com",
+  "clarissa.machado@madronaadvogados.com.br",
+  "ione.moraes@madronaadvogados.com.br",
+  "raquel.marques@madronaadvogados.com.br",
+];
+
+// E-mails com permissão de VISUALIZAÇÃO (somente leitura) no Painel de Inovação
+export const PAINEL_INOVACAO_VIEWERS = [
+  "mininel@madronaadvogados.com.br",
+];
+
+export function canAccessPainelInovacao(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const normalized = email.toLowerCase().trim();
+  return ADMIN_EMAILS.some(a => a.toLowerCase() === normalized) ||
+         PAINEL_INOVACAO_ADMINS.some(a => a.toLowerCase() === normalized) ||
+         PAINEL_INOVACAO_VIEWERS.some(v => v.toLowerCase() === normalized);
+}
+
+// Indica se o usuário tem permissão de EDIÇÃO (admin) no Painel de Inovação
+export function canEditPainelInovacao(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const normalized = email.toLowerCase().trim();
+  return ADMIN_EMAILS.some(a => a.toLowerCase() === normalized) ||
+         PAINEL_INOVACAO_ADMINS.some(a => a.toLowerCase() === normalized);
+}
+
+// Papel do usuário no Painel de Inovação: 'admin' (edição), 'viewer' (somente leitura) ou null (sem acesso)
+export type PainelInovacaoRole = 'admin' | 'viewer' | null;
+
+export function getPainelInovacaoRole(email: string | null | undefined): PainelInovacaoRole {
+  if (!email) return null;
+  const normalized = email.toLowerCase().trim();
+  if (ADMIN_EMAILS.some(a => a.toLowerCase() === normalized)) return 'admin';
+  if (PAINEL_INOVACAO_ADMINS.some(a => a.toLowerCase() === normalized)) return 'admin';
+  if (PAINEL_INOVACAO_VIEWERS.some(v => v.toLowerCase() === normalized)) return 'viewer';
+  return null;
+}
