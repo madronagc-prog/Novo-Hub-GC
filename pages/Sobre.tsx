@@ -37,7 +37,8 @@ const defaultContent: SobreContent = {
     'Acesso aos **Serviços de GC**, plataformas e bases de dados externas gerenciadas pela equipe.',
     'Monitoramento contínuo de **Jurisprudência** (Temas Repetitivos, Controvérsias do STJ, Repercussão Geral do STF).',
     'Acompanhamento Legislativo e **Monitoramento de Empresas**.',
-    '**Clipping Corporativo** e fontes de curadoria confiáveis no Explorador.'
+    '**Clipping Corporativo** e fontes de curadoria confiáveis no Explorador.',
+    'O **Madrona Lab**, laboratório de testes e experimentos de IA da equipe de GC: [acesse aqui](/madrona-lab).'
   ],
   contatoTexto: 'Dúvidas ou sugestões? Fale com a GC:',
   contatoEmail: 'gestaodoconhecimento@madronaadvogados.com.br'
