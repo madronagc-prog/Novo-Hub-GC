@@ -36,15 +36,15 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_MB = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto'];
+const MESES_MB = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 interface BibMbViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function BibMbView({ selectedMonth }: BibMbViewProps) {
+export default function BibMbView({ selectedMonth, selectedUn }: BibMbViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState<string>('todas');
 
   // Base normalizada com padronização de UN e Mês
   const normalizedData = useMemo(() => {
@@ -73,20 +73,21 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Opções de UNs para filtro
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
 
-  // Filtros combinados da tabela (busca + UN)
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtro de busca textual da tabela (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
-
+    return filteredData.filter((d) => {
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
         const match =
@@ -97,32 +98,32 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
       }
       return true;
     });
-  }, [monthFilteredData, selectedUn, searchTerm]);
+  }, [filteredData, searchTerm]);
 
-  // Totais do Resumo (no período filtrado)
+  // Totais do Resumo (no período e UN filtrados)
   const somaAcessos = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.acessos, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.acessos, 0),
+    [filteredData]
   );
 
   const usuariosUnicosSet = useMemo(() => {
     const set = new Set<string>();
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (d.acessos > 0) {
         set.add(d.nome);
       }
     });
     return set;
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   const totalUsuariosUnicos = usuariosUnicosSet.size;
 
   const mediaAcessosPorUsuario = totalUsuariosUnicos > 0 ? (somaAcessos / totalUsuariosUnicos).toFixed(1) : '0';
 
-  // Evolução Mensal (Janeiro a Agosto) - Base Consolidada Global
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_MB.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const totalAcessosMes = itensDoMes.reduce((acc, d) => acc + d.acessos, 0);
       const ativosCount = new Set(itensDoMes.filter((d) => d.acessos > 0).map((d) => d.nome)).size;
 
@@ -132,13 +133,13 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
         ativosCount
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   // Agrupamento por UN (no período filtrado)
   const statsPorUn = useMemo(() => {
     const map: Record<string, { acessos: number; users: Set<string> }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { acessos: 0, users: new Set() };
@@ -157,7 +158,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
         percentual: somaAcessos > 0 ? (data.acessos / somaAcessos) * 100 : 0
       }))
       .sort((a, b) => b.acessos - a.acessos);
-  }, [monthFilteredData, somaAcessos]);
+  }, [filteredData, somaAcessos]);
 
   const unLider = statsPorUn[0] || null;
 
@@ -165,7 +166,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
   const topUsuarios = useMemo(() => {
     const map: Record<string, { acessos: number; un: string }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (!map[d.nome]) {
         map[d.nome] = { acessos: 0, un: d.un };
       }
@@ -181,7 +182,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
       .filter((u) => u.acessos > 0)
       .sort((a, b) => b.acessos - a.acessos)
       .slice(0, 10);
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   // Exportar Excel
   const handleExportExcel = () => {
@@ -305,7 +306,7 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
         </div>
 
         {/* Grid de Barras Mensais (8 Meses) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.round((item.totalAcessos / maxEvolucaoAcessos) * 100);
             const isCurrentMonth = selectedMonth === item.mes;
@@ -507,23 +508,6 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
             </div>
 
             <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => setSelectedUn(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Busca por Nome */}
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -549,11 +533,11 @@ export default function BibMbView({ selectedMonth }: BibMbViewProps) {
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+            <thead className="sticky top-0 z-10 bg-gray-50/70 border-b border-gray-200/80 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-12 text-center">#</th>
                 <th className="py-3 px-4 min-w-[220px]">Colaborador</th>
                 <th className="py-3 px-4 w-44">UN (Padronizada)</th>
