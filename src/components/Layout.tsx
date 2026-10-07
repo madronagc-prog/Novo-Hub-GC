@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, LayoutDashboard, Info, Menu, X, FileText,
-  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical, BarChart3, Lightbulb
+  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, BarChart3, Lightbulb
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { auth, signIn, logOut } from '../firebase';
@@ -71,12 +71,7 @@ export default function Layout() {
       subItems?: Array<{ path: string; label: string }>;
     }> = [
       { path: '/sobre', label: 'Sobre o Hub', icon: Info },
-      
-      {
-        label: 'Madrona Lab',
-        path: '/madrona-lab',
-        icon: FlaskConical,
-      },
+
       {
         label: 'Serviços de GC',
         path: '/servicos-gc',
@@ -112,7 +107,7 @@ export default function Layout() {
     if (hasAccessIndicadores) {
       items.push({
         path: '/dashboard-indicadores',
-        label: 'Indicadores,
+        label: 'Indicadores GC & COM',
         icon: BarChart3,
       });
     }
@@ -120,7 +115,7 @@ export default function Layout() {
     if (hasAccessPainelInovacao) {
       items.push({
         path: '/painel-inovacao',
-        label: 'Inovação',
+        label: 'Painel de Inovação',
         icon: Lightbulb,
       });
     }
