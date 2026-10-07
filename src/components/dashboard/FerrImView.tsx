@@ -41,15 +41,15 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_IM = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto'];
+const MESES_IM = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 interface FerrImViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function FerrImView({ selectedMonth }: FerrImViewProps) {
+export default function FerrImView({ selectedMonth, selectedUn }: FerrImViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState<string>('todas');
   const [selectedPosicao, setSelectedPosicao] = useState<string>('todas');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
@@ -83,15 +83,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Opções de UNs e Posições para dropdown
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
-
+  // Opções de Posições para dropdown
   const posicaoOptions = useMemo(() => {
     const set = new Set<string>();
     normalizedData.forEach((d) => {
@@ -100,10 +92,21 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
     return Array.from(set).sort();
   }, [normalizedData]);
 
-  // Filtros combinados da tabela (busca + UN + posição)
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtros combinados da tabela (busca + posição; mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
+    return filteredData.filter((d) => {
       if (selectedPosicao !== 'todas' && d.posicao !== selectedPosicao) return false;
 
       if (searchTerm.trim()) {
@@ -117,7 +120,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
       }
       return true;
     });
-  }, [monthFilteredData, selectedUn, selectedPosicao, searchTerm]);
+  }, [filteredData, selectedPosicao, searchTerm]);
 
   // Paginação dos registros
   const totalPages = Math.ceil(displayRecords.length / pageSize) || 1;
@@ -126,32 +129,32 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
     return displayRecords.slice(start, start + pageSize);
   }, [displayRecords, page, pageSize]);
 
-  // Totais do Resumo (no período filtrado)
+  // Totais do Resumo (no período e UN filtrados)
   const somaTotal = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.total, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.total, 0),
+    [filteredData]
   );
   const somaDocCriado = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.doc_criado, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.doc_criado, 0),
+    [filteredData]
   );
   const somaVCriada = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.v_criada, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.v_criada, 0),
+    [filteredData]
   );
   const somaEmailArq = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.email_arq, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.email_arq, 0),
+    [filteredData]
   );
   const somaExp = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.exp, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.exp, 0),
+    [filteredData]
   );
 
-  // Evolução Mensal (Janeiro a Agosto) - Base Consolidada
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_IM.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const totalUso = itensDoMes.reduce((acc, d) => acc + d.total, 0);
       const totalDocs = itensDoMes.reduce((acc, d) => acc + d.doc_criado, 0);
       const totalEmails = itensDoMes.reduce((acc, d) => acc + d.email_arq, 0);
@@ -169,13 +172,13 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
         ativosCount
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   // Agrupamento por UN (no período filtrado)
   const statsPorUn = useMemo(() => {
     const map: Record<string, { total: number; docs: number; versoes: number; emails: number; exp: number; users: Set<string> }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { total: 0, docs: 0, versoes: 0, emails: 0, exp: 0, users: new Set() };
@@ -202,13 +205,13 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
         percentual: somaTotal > 0 ? (data.total / somaTotal) * 100 : 0
       }))
       .sort((a, b) => b.total - a.total);
-  }, [monthFilteredData, somaTotal]);
+  }, [filteredData, somaTotal]);
 
   // Ranking Top 10 Usuários no Período Selecionado
   const topUsuarios = useMemo(() => {
     const map: Record<string, { total: number; docs: number; versoes: number; emails: number; exp: number; un: string; posicao: string }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (!map[d.nome]) {
         map[d.nome] = { total: 0, docs: 0, versoes: 0, emails: 0, exp: 0, un: d.un, posicao: d.posicao };
       }
@@ -233,7 +236,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
       .filter((u) => u.total > 0)
       .sort((a, b) => b.total - a.total)
       .slice(0, 10);
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   // Exportar Excel
   const handleExportExcel = () => {
@@ -380,7 +383,7 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
         </div>
 
         {/* Grid de Barras Mensais (8 Meses) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.round((item.totalUso / maxEvolucaoUso) * 100);
             const isCurrentMonth = selectedMonth === item.mes;
@@ -588,26 +591,6 @@ export default function FerrImView({ selectedMonth }: FerrImViewProps) {
             </div>
 
             <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => {
-                    setSelectedUn(e.target.value);
-                    setPage(1);
-                  }}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Filtro por Posição */}
               <div className="flex items-center gap-1.5 text-xs">
                 <span className="text-gray-500 font-medium">Cargo:</span>
