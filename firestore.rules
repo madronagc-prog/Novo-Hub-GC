@@ -39,12 +39,16 @@ service cloud.firestore {
 
     function isAdmin() {
       return isAuthenticated() && (
-        (request.auth.token.email != null && request.auth.token.email in [
+        (request.auth.token.email != null && request.auth.token.email.lower() in [
           "carnivalofdisgustblog@gmail.com", 
           "gc.madronafialho@gmail.com",
           "andrezzasoares08@gmail.com",
           "amandacarvaleite@gmail.com",
-          "madrona.gc@gmail.com"
+          "madrona.gc@gmail.com",
+          "andrezza.soares@madronaadvogados.com.br",
+          "deborah.lindau@madronaadvogados.com.br",
+          "filipi.oliveira@madronaadvogados.com.br",
+          "amanda.correa@madronaadvogados.com.br"
         ]) ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
@@ -199,6 +203,32 @@ service cloud.firestore {
     match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // ── Painel de Inovação ────────────────────────────────────────────────────
+    match /painel_inovacao_projetos/{projetoId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /painel_inovacao_etapas/{projetoId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /painel_inovacao_adocao/{adocaoId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /painel_inovacao_valor_qualidade/{registroId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /painel_inovacao_metas_pe/{metaId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
     }
   }
 }

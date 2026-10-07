@@ -160,12 +160,145 @@
         "data": { "type": "object" },
         "createdAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "InovacaoProjeto": {
+      "title": "Projeto de Inovação",
+      "description": "Iniciativa do Painel de Inovação com métricas de gestão.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projeto": { "type": "string" },
+        "tipo_iniciativa": { "type": "string" },
+        "categoria": { "type": "string" },
+        "ferramenta_fornecedor": { "type": "string" },
+        "dor_resolvida": { "type": "string" },
+        "un_area": { "type": "string" },
+        "socio_sponsor": { "type": "string" },
+        "responsavel_gc": { "type": "string" },
+        "pilar_pe": { "type": "string" },
+        "prioridade": { "type": "string" },
+        "alcada": { "type": "string" },
+        "decisao_comite": { "type": "string" },
+        "etapa_atual": { "type": "string" },
+        "situacao": { "type": "string" },
+        "saude_projeto": { "type": "string" },
+        "bloqueado": { "type": "string" },
+        "risco_principal": { "type": "string" },
+        "nivel_risco": { "type": "string" },
+        "data_pedido": { "type": "string" },
+        "golive_previsto_linha_base": { "type": "string" },
+        "golive_previsto_atual": { "type": "string" },
+        "golive_realizado": { "type": "string" },
+        "orcamento_previsto": { "type": "number" },
+        "custo_realizado": { "type": "number" },
+        "modelo_custo": { "type": "string" },
+        "licencas_contratadas": { "type": "number" },
+        "proximo_passo": { "type": "string" },
+        "ultima_atualizacao": { "type": "string" }
+      },
+      "required": ["projeto"]
+    },
+    "InovacaoEtapas": {
+      "title": "Etapas do Projeto de Inovação",
+      "description": "Registro das datas de início e fim das 9 etapas do projeto.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "mapeamento_ferramentas_inicio": { "type": "string" },
+        "mapeamento_ferramentas_fim": { "type": "string" },
+        "testes_inicio": { "type": "string" },
+        "testes_fim": { "type": "string" },
+        "negociacao_contrato_inicio": { "type": "string" },
+        "negociacao_contrato_fim": { "type": "string" },
+        "assinatura_contrato_inicio": { "type": "string" },
+        "assinatura_contrato_fim": { "type": "string" },
+        "inicio_projeto_inicio": { "type": "string" },
+        "inicio_projeto_fim": { "type": "string" },
+        "projeto_andamento_inicio": { "type": "string" },
+        "projeto_andamento_fim": { "type": "string" },
+        "golive_inicio": { "type": "string" },
+        "golive_fim": { "type": "string" },
+        "treinamentos_inicio": { "type": "string" },
+        "treinamentos_fim": { "type": "string" },
+        "feedbacks_inicio": { "type": "string" },
+        "feedbacks_fim": { "type": "string" }
+      }
+    },
+    "InovacaoAdocao": {
+      "title": "Adoção e Treinamento de Inovação",
+      "description": "Métricas de adoção por projeto, mês e UN.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projeto_id": { "type": "string" },
+        "mes_referencia": { "type": "string" },
+        "un_area": { "type": "string" },
+        "licencas_disponiveis": { "type": "number" },
+        "usuarios_ativos_mes": { "type": "number" },
+        "sessoes_treinamento_mes": { "type": "number" },
+        "pessoas_treinadas": { "type": "number" },
+        "publico_alvo_treinamento": { "type": "number" },
+        "observacoes": { "type": "string" }
+      }
+    },
+    "InovacaoValorQualidade": {
+      "title": "Valor e Qualidade de Inovação",
+      "description": "Impacto de tempo e qualidade por projeto e bimestre.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projeto_id": { "type": "string" },
+        "bimestre": { "type": "string" },
+        "pessoas_impactadas": { "type": "number" },
+        "horas_economizadas_bimestre": { "type": "number" },
+        "metodo_apuracao": { "type": "string" },
+        "tempo_medio_antes": { "type": "number" },
+        "tempo_medio_depois": { "type": "number" },
+        "nota_qualidade_antes": { "type": "number" },
+        "nota_qualidade_depois": { "type": "number" },
+        "satisfacao_usuarios": { "type": "number" },
+        "respostas_feedback": { "type": "number" },
+        "comentarios": { "type": "string" }
+      }
+    },
+    "InovacaoMetaPE": {
+      "title": "Metas do Planejamento Estratégico",
+      "description": "Indicadores M1 a M9 e metas de Inovação.",
+      "type": "object",
+      "properties": {
+        "codigo": { "type": "string" },
+        "pilar": { "type": "string" },
+        "indicador": { "type": "string" },
+        "o_que_mede": { "type": "string" },
+        "tipo_meta": { "type": "string" },
+        "meta": { "type": "number" }
+      }
     }
   },
   "firestore": {
     "/clippings/{clippingId}": {
       "schema": "Clipping",
       "description": "Edições do Clipping UN Corporate."
+    },
+    "/painel_inovacao_projetos/{projetoId}": {
+      "schema": "InovacaoProjeto",
+      "description": "Projetos e iniciativas do Painel de Inovação."
+    },
+    "/painel_inovacao_etapas/{projetoId}": {
+      "schema": "InovacaoEtapas",
+      "description": "Datas e status das 9 etapas por projeto de inovação."
+    },
+    "/painel_inovacao_adocao/{adocaoId}": {
+      "schema": "InovacaoAdocao",
+      "description": "Métricas de adoção e treinamentos por projeto, mês e UN."
+    },
+    "/painel_inovacao_valor_qualidade/{registroId}": {
+      "schema": "InovacaoValorQualidade",
+      "description": "Métricas de horas economizadas, tempo e qualidade por projeto e bimestre."
+    },
+    "/painel_inovacao_metas_pe/{metaId}": {
+      "schema": "InovacaoMetaPE",
+      "description": "Metas estratégicas M1 a M9 e configuração do ano de apuração."
     },
     "/projetosDeLei/{projetoId}": {
       "schema": "ProjetoDeLei",
