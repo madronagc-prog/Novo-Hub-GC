@@ -41,6 +41,7 @@ import { ValorQualidadeTab } from '../components/painel-inovacao/ValorQualidadeT
 import { MetasPETab } from '../components/painel-inovacao/MetasPETab';
 
 import {
+  Lightbulb,
   Layers,
   Calendar,
   Users,
@@ -583,8 +584,15 @@ export default function PainelInovacao() {
 
   return (
     <div className="min-h-screen bg-gray-50/70 text-gray-800 pb-24">
-      {/* ── Top Header Institucional removido a pedido do Filipi ──────── */}
+      {/* ── Top Header Institucional (só o título) ─────────────────────── */}
       <div className="bg-white border-b border-gray-200/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 tracking-tight flex items-center gap-2.5">
+            <Lightbulb size={28} className="text-[#00B2FF]" />
+            Painel de Inovação
+          </h1>
+        </div>
+
         {/* ── Abas de Navegação ────────────────────────────────────────── */}
         <div className="border-t border-gray-200/70 bg-[#fafbfc]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
