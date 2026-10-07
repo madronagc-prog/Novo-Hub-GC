@@ -348,11 +348,11 @@ export default function ImpClippingView({ selectedMonth, selectedUn }: ImpClippi
           </div>
         </div>
 
-        {/* Tabela Heatmap com Scroll Horizontal */}
-        <div className="overflow-x-auto">
+        {/* Tabela Heatmap com Rolagem Interna (horizontal e vertical) */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-center border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-gray-200 bg-gray-50/80 text-[11px] font-semibold text-gray-600 uppercase tracking-wider">
+            <thead className="sticky top-0 z-10 bg-gray-50/80 border-b border-gray-200 text-[11px] font-semibold text-gray-600 uppercase tracking-wider">
+              <tr className="text-[11px] font-semibold text-gray-600 uppercase tracking-wider">
                 <th className="py-3 px-4 text-left min-w-[220px]">Área / UN</th>
                 {MESES_COLUNAS.map((m) => {
                   const isHighlighted = activeMonthKey === m.key;
