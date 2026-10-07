@@ -39,7 +39,7 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_UPMINER = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto'];
+const MESES_UPMINER = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 function formatarMoeda(val: number): string {
   return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -68,9 +68,10 @@ function formatarAreaUpMiner(area: string): string {
 
 interface FerrUpMinerViewProps {
   selectedMonth?: string;
+  selectedUn?: string;
 }
 
-export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: FerrUpMinerViewProps) {
+export default function FerrUpMinerView({ selectedMonth = 'Todos os meses', selectedUn = 'Todas as UNs' }: FerrUpMinerViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFrente, setSelectedFrente] = useState('todas');
   const [localMonth, setLocalMonth] = useState('todos');
@@ -96,9 +97,21 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
     return data;
   }, [normalizedData, selectedMonth, localMonth]);
 
-  // Filtros combinados da tabela
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.areaNormalizada === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.areaNormalizada === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtros combinados da tabela (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
+    return filteredData.filter((d) => {
       if (selectedFrente !== 'todas') {
         const isCT = d.frenteFormatada.startsWith('CT');
         if (selectedFrente === 'CT' && !isCT) return false;
@@ -116,12 +129,12 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
       }
       return true;
     });
-  }, [monthFilteredData, selectedFrente, searchTerm]);
+  }, [filteredData, selectedFrente, searchTerm]);
 
   // Totais do Período Filtrado
   const totalUsadoFiltrado = useMemo(() => {
-    return monthFilteredData.reduce((acc, d) => acc + d.valor, 0);
-  }, [monthFilteredData]);
+    return filteredData.reduce((acc, d) => acc + d.valor, 0);
+  }, [filteredData]);
 
   // Totais Globais de Contrato
   const totalContratado = UPMINER_TOTAL_CONTRATO;
@@ -129,10 +142,10 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
   const totalDisponivelGlobal = Math.max(0, totalContratado - totalUsadoGlobal);
   const pctUsoGlobal = (totalUsadoGlobal / totalContratado) * 100;
 
-  // Evolução Mensal (Janeiro a Agosto)
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_UPMINER.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const valorTotal = itensDoMes.reduce((acc, d) => acc + d.valor, 0);
       const valorBD = itensDoMes
         .filter((d) => !d.frenteFormatada.startsWith('CT'))
@@ -149,7 +162,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
         count: itensDoMes.length
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   const maxEvolucaoValor = Math.max(...evolucaoMensal.map((e) => e.valorTotal), 1);
 
@@ -157,7 +170,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
   const statsPorArea = useMemo(() => {
     const map: Record<string, { valor: number; count: number }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const a = d.areaNormalizada;
       if (!map[a]) {
         map[a] = { valor: 0, count: 0 };
@@ -174,7 +187,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
         pct: totalUsadoFiltrado > 0 ? (s.valor / totalUsadoFiltrado) * 100 : 0
       }))
       .sort((a, b) => b.valor - a.valor);
-  }, [monthFilteredData, totalUsadoFiltrado]);
+  }, [filteredData, totalUsadoFiltrado]);
 
   const maxAreaValor = statsPorArea[0]?.valor || 1;
 
@@ -185,7 +198,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
     let valorCT = 0;
     let countCT = 0;
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (d.frenteFormatada.startsWith('CT')) {
         valorCT += d.valor;
         countCT += 1;
@@ -338,7 +351,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
         </div>
 
         {/* Grid de Barras Mensais (8 Meses) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.max(15, Math.round((item.valorTotal / maxEvolucaoValor) * 100));
             const isSelected = selectedMonth === item.mes || localMonth === item.mes;
@@ -528,7 +541,7 @@ export default function FerrUpMinerView({ selectedMonth = 'Todos os meses' }: Fe
                 <FileText size={18} className="text-brand-blue" />
                 <span>Lançamentos upMiner</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
-                  ({displayRecords.length} de {normalizedData.length} registros)
+                  ({displayRecords.length} de {filteredData.length} registros)
                 </span>
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
