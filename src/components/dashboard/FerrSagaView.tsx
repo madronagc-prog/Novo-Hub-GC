@@ -26,9 +26,12 @@ import {
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
-export default function FerrSagaView() {
+interface FerrSagaViewProps {
+  selectedUn: string;
+}
+
+export default function FerrSagaView({ selectedUn }: FerrSagaViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState('todas');
   const [selectedPosicao, setSelectedPosicao] = useState('todas');
   const [rankingTab, setRankingTab] = useState<'enviado' | 'dias'>('enviado');
 
@@ -49,15 +52,13 @@ export default function FerrSagaView() {
     });
   }, []);
 
-  // Opções de UN e Posição para dropdowns
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
+  // Filtro de UN (do seletor superior da página)
+  const filteredByUn = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
 
+  // Opções de Posição para dropdown
   const posicaoOptions = useMemo(() => {
     const set = new Set<string>();
     normalizedData.forEach((d) => {
@@ -66,10 +67,9 @@ export default function FerrSagaView() {
     return Array.from(set).sort();
   }, [normalizedData]);
 
-  // Filtros combinados da tabela
+  // Filtros combinados da tabela (posição + busca; UN já vem de filteredByUn)
   const displayRecords = useMemo(() => {
-    return normalizedData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
+    return filteredByUn.filter((d) => {
       if (selectedPosicao !== 'todas' && d.posicao !== selectedPosicao) return false;
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
@@ -81,30 +81,30 @@ export default function FerrSagaView() {
       }
       return true;
     });
-  }, [normalizedData, selectedUn, selectedPosicao, searchTerm]);
+  }, [filteredByUn, selectedPosicao, searchTerm]);
 
-  // Totais do Resumo
-  const totalLicencas = normalizedData.length;
-  const totalEnviado = useMemo(() => normalizedData.reduce((acc, d) => acc + d.enviado, 0), [normalizedData]);
-  const totalProjetos = useMemo(() => normalizedData.reduce((acc, d) => acc + d.projetos, 0), [normalizedData]);
+  // Totais do Resumo (já respeitando o filtro de UN)
+  const totalLicencas = filteredByUn.length;
+  const totalEnviado = useMemo(() => filteredByUn.reduce((acc, d) => acc + d.enviado, 0), [filteredByUn]);
+  const totalProjetos = useMemo(() => filteredByUn.reduce((acc, d) => acc + d.projetos, 0), [filteredByUn]);
   const totalProjetosComp = useMemo(
-    () => normalizedData.reduce((acc, d) => acc + (d.projetos_comp || 0), 0),
-    [normalizedData]
+    () => filteredByUn.reduce((acc, d) => acc + (d.projetos_comp || 0), 0),
+    [filteredByUn]
   );
 
-  // Custo Mensal Atual (Headcount pleno de 49 licenças ativas)
+  // Custo Mensal Atual (Headcount pleno de licenças ativas no filtro)
   const custoMensalAtual = totalLicencas * SAGA_VALOR_UNITARIO;
 
   // Custo Acumulado Proporcional no período (Jan a Ago)
   const custoTotalProporcional = useMemo(
-    () => normalizedData.reduce((acc, d) => acc + d.custoAcumulado, 0),
-    [normalizedData]
+    () => filteredByUn.reduce((acc, d) => acc + d.custoAcumulado, 0),
+    [filteredByUn]
   );
 
   // Agrupamento por UN
   const statsPorUn = useMemo(() => {
     const map: Record<string, { licencas: number; enviado: number; projetos: number }> = {};
-    normalizedData.forEach((d) => {
+    filteredByUn.forEach((d) => {
       if (!map[d.un]) {
         map[d.un] = { licencas: 0, enviado: 0, projetos: 0 };
       }
@@ -122,14 +122,14 @@ export default function FerrSagaView() {
         pctEnviado: totalEnviado > 0 ? (s.enviado / totalEnviado) * 100 : 0
       }))
       .sort((a, b) => b.enviado - a.enviado);
-  }, [normalizedData, totalEnviado]);
+  }, [filteredByUn, totalEnviado]);
 
   const maxUnEnviado = statsPorUn[0]?.enviado || 1;
 
   // Agrupamento por Posição
   const statsPorPosicao = useMemo(() => {
     const map: Record<string, { licencas: number; enviado: number; dias_de_uso: number }> = {};
-    normalizedData.forEach((d) => {
+    filteredByUn.forEach((d) => {
       if (!map[d.posicao]) {
         map[d.posicao] = { licencas: 0, enviado: 0, dias_de_uso: 0 };
       }
@@ -147,18 +147,18 @@ export default function FerrSagaView() {
         pctEnviado: totalEnviado > 0 ? (s.enviado / totalEnviado) * 100 : 0
       }))
       .sort((a, b) => b.enviado - a.enviado);
-  }, [normalizedData, totalEnviado]);
+  }, [filteredByUn, totalEnviado]);
 
   const maxPosicaoEnviado = statsPorPosicao[0]?.enviado || 1;
 
   // Rankings Top 15
   const top15PorEnviado = useMemo(() => {
-    return [...normalizedData].sort((a, b) => b.enviado - a.enviado).slice(0, 15);
-  }, [normalizedData]);
+    return [...filteredByUn].sort((a, b) => b.enviado - a.enviado).slice(0, 15);
+  }, [filteredByUn]);
 
   const top15PorDias = useMemo(() => {
-    return [...normalizedData].sort((a, b) => b.dias_de_uso - a.dias_de_uso).slice(0, 15);
-  }, [normalizedData]);
+    return [...filteredByUn].sort((a, b) => b.dias_de_uso - a.dias_de_uso).slice(0, 15);
+  }, [filteredByUn]);
 
   const maxTopEnviado = top15PorEnviado[0]?.enviado || 1;
   const maxTopDias = top15PorDias[0]?.dias_de_uso || 1;
@@ -507,7 +507,7 @@ export default function FerrSagaView() {
                 <Wrench size={18} className="text-brand-blue" />
                 <span>Licenças Saga</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
-                  ({displayRecords.length} de {normalizedData.length} colaboradores)
+                  ({displayRecords.length} de {filteredByUn.length} colaboradores)
                 </span>
               </h3>
               <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1.5">
@@ -517,23 +517,6 @@ export default function FerrSagaView() {
             </div>
 
             <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => setSelectedUn(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Filtro por Posição */}
               <div className="flex items-center gap-1.5 text-xs">
                 <span className="text-gray-500 font-medium">Posição:</span>
@@ -682,7 +665,7 @@ export default function FerrSagaView() {
         {displayRecords.length > 0 && (
           <div className="p-4 border-t border-gray-100 bg-[#fafbfc] flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 gap-2">
             <span>
-              Exibindo <strong>{displayRecords.length} de {normalizedData.length} licenças</strong> alocadas no Saga.
+              Exibindo <strong>{displayRecords.length} de {filteredByUn.length} licenças</strong> alocadas no Saga.
             </span>
             <div className="flex items-center gap-4">
               <span>
