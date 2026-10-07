@@ -35,15 +35,15 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_PROVIEW = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto'];
+const MESES_PROVIEW = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 interface BibProViewViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
+export default function BibProViewView({ selectedMonth, selectedUn }: BibProViewViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState<string>('todas');
 
   // Base normalizada com padronização de UN e Mês
   const normalizedData = useMemo(() => {
@@ -72,20 +72,21 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Opções de UNs para filtro
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
 
-  // Filtros combinados da tabela (busca + UN)
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtro de busca textual da tabela (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
-
+    return filteredData.filter((d) => {
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
         const match =
@@ -95,18 +96,18 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
       }
       return true;
     });
-  }, [monthFilteredData, selectedUn, searchTerm]);
+  }, [filteredData, searchTerm]);
 
-  // Totais do Resumo (no período filtrado)
+  // Totais do Resumo (no período e UN filtrados)
   const totalAcessos = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.acessos, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.acessos, 0),
+    [filteredData]
   );
 
-  // Evolução Mensal (Janeiro a Agosto) - Base Consolidada Global
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_PROVIEW.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const totalAcessosMes = itensDoMes.reduce((acc, d) => acc + d.acessos, 0);
       const unsCount = itensDoMes.length;
 
@@ -116,7 +117,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
         unsCount
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   const maxEvolucaoAcessos = Math.max(...evolucaoMensal.map((e) => e.totalAcessos), 1);
 
@@ -124,7 +125,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
   const statsPorUn = useMemo(() => {
     const map: Record<string, { acessos: number; meses: Set<string> }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { acessos: 0, meses: new Set() };
@@ -141,7 +142,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
         percentual: totalAcessos > 0 ? (data.acessos / totalAcessos) * 100 : 0
       }))
       .sort((a, b) => b.acessos - a.acessos);
-  }, [monthFilteredData, totalAcessos]);
+  }, [filteredData, totalAcessos]);
 
   const unLider = statsPorUn[0] || null;
   const maxUnAcessos = statsPorUn[0]?.acessos || 1;
@@ -263,7 +264,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
         </div>
 
         {/* Grid de Barras Mensais (8 Meses) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.max(15, Math.round((item.totalAcessos / maxEvolucaoAcessos) * 100));
             const isSelected = selectedMonth === item.mes;
@@ -402,7 +403,7 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
                 <Library size={18} className="text-brand-blue" />
                 <span>Histórico de Acessos</span>
                 <span className="text-xs font-sans font-normal text-gray-500">
-                  ({displayRecords.length} de {normalizedData.length} registros)
+                  ({displayRecords.length} de {filteredData.length} registros)
                 </span>
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
@@ -411,23 +412,6 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
             </div>
 
             <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => setSelectedUn(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Busca por Texto */}
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -453,11 +437,11 @@ export default function BibProViewView({ selectedMonth }: BibProViewViewProps) {
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+            <thead className="sticky top-0 z-10 bg-gray-50/70 border-b border-gray-200/80 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-12 text-center">#</th>
                 <th className="py-3 px-4 min-w-[240px]">UN (Unidade de Negócio)</th>
                 <th className="py-3 px-4 w-32">Mês</th>
