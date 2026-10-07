@@ -67,9 +67,10 @@ const UN_COLORS = [
 
 interface BibAquisicoesViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewProps) {
+export default function BibAquisicoesView({ selectedMonth, selectedUn }: BibAquisicoesViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [chartView, setChartView] = useState<'unan' | 'localidade' | 'mes'>('unan');
 
@@ -99,11 +100,17 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
     return sortedData.filter((d) => d.mes === selectedMonth);
   }, [sortedData, selectedMonth]);
 
-  // Filtro de busca textual
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un_an === selectedUn);
+  }, [monthFilteredData, selectedUn]);
+
+  // Filtro de busca textual (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    if (!searchTerm.trim()) return monthFilteredData;
+    if (!searchTerm.trim()) return filteredData;
     const term = searchTerm.toLowerCase();
-    return monthFilteredData.filter(
+    return filteredData.filter(
       (d) =>
         d.titulo.toLowerCase().includes(term) ||
         d.un_an.toLowerCase().includes(term) ||
@@ -111,20 +118,20 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
         d.mes.toLowerCase().includes(term) ||
         (d.tipo && d.tipo.toLowerCase().includes(term))
     );
-  }, [monthFilteredData, searchTerm]);
+  }, [filteredData, searchTerm]);
 
-  // Totais do Resumo
-  const totalAquisicoes = monthFilteredData.length;
+  // Totais do Resumo (no período e UN filtrados)
+  const totalAquisicoes = filteredData.length;
   const valorTotalGasto = useMemo(
-    () => monthFilteredData.reduce((acc, curr) => acc + curr.valor, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, curr) => acc + curr.valor, 0),
+    [filteredData]
   );
   const valorMedio = totalAquisicoes > 0 ? valorTotalGasto / totalAquisicoes : 0;
 
   // Quebra por UN/AN
   const statsPorUnAn = useMemo(() => {
     const map: Record<string, { total: number; qtd: number }> = {};
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (!map[d.un_an]) {
         map[d.un_an] = { total: 0, qtd: 0 };
       }
@@ -141,12 +148,12 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
         percentual: valorTotalGasto > 0 ? (stats.total / valorTotalGasto) * 100 : 0
       }))
       .sort((a, b) => b.total - a.total);
-  }, [monthFilteredData, valorTotalGasto]);
+  }, [filteredData, valorTotalGasto]);
 
   // Quebra por Localidade
   const statsPorLocalidade = useMemo(() => {
     const map: Record<string, { total: number; qtd: number }> = {};
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const loc = d.localidade || 'Não especificada';
       if (!map[loc]) {
         map[loc] = { total: 0, qtd: 0 };
@@ -163,12 +170,13 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
         percentual: valorTotalGasto > 0 ? (stats.total / valorTotalGasto) * 100 : 0
       }))
       .sort((a, b) => b.total - a.total);
-  }, [monthFilteredData, valorTotalGasto]);
+  }, [filteredData, valorTotalGasto]);
 
-  // Evolução Mensal (Janeiro a Agosto)
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const statsPorMes = useMemo(() => {
     const map: Record<string, { total: number; qtd: number }> = {};
-    sortedData.forEach((d) => {
+    const base = selectedUn === 'Todas as UNs' ? sortedData : sortedData.filter((d) => d.un_an === selectedUn);
+    base.forEach((d) => {
       if (!map[d.mes]) {
         map[d.mes] = { total: 0, qtd: 0 };
       }
@@ -184,7 +192,7 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
         media: stats.total / stats.qtd
       }))
       .sort((a, b) => (MONTH_ORDER[a.mes] || 99) - (MONTH_ORDER[b.mes] || 99));
-  }, [sortedData]);
+  }, [sortedData, selectedUn]);
 
   // Exportar para Excel
   const handleExportExcel = () => {
@@ -497,8 +505,8 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
             </div>
           </div>
         ) : (
-          /* Evolução Mensal (Janeiro a Agosto) */
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+          /* Evolução Mensal (Janeiro a Dezembro) */
+          <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-3">
             {statsPorMes.map((m) => {
               const maxMonthly = Math.max(...statsPorMes.map((s) => s.total));
               const heightPct = Math.round((m.total / maxMonthly) * 100);
@@ -558,7 +566,7 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
                 </span>
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                Ordenado cronologicamente de Janeiro a Agosto de 2026
+                Ordenado cronologicamente, Janeiro a Dezembro de 2026
               </p>
             </div>
 
@@ -588,11 +596,11 @@ export default function BibAquisicoesView({ selectedMonth }: BibAquisicoesViewPr
           </div>
         </div>
 
-        {/* Tabela de Dados */}
-        <div className="overflow-x-auto">
+        {/* Tabela de Dados com Rolagem Interna */}
+        <div className="overflow-x-auto overflow-y-auto scrollbar-thin" style={{ height: '480px' }}>
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+            <thead className="sticky top-0 z-10 bg-gray-50/70 border-b border-gray-200/80 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-28">Mês</th>
                 <th className="py-3 px-4">Título da Obra</th>
                 <th className="py-3 px-4 w-48">UN / AN</th>
