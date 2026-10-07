@@ -41,7 +41,6 @@ import { ValorQualidadeTab } from '../components/painel-inovacao/ValorQualidadeT
 import { MetasPETab } from '../components/painel-inovacao/MetasPETab';
 
 import {
-  Lightbulb,
   Layers,
   Calendar,
   Users,
@@ -49,8 +48,6 @@ import {
   Target,
   Lock,
   ArrowLeft,
-  ShieldCheck,
-  Eye,
   Sparkles
 } from 'lucide-react';
 
@@ -586,46 +583,8 @@ export default function PainelInovacao() {
 
   return (
     <div className="min-h-screen bg-gray-50/70 text-gray-800 pb-24">
-      {/* ── Top Header Institucional ─────────────────────────────────── */}
+      {/* ── Top Header Institucional removido a pedido do Filipi ──────── */}
       <div className="bg-white border-b border-gray-200/80 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-sky-50 text-[#00B2FF] border border-sky-200">
-                  Gestão do Conhecimento
-                </span>
-                <span className="text-xs text-gray-400">•</span>
-                <span className="text-xs font-medium text-gray-500">
-                  Hub GC & Inovação
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 tracking-tight flex items-center gap-2.5">
-                <Lightbulb size={28} className="text-[#00B2FF]" />
-                Painel de Inovação
-              </h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                Portfólio de iniciativas, automações, cronogramas, métricas de adoção e metas do Planejamento Estratégico.
-              </p>
-            </div>
-
-            {/* Badge de Permissão */}
-            <div className="flex items-center gap-2 self-start md:self-auto">
-              {isAdmin ? (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold shadow-2xs">
-                  <ShieldCheck size={15} className="text-emerald-600" />
-                  <span>Administrador (Edição Ativa)</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 border border-gray-200 text-xs font-medium shadow-2xs">
-                  <Eye size={15} className="text-gray-500" />
-                  <span>Visualizador (Somente Leitura)</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* ── Abas de Navegação ────────────────────────────────────────── */}
         <div className="border-t border-gray-200/70 bg-[#fafbfc]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
