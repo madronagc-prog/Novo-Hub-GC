@@ -25,12 +25,6 @@ import {
   METAS_PE_PADRAO
 } from '../types/painelInovacao';
 
-import {
-  SEED_PROJETOS,
-  SEED_ETAPAS,
-  SEED_ADOCAO,
-  SEED_VALOR_QUALIDADE
-} from '../data/painelInovacaoSeed';
 import { cleanFirestoreData } from '../utils/painelInovacaoCalculos';
 
 import { ResumoPortfolioTab } from '../components/painel-inovacao/ResumoPortfolioTab';
@@ -54,50 +48,7 @@ import {
 
 type TabId = 'resumo' | 'projetos' | 'etapas' | 'adocao' | 'valor-qualidade' | 'metas-pe';
 
-// ── Chaves e Helpers de Armazenamento Persistente ─────────────────────────────
-const STORAGE_KEYS = {
-  PROJETOS: 'painel_inovacao_projetos_v3',
-  ETAPAS: 'painel_inovacao_etapas_v3',
-  ADOCAO: 'painel_inovacao_adocao_v3',
-  VALOR: 'painel_inovacao_valor_v3',
-  METAS: 'painel_inovacao_metas_v3',
-  CONFIG: 'painel_inovacao_config_v3'
-};
-
-const defaultEtapasMap: Record<string, InovacaoEtapas> = (() => {
-  const map: Record<string, InovacaoEtapas> = {};
-  SEED_ETAPAS.forEach((e) => {
-    map[e.id] = e;
-  });
-  return map;
-})();
-
 const defaultConfigPE: InovacaoConfigPE = { id: 'config', ano_apuracao: 2026 };
-
-function getLocalData<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(fallback)) {
-        if (Array.isArray(parsed)) return parsed as unknown as T;
-      } else if (typeof fallback === 'object' && fallback !== null) {
-        if (typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length > 0) return parsed as unknown as T;
-      } else if (parsed !== null && parsed !== undefined) {
-        return parsed as unknown as T;
-      }
-    }
-  } catch {}
-  return fallback;
-}
-
-function setLocalData(key: string, data: any) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (err) {
-    console.warn('Erro ao gravar no localStorage:', err);
-  }
-}
 
 export default function PainelInovacao() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -106,46 +57,14 @@ export default function PainelInovacao() {
   // Aba ativa
   const [activeTab, setActiveTab] = useState<TabId>('resumo');
 
-  // Estados com carregamento persistente imediato (não perde dados no F5)
-  const [projetos, setProjetos] = useState<InovacaoProjeto[]>(() => {
-    return getLocalData(STORAGE_KEYS.PROJETOS, SEED_PROJETOS);
-  });
-
-  const [etapasMap, setEtapasMap] = useState<Record<string, InovacaoEtapas>>(() => {
-    const loaded = getLocalData<Record<string, InovacaoEtapas>>(STORAGE_KEYS.ETAPAS, defaultEtapasMap);
-    // Recupera também chaves unitárias de contingência salvas anteriormente
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && (k.startsWith('painel_etapas_') || k.startsWith('painel_inovacao_etapas_'))) {
-          const val = localStorage.getItem(k);
-          if (val) {
-            const parsed = JSON.parse(val);
-            if (parsed && parsed.id) {
-              loaded[parsed.id] = { ...loaded[parsed.id], ...parsed };
-            }
-          }
-        }
-      }
-    } catch {}
-    return loaded;
-  });
-
-  const [adocoes, setAdocoes] = useState<InovacaoAdocao[]>(() => {
-    return getLocalData(STORAGE_KEYS.ADOCAO, SEED_ADOCAO);
-  });
-
-  const [valores, setValores] = useState<InovacaoValorQualidade[]>(() => {
-    return getLocalData(STORAGE_KEYS.VALOR, SEED_VALOR_QUALIDADE);
-  });
-
-  const [metas, setMetas] = useState<InovacaoMetaPE[]>(() => {
-    return getLocalData(STORAGE_KEYS.METAS, METAS_PE_PADRAO as InovacaoMetaPE[]);
-  });
-
-  const [configPE, setConfigPE] = useState<InovacaoConfigPE>(() => {
-    return getLocalData(STORAGE_KEYS.CONFIG, defaultConfigPE);
-  });
+  // Estado vem só do Firestore: o que está no banco é o que aparece na tela,
+  // para todo mundo, sem cache local escondendo exclusões ou edições.
+  const [projetos, setProjetos] = useState<InovacaoProjeto[]>([]);
+  const [etapasMap, setEtapasMap] = useState<Record<string, InovacaoEtapas>>({});
+  const [adocoes, setAdocoes] = useState<InovacaoAdocao[]>([]);
+  const [valores, setValores] = useState<InovacaoValorQualidade[]>([]);
+  const [metas, setMetas] = useState<InovacaoMetaPE[]>(METAS_PE_PADRAO as InovacaoMetaPE[]);
+  const [configPE, setConfigPE] = useState<InovacaoConfigPE>(defaultConfigPE);
 
   const [loadingData, setLoadingData] = useState(true);
 
@@ -173,25 +92,13 @@ export default function PainelInovacao() {
     const unsubProjetos = onSnapshot(
       collection(db, 'painel_inovacao_projetos'),
       (snap) => {
-        if (snap.empty) {
-          // Se o Firestore estiver vazio, preserva o que está no cache local do usuário e sobe para o banco
-          const atuais = getLocalData(STORAGE_KEYS.PROJETOS, SEED_PROJETOS);
-          setProjetos(atuais);
-          atuais.forEach((p) => {
-            setDoc(doc(db, 'painel_inovacao_projetos', p.id), p).catch(() => {});
-          });
-        } else {
-          const list: InovacaoProjeto[] = [];
-          snap.forEach((d) => list.push(d.data() as InovacaoProjeto));
-          list.sort((a, b) => a.id.localeCompare(b.id));
-          setProjetos(list);
-          setLocalData(STORAGE_KEYS.PROJETOS, list);
-        }
+        const list: InovacaoProjeto[] = [];
+        snap.forEach((d) => list.push(d.data() as InovacaoProjeto));
+        list.sort((a, b) => a.id.localeCompare(b.id));
+        setProjetos(list);
       },
       (err) => {
-        console.warn('Aviso ao carregar projetos do Firestore (mantendo dados salvos):', err);
-        const locais = getLocalData(STORAGE_KEYS.PROJETOS, SEED_PROJETOS);
-        setProjetos(locais);
+        console.warn('Erro ao carregar projetos do Firestore:', err);
       }
     );
 
@@ -199,30 +106,15 @@ export default function PainelInovacao() {
     const unsubEtapas = onSnapshot(
       collection(db, 'painel_inovacao_etapas'),
       (snap) => {
-        if (snap.empty) {
-          // Se o Firestore estiver vazio, preserva as etapas e novas etapas salvas localmente
-          const atuais = getLocalData(STORAGE_KEYS.ETAPAS, defaultEtapasMap);
-          setEtapasMap(atuais);
-          Object.values(atuais).forEach((e) => {
-            setDoc(doc(db, 'painel_inovacao_etapas', e.id), e).catch(() => {});
-          });
-        } else {
-          const map: Record<string, InovacaoEtapas> = {};
-          snap.forEach((d) => {
-            const data = d.data() as InovacaoEtapas;
-            map[data.id] = data;
-          });
-          // Mescla com etapas personalizadas locais se houver
-          const locais = getLocalData(STORAGE_KEYS.ETAPAS, defaultEtapasMap);
-          const mesclado = { ...locais, ...map };
-          setEtapasMap(mesclado);
-          setLocalData(STORAGE_KEYS.ETAPAS, mesclado);
-        }
+        const map: Record<string, InovacaoEtapas> = {};
+        snap.forEach((d) => {
+          const data = d.data() as InovacaoEtapas;
+          map[data.id] = data;
+        });
+        setEtapasMap(map);
       },
       (err) => {
-        console.warn('Aviso ao carregar etapas do Firestore (mantendo dados salvos):', err);
-        const locais = getLocalData(STORAGE_KEYS.ETAPAS, defaultEtapasMap);
-        setEtapasMap(locais);
+        console.warn('Erro ao carregar etapas do Firestore:', err);
       }
     );
 
@@ -230,23 +122,12 @@ export default function PainelInovacao() {
     const unsubAdocao = onSnapshot(
       collection(db, 'painel_inovacao_adocao'),
       (snap) => {
-        if (snap.empty) {
-          const atuais = getLocalData(STORAGE_KEYS.ADOCAO, SEED_ADOCAO);
-          setAdocoes(atuais);
-          atuais.forEach((a) => {
-            setDoc(doc(db, 'painel_inovacao_adocao', a.id), a).catch(() => {});
-          });
-        } else {
-          const list: InovacaoAdocao[] = [];
-          snap.forEach((d) => list.push(d.data() as InovacaoAdocao));
-          setAdocoes(list);
-          setLocalData(STORAGE_KEYS.ADOCAO, list);
-        }
+        const list: InovacaoAdocao[] = [];
+        snap.forEach((d) => list.push(d.data() as InovacaoAdocao));
+        setAdocoes(list);
       },
       (err) => {
-        console.warn('Aviso ao carregar adocao do Firestore:', err);
-        const locais = getLocalData(STORAGE_KEYS.ADOCAO, SEED_ADOCAO);
-        setAdocoes(locais);
+        console.warn('Erro ao carregar adocao do Firestore:', err);
       }
     );
 
@@ -254,23 +135,12 @@ export default function PainelInovacao() {
     const unsubValores = onSnapshot(
       collection(db, 'painel_inovacao_valor_qualidade'),
       (snap) => {
-        if (snap.empty) {
-          const atuais = getLocalData(STORAGE_KEYS.VALOR, SEED_VALOR_QUALIDADE);
-          setValores(atuais);
-          atuais.forEach((v) => {
-            setDoc(doc(db, 'painel_inovacao_valor_qualidade', v.id), v).catch(() => {});
-          });
-        } else {
-          const list: InovacaoValorQualidade[] = [];
-          snap.forEach((d) => list.push(d.data() as InovacaoValorQualidade));
-          setValores(list);
-          setLocalData(STORAGE_KEYS.VALOR, list);
-        }
+        const list: InovacaoValorQualidade[] = [];
+        snap.forEach((d) => list.push(d.data() as InovacaoValorQualidade));
+        setValores(list);
       },
       (err) => {
-        console.warn('Aviso ao carregar valor_qualidade do Firestore:', err);
-        const locais = getLocalData(STORAGE_KEYS.VALOR, SEED_VALOR_QUALIDADE);
-        setValores(locais);
+        console.warn('Erro ao carregar valor_qualidade do Firestore:', err);
       }
     );
 
@@ -278,38 +148,22 @@ export default function PainelInovacao() {
     const unsubMetas = onSnapshot(
       collection(db, 'painel_inovacao_metas_pe'),
       (snap) => {
-        if (snap.empty) {
-          const atuais = getLocalData(STORAGE_KEYS.METAS, METAS_PE_PADRAO as InovacaoMetaPE[]);
-          const configAtual = getLocalData(STORAGE_KEYS.CONFIG, defaultConfigPE);
-          setMetas(atuais);
-          setConfigPE(configAtual);
-          atuais.forEach((m) => {
-            setDoc(doc(db, 'painel_inovacao_metas_pe', m.id), m).catch(() => {});
-          });
-          setDoc(doc(db, 'painel_inovacao_metas_pe', 'config'), configAtual).catch(() => {});
-        } else {
-          const metasArr: InovacaoMetaPE[] = [];
-          snap.forEach((d) => {
-            if (d.id === 'config') {
-              const cfg = d.data() as InovacaoConfigPE;
-              setConfigPE(cfg);
-              setLocalData(STORAGE_KEYS.CONFIG, cfg);
-            } else {
-              metasArr.push(d.data() as InovacaoMetaPE);
-            }
-          });
-          metasArr.sort((a, b) => a.codigo.localeCompare(b.codigo, undefined, { numeric: true }));
-          if (metasArr.length > 0) {
-            setMetas(metasArr);
-            setLocalData(STORAGE_KEYS.METAS, metasArr);
+        const metasArr: InovacaoMetaPE[] = [];
+        snap.forEach((d) => {
+          if (d.id === 'config') {
+            setConfigPE(d.data() as InovacaoConfigPE);
+          } else {
+            metasArr.push(d.data() as InovacaoMetaPE);
           }
+        });
+        metasArr.sort((a, b) => a.codigo.localeCompare(b.codigo, undefined, { numeric: true }));
+        if (metasArr.length > 0) {
+          setMetas(metasArr);
         }
         setLoadingData(false);
       },
       (err) => {
-        console.warn('Aviso ao carregar metas_pe do Firestore:', err);
-        const locais = getLocalData(STORAGE_KEYS.METAS, METAS_PE_PADRAO as InovacaoMetaPE[]);
-        setMetas(locais);
+        console.warn('Erro ao carregar metas_pe do Firestore:', err);
         setLoadingData(false);
       }
     );
@@ -323,71 +177,47 @@ export default function PainelInovacao() {
     };
   }, [hasAccess]);
 
-  // ── Operações com Persistência Garantida (Local + Firestore) ───────────────
+  // ── Operações direto no Firestore (ele é a única fonte de verdade) ─────────
+  // O onSnapshot acima já atualiza projetos/etapas/adocoes/valores sozinho
+  // assim que o Firestore confirma a escrita, então os handlers abaixo só
+  // conversam com o banco, sem mexer no estado local na mão.
   const handleSalvarProjeto = async (p: InovacaoProjeto, isNovo: boolean) => {
     if (!isAdmin) return;
     const cleanP = cleanFirestoreData(p);
-    setProjetos((prev) => {
-      const exists = prev.some((item) => item.id === cleanP.id);
-      const updated = exists
-        ? prev.map((item) => (item.id === cleanP.id ? cleanP : item))
-        : [...prev, cleanP].sort((a, b) => a.id.localeCompare(b.id));
-      setLocalData(STORAGE_KEYS.PROJETOS, updated);
-      return updated;
-    });
-
-    if (isNovo && !etapasMap[cleanP.id]) {
-      const novoEtapas: InovacaoEtapas = {
-        id: cleanP.id,
-        mapeamento_ferramentas_inicio: cleanP.data_pedido || '',
-        updatedAt: new Date().toISOString()
-      };
-      setEtapasMap((prev) => {
-        const updated = { ...prev, [cleanP.id]: novoEtapas };
-        setLocalData(STORAGE_KEYS.ETAPAS, updated);
-        return updated;
-      });
-      setDoc(doc(db, 'painel_inovacao_etapas', cleanP.id), novoEtapas).catch(() => {});
-    }
 
     try {
-      await setDoc(doc(db, 'painel_inovacao_projetos', cleanP.id), cleanP, { merge: true });
-      // Backup em settings caso regras customizadas estejam pendentes
-      await setDoc(doc(db, 'settings', `pi_proj_${cleanP.id}`), { data: cleanP, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+      await setDoc(doc(db, 'painel_inovacao_projetos', cleanP.id), cleanP);
+
+      if (isNovo && !etapasMap[cleanP.id]) {
+        const novoEtapas: InovacaoEtapas = {
+          id: cleanP.id,
+          mapeamento_ferramentas_inicio: cleanP.data_pedido || '',
+          updatedAt: new Date().toISOString()
+        };
+        await setDoc(doc(db, 'painel_inovacao_etapas', cleanP.id), novoEtapas);
+      }
     } catch (err) {
-      console.warn('Erro na nuvem (mantido no armazenamento local):', err);
+      console.warn('Erro ao salvar projeto no Firestore:', err);
     }
   };
 
   const handleExcluirProjeto = async (id: string) => {
     if (!isAdmin) return;
-    setProjetos((prev) => {
-      const updated = prev.filter((p) => p.id !== id);
-      setLocalData(STORAGE_KEYS.PROJETOS, updated);
-      return updated;
-    });
-    setEtapasMap((prev) => {
-      const copy = { ...prev };
-      delete copy[id];
-      setLocalData(STORAGE_KEYS.ETAPAS, copy);
-      return copy;
-    });
-    setAdocoes((prev) => {
-      const updated = prev.filter((a) => a.projeto_id !== id);
-      setLocalData(STORAGE_KEYS.ADOCAO, updated);
-      return updated;
-    });
-    setValores((prev) => {
-      const updated = prev.filter((v) => v.projeto_id !== id);
-      setLocalData(STORAGE_KEYS.VALOR, updated);
-      return updated;
-    });
     try {
       await deleteDoc(doc(db, 'painel_inovacao_projetos', id));
       await deleteDoc(doc(db, 'painel_inovacao_etapas', id)).catch(() => {});
-      await deleteDoc(doc(db, 'settings', `pi_proj_${id}`)).catch(() => {});
+
+      // Apaga também, de verdade no Firestore, os lançamentos de Adoção e de
+      // Valor/Qualidade ligados a esse projeto (antes só saíam da tela, mas
+      // continuavam no banco e podiam reaparecer para outras pessoas).
+      const adocoesDoProjeto = adocoes.filter((a) => a.projeto_id === id);
+      const valoresDoProjeto = valores.filter((v) => v.projeto_id === id);
+      await Promise.all([
+        ...adocoesDoProjeto.map((a) => deleteDoc(doc(db, 'painel_inovacao_adocao', a.id)).catch(() => {})),
+        ...valoresDoProjeto.map((v) => deleteDoc(doc(db, 'painel_inovacao_valor_qualidade', v.id)).catch(() => {})),
+      ]);
     } catch (err) {
-      console.warn('Erro ao excluir no Firestore:', err);
+      console.warn('Erro ao excluir projeto no Firestore:', err);
     }
   };
 
@@ -395,59 +225,30 @@ export default function PainelInovacao() {
     if (!isAdmin) return;
     const cleanEtapas = cleanFirestoreData(etapas);
 
-    // 1. Atualização imediata no estado e no LocalStorage
-    setEtapasMap((prev) => {
-      const updated = {
-        ...prev,
-        [cleanEtapas.id]: cleanEtapas
-      };
-      setLocalData(STORAGE_KEYS.ETAPAS, updated);
-      return updated;
-    });
-
-    // 2. Atualização otimista do projeto se houver alteração de título ou etapa
-    if (projetoAtualizado) {
-      const cleanProj = cleanFirestoreData(projetoAtualizado);
-      setProjetos((prev) => {
-        const updated = prev.map((p) => (p.id === cleanProj.id ? cleanProj : p));
-        setLocalData(STORAGE_KEYS.PROJETOS, updated);
-        return updated;
-      });
-      setDoc(doc(db, 'painel_inovacao_projetos', cleanProj.id), cleanProj, { merge: true }).catch(() => {});
-    }
-
-    // 3. Persistência em Firestore (coleção principal + backup em settings)
     try {
-      await setDoc(doc(db, 'painel_inovacao_etapas', cleanEtapas.id), cleanEtapas, { merge: true });
-      await setDoc(doc(db, 'settings', `pi_etapas_${cleanEtapas.id}`), { data: cleanEtapas, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+      await setDoc(doc(db, 'painel_inovacao_etapas', cleanEtapas.id), cleanEtapas);
+
+      if (projetoAtualizado) {
+        const cleanProj = cleanFirestoreData(projetoAtualizado);
+        await setDoc(doc(db, 'painel_inovacao_projetos', cleanProj.id), cleanProj, { merge: true });
+      }
     } catch (err) {
-      console.warn('Erro ao sincronizar com Firestore (mantido com segurança no armazenamento local):', err);
+      console.warn('Erro ao salvar etapas no Firestore:', err);
     }
   };
 
   const handleSalvarAdocao = async (item: InovacaoAdocao) => {
     if (!isAdmin) return;
     const cleanItem = cleanFirestoreData(item);
-    setAdocoes((prev) => {
-      const exists = prev.some((a) => a.id === cleanItem.id);
-      const updated = exists ? prev.map((a) => (a.id === cleanItem.id ? cleanItem : a)) : [...prev, cleanItem];
-      setLocalData(STORAGE_KEYS.ADOCAO, updated);
-      return updated;
-    });
     try {
-      await setDoc(doc(db, 'painel_inovacao_adocao', cleanItem.id), cleanItem, { merge: true });
+      await setDoc(doc(db, 'painel_inovacao_adocao', cleanItem.id), cleanItem);
     } catch (err) {
-      console.warn('Erro ao persistir adocao no Firestore:', err);
+      console.warn('Erro ao salvar adocao no Firestore:', err);
     }
   };
 
   const handleExcluirAdocao = async (id: string) => {
     if (!isAdmin) return;
-    setAdocoes((prev) => {
-      const updated = prev.filter((a) => a.id !== id);
-      setLocalData(STORAGE_KEYS.ADOCAO, updated);
-      return updated;
-    });
     try {
       await deleteDoc(doc(db, 'painel_inovacao_adocao', id));
     } catch (err) {
@@ -458,26 +259,15 @@ export default function PainelInovacao() {
   const handleSalvarValorQualidade = async (item: InovacaoValorQualidade) => {
     if (!isAdmin) return;
     const cleanItem = cleanFirestoreData(item);
-    setValores((prev) => {
-      const exists = prev.some((v) => v.id === cleanItem.id);
-      const updated = exists ? prev.map((v) => (v.id === cleanItem.id ? cleanItem : v)) : [...prev, cleanItem];
-      setLocalData(STORAGE_KEYS.VALOR, updated);
-      return updated;
-    });
     try {
-      await setDoc(doc(db, 'painel_inovacao_valor_qualidade', cleanItem.id), cleanItem, { merge: true });
+      await setDoc(doc(db, 'painel_inovacao_valor_qualidade', cleanItem.id), cleanItem);
     } catch (err) {
-      console.warn('Erro ao persistir valor_qualidade no Firestore:', err);
+      console.warn('Erro ao salvar valor_qualidade no Firestore:', err);
     }
   };
 
   const handleExcluirValorQualidade = async (id: string) => {
     if (!isAdmin) return;
-    setValores((prev) => {
-      const updated = prev.filter((v) => v.id !== id);
-      setLocalData(STORAGE_KEYS.VALOR, updated);
-      return updated;
-    });
     try {
       await deleteDoc(doc(db, 'painel_inovacao_valor_qualidade', id));
     } catch (err) {
@@ -488,29 +278,15 @@ export default function PainelInovacao() {
   const handleSalvarMeta = async (meta: InovacaoMetaPE) => {
     if (!isAdmin) return;
     const cleanMeta = cleanFirestoreData(meta);
-    setMetas((prev) => {
-      const exists = prev.some((m) => m.id === cleanMeta.id);
-      const updated = exists
-        ? prev.map((m) => (m.id === cleanMeta.id ? cleanMeta : m))
-        : [...prev, cleanMeta];
-      updated.sort((a, b) => a.codigo.localeCompare(b.codigo, undefined, { numeric: true }));
-      setLocalData(STORAGE_KEYS.METAS, updated);
-      return updated;
-    });
     try {
-      await setDoc(doc(db, 'painel_inovacao_metas_pe', cleanMeta.id), cleanMeta, { merge: true });
+      await setDoc(doc(db, 'painel_inovacao_metas_pe', cleanMeta.id), cleanMeta);
     } catch (err) {
-      console.warn('Erro ao persistir meta no Firestore:', err);
+      console.warn('Erro ao salvar meta no Firestore:', err);
     }
   };
 
   const handleExcluirMeta = async (id: string) => {
     if (!isAdmin) return;
-    setMetas((prev) => {
-      const updated = prev.filter((m) => m.id !== id);
-      setLocalData(STORAGE_KEYS.METAS, updated);
-      return updated;
-    });
     try {
       await deleteDoc(doc(db, 'painel_inovacao_metas_pe', id));
     } catch (err) {
@@ -520,11 +296,6 @@ export default function PainelInovacao() {
 
   const handleSalvarAnoApuracao = async (ano: number) => {
     if (!isAdmin) return;
-    setConfigPE((prev) => {
-      const updated = { ...prev, ano_apuracao: ano };
-      setLocalData(STORAGE_KEYS.CONFIG, updated);
-      return updated;
-    });
     try {
       await setDoc(doc(db, 'painel_inovacao_metas_pe', 'config'), {
         id: 'config',
@@ -532,7 +303,7 @@ export default function PainelInovacao() {
         updatedAt: new Date().toISOString()
       }, { merge: true });
     } catch (err) {
-      console.warn('Erro ao persistir config ano_apuracao no Firestore:', err);
+      console.warn('Erro ao salvar ano de apuração no Firestore:', err);
     }
   };
 
