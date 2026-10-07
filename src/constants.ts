@@ -92,7 +92,8 @@ export const DASHBOARD_INDICADORES_VIEWERS = [
 export function canAccessDashboardIndicadores(email: string | null | undefined): boolean {
   if (!email) return false;
   const normalized = email.toLowerCase().trim();
-  return DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized) ||
+  return ADMIN_EMAILS.some(a => a.toLowerCase() === normalized) ||
+         DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized) ||
          DASHBOARD_INDICADORES_VIEWERS.some(v => v.toLowerCase() === normalized);
 }
 
@@ -100,7 +101,8 @@ export function canAccessDashboardIndicadores(email: string | null | undefined):
 export function canEditDashboardIndicadores(email: string | null | undefined): boolean {
   if (!email) return false;
   const normalized = email.toLowerCase().trim();
-  return DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized);
+  return ADMIN_EMAILS.some(a => a.toLowerCase() === normalized) ||
+         DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized);
 }
 
 // Papel do usuário no Dashboard de Indicadores: 'admin' (edição), 'viewer' (somente leitura) ou null (sem acesso)
@@ -109,7 +111,19 @@ export type DashboardIndicadoresRole = 'admin' | 'viewer' | null;
 export function getDashboardIndicadoresRole(email: string | null | undefined): DashboardIndicadoresRole {
   if (!email) return null;
   const normalized = email.toLowerCase().trim();
+  if (ADMIN_EMAILS.some(a => a.toLowerCase() === normalized)) return 'admin';
   if (DASHBOARD_INDICADORES_ADMINS.some(a => a.toLowerCase() === normalized)) return 'admin';
   if (DASHBOARD_INDICADORES_VIEWERS.some(v => v.toLowerCase() === normalized)) return 'viewer';
   return null;
 }
+
+// ============================================================================
+// Permissões do Painel de Inovação
+// ============================================================================
+// Compartilha exatamente a mesma lista e os mesmos papéis do Dashboard de Indicadores:
+// Administradores com edição: Andrezza, Deborah, Filipi e Amanda (+ ADMIN_EMAILS)
+// Demais pessoas: apenas visualização
+export const canAccessPainelInovacao = canAccessDashboardIndicadores;
+export const canEditPainelInovacao = canEditDashboardIndicadores;
+export type PainelInovacaoRole = DashboardIndicadoresRole;
+export const getPainelInovacaoRole = getDashboardIndicadoresRole;
