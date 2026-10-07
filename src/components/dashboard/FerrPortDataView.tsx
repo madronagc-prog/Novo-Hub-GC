@@ -38,7 +38,7 @@ const MONTH_ORDER: Record<string, number> = {
   'Dezembro': 12
 };
 
-const MESES_PORTDATA = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro'];
+const MESES_PORTDATA = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 // Helper para formatar moeda brasileira
 function formatCurrency(val: number): string {
@@ -47,11 +47,11 @@ function formatCurrency(val: number): string {
 
 interface FerrPortDataViewProps {
   selectedMonth: string;
+  selectedUn: string;
 }
 
-export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProps) {
+export default function FerrPortDataView({ selectedMonth, selectedUn }: FerrPortDataViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUn, setSelectedUn] = useState<string>('todas');
 
   // Base normalizada com padronização de UN e Mês
   const normalizedData = useMemo(() => {
@@ -80,20 +80,21 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
     return sortedChronologically.filter((d) => d.mes === selectedMonth);
   }, [sortedChronologically, selectedMonth]);
 
-  // Opções de UNs para filtro
-  const unOptions = useMemo(() => {
-    const set = new Set<string>();
-    normalizedData.forEach((d) => {
-      if (d.un && d.un.trim()) set.add(d.un.trim());
-    });
-    return Array.from(set).sort();
-  }, [normalizedData]);
+  // Filtro de UN (do seletor superior da página) - aplicado sobre o período já filtrado por mês
+  const filteredData = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return monthFilteredData;
+    return monthFilteredData.filter((d) => d.un === selectedUn);
+  }, [monthFilteredData, selectedUn]);
 
-  // Filtros combinados da tabela (busca por usuário ou cliente/caso + UN)
+  // Mesma base de UN, mas sem o filtro de mês (para o gráfico de evolução, que mostra todos os meses)
+  const unFilteredAllMonths = useMemo(() => {
+    if (selectedUn === 'Todas as UNs') return normalizedData;
+    return normalizedData.filter((d) => d.un === selectedUn);
+  }, [normalizedData, selectedUn]);
+
+  // Filtro de busca textual da tabela (mês e UN já vêm de filteredData)
   const displayRecords = useMemo(() => {
-    return monthFilteredData.filter((d) => {
-      if (selectedUn !== 'todas' && d.un !== selectedUn) return false;
-
+    return filteredData.filter((d) => {
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
         const match =
@@ -105,30 +106,30 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
       }
       return true;
     });
-  }, [monthFilteredData, selectedUn, searchTerm]);
+  }, [filteredData, searchTerm]);
 
-  // Totais do Resumo (no período filtrado)
-  const totalConsultas = monthFilteredData.length;
+  // Totais do Resumo (no período e UN filtrados)
+  const totalConsultas = filteredData.length;
 
   const totalValor = useMemo(
-    () => monthFilteredData.reduce((acc, d) => acc + d.valor, 0),
-    [monthFilteredData]
+    () => filteredData.reduce((acc, d) => acc + d.valor, 0),
+    [filteredData]
   );
 
   const usuariosUnicosSet = useMemo(() => {
     const set = new Set<string>();
-    monthFilteredData.forEach((d) => set.add(d.usuario));
+    filteredData.forEach((d) => set.add(d.usuario));
     return set;
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   const totalUsuariosUnicos = usuariosUnicosSet.size;
 
   const ticketMedio = totalConsultas > 0 ? totalValor / totalConsultas : 0;
 
-  // Evolução Mensal (Janeiro a Setembro)
+  // Evolução Mensal (Janeiro a Dezembro; respeita o filtro de UN)
   const evolucaoMensal = useMemo(() => {
     return MESES_PORTDATA.map((m) => {
-      const itensDoMes = normalizedData.filter((d) => d.mes === m);
+      const itensDoMes = unFilteredAllMonths.filter((d) => d.mes === m);
       const valorTotalMes = itensDoMes.reduce((acc, d) => acc + d.valor, 0);
       const consultasCount = itensDoMes.length;
       const usuariosCount = new Set(itensDoMes.map((d) => d.usuario)).size;
@@ -140,7 +141,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
         usuariosCount
       };
     });
-  }, [normalizedData]);
+  }, [unFilteredAllMonths]);
 
   const maxEvolucaoValor = Math.max(...evolucaoMensal.map((e) => e.valorTotal), 1);
 
@@ -148,7 +149,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
   const statsPorUn = useMemo(() => {
     const map: Record<string, { valor: number; consultas: number; users: Set<string> }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       const unName = d.un || 'Não informada';
       if (!map[unName]) {
         map[unName] = { valor: 0, consultas: 0, users: new Set() };
@@ -167,7 +168,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
         percentual: totalValor > 0 ? (data.valor / totalValor) * 100 : 0
       }))
       .sort((a, b) => b.valor - a.valor);
-  }, [monthFilteredData, totalValor]);
+  }, [filteredData, totalValor]);
 
   const maxUnValor = statsPorUn[0]?.valor || 1;
 
@@ -175,7 +176,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
   const topUsuarios = useMemo(() => {
     const map: Record<string, { valor: number; consultas: number; un: string }> = {};
 
-    monthFilteredData.forEach((d) => {
+    filteredData.forEach((d) => {
       if (!map[d.usuario]) {
         map[d.usuario] = { valor: 0, consultas: 0, un: d.un };
       }
@@ -192,7 +193,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
       }))
       .sort((a, b) => b.valor - a.valor)
       .slice(0, 10);
-  }, [monthFilteredData]);
+  }, [filteredData]);
 
   const maxTopValor = topUsuarios[0]?.valor || 1;
 
@@ -315,7 +316,7 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
         </div>
 
         {/* Grid de Barras Mensais (9 Meses) */}
-        <div className="grid grid-cols-3 sm:grid-cols-9 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-6 gap-2">
           {evolucaoMensal.map((item) => {
             const heightPct = Math.max(15, Math.round((item.valorTotal / maxEvolucaoValor) * 100));
             const isSelected = selectedMonth === item.mes;
@@ -515,23 +516,6 @@ export default function FerrPortDataView({ selectedMonth }: FerrPortDataViewProp
             </div>
 
             <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Filtro por UN */}
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-gray-500 font-medium">UN:</span>
-                <select
-                  value={selectedUn}
-                  onChange={(e) => setSelectedUn(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue text-gray-800 font-medium max-w-[170px]"
-                >
-                  <option value="todas">Todas as UNs</option>
-                  {unOptions.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Busca por Usuário ou Cliente/Caso */}
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
