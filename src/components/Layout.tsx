@@ -1,14 +1,14 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Search, LayoutDashboard, Info, Menu, X, FileText,
-  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical, BarChart3
+  ChevronDown, LogIn, LogOut, User, BookOpen, Briefcase, FlaskConical, BarChart3, Lightbulb
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { auth, signIn, logOut } from '../firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import AuthErrorModal from './AuthErrorModal';
 import { CATEGORIES } from '../data/servicesGCData';
-import { canAccessDashboardIndicadores } from '../constants';
+import { canAccessDashboardIndicadores, canAccessPainelInovacao } from '../constants';
 
 export default function Layout() {
   const location = useLocation();
@@ -61,6 +61,7 @@ export default function Layout() {
   }, []);
 
   const hasAccessIndicadores = canAccessDashboardIndicadores(user?.email);
+  const hasAccessPainelInovacao = canAccessPainelInovacao(user?.email);
 
   const navItems = useMemo(() => {
     const items: Array<{
@@ -111,13 +112,21 @@ export default function Layout() {
     if (hasAccessIndicadores) {
       items.push({
         path: '/dashboard-indicadores',
-        label: 'Indicadores GC & COM',
+        label: 'Indicadores,
         icon: BarChart3,
       });
     }
 
+    if (hasAccessPainelInovacao) {
+      items.push({
+        path: '/painel-inovacao',
+        label: 'Inovação',
+        icon: Lightbulb,
+      });
+    }
+
     return items;
-  }, [hasAccessIndicadores]);
+  }, [hasAccessIndicadores, hasAccessPainelInovacao]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
