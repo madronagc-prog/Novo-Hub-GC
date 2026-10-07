@@ -37,7 +37,8 @@ const defaultContent: SobreContent = {
     'Acesso aos **Serviços de GC**, plataformas e bases de dados externas gerenciadas pela equipe.',
     'Monitoramento contínuo de **Jurisprudência** (Temas Repetitivos, Controvérsias do STJ, Repercussão Geral do STF).',
     'Acompanhamento Legislativo e **Monitoramento de Empresas**.',
-    '**Clipping Corporativo** e fontes de curadoria confiáveis no Explorador.'
+    '**Clipping Corporativo** e fontes de curadoria confiáveis no Explorador.',
+    'O **Madrona Lab**, laboratório de testes e experimentos de IA da equipe de GC: [acesse aqui](/madrona-lab).'
   ],
   contatoTexto: 'Dúvidas ou sugestões? Fale com a GC:',
   contatoEmail: 'gestaodoconhecimento@madronaadvogados.com.br'
@@ -97,7 +98,22 @@ export default function Sobre() {
     const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\)|https?:\/\/[^\s]+)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i}>{part.slice(2, -2)}</strong>;
+        const inner = part.slice(2, -2);
+        const innerLinkMatch = inner.match(/^\[(.*?)\]\((.*?)\)$/);
+        if (innerLinkMatch) {
+          return (
+            <a
+              key={i}
+              href={innerLinkMatch[2]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-blue hover:underline font-bold"
+            >
+              {innerLinkMatch[1]}
+            </a>
+          );
+        }
+        return <strong key={i}>{inner}</strong>;
       }
       const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
       if (linkMatch) {
