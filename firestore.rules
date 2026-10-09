@@ -55,6 +55,31 @@ service cloud.firestore {
       );
     }
 
+    // Administradores do Painel de Inovação (espelha PAINEL_INOVACAO_ADMINS em src/constants.ts).
+    // Lista própria, independente de isAdmin(): atualizar aqui sempre que a lista
+    // de admins do Painel de Inovação mudar em constants.ts, senão a tela libera
+    // o botão de salvar/excluir mas o Firestore recusa a escrita em silêncio.
+    function isPainelInovacaoAdmin() {
+      return isAdmin() || (
+        isAuthenticated() &&
+        request.auth.token.email != null &&
+        request.auth.token.email.lower() in [
+          "andrezza.soares@madronaadvogados.com.br",
+          "deborah.lindau@madronaadvogados.com.br",
+          "filipi.oliveira@madronaadvogados.com.br",
+          "amanda.correa@madronaadvogados.com.br",
+          "carnivalofdisgustblog@gmail.com",
+          "gc.madronafialho@gmail.com",
+          "andrezzasoares08@gmail.com",
+          "amandacarvaleite@gmail.com",
+          "madrona.gc@gmail.com",
+          "clarissa.machado@madronaadvogados.com.br",
+          "ione.moraes@madronaadvogados.com.br",
+          "raquel.marques@madronaadvogados.com.br"
+        ]
+      );
+    }
+
     function isValidProjeto(data) {
       return data.projeto is string && data.projeto.size() > 0 &&
              data.ementa is string && data.ementa.size() > 0 &&
@@ -208,27 +233,27 @@ service cloud.firestore {
     // ── Painel de Inovação ────────────────────────────────────────────────────
     match /painel_inovacao_projetos/{projetoId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, update, delete: if isPainelInovacaoAdmin();
     }
 
     match /painel_inovacao_etapas/{projetoId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, update, delete: if isPainelInovacaoAdmin();
     }
 
     match /painel_inovacao_adocao/{adocaoId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, update, delete: if isPainelInovacaoAdmin();
     }
 
     match /painel_inovacao_valor_qualidade/{registroId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, update, delete: if isPainelInovacaoAdmin();
     }
 
     match /painel_inovacao_metas_pe/{metaId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, update, delete: if isPainelInovacaoAdmin();
     }
   }
 }
