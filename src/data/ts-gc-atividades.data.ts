@@ -8,7 +8,7 @@ export interface TSGCAtividadeRegistro {
 }
 
 export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
-      {
+     {
     nome: "Amanda Corrêa",
     mes: "Agosto",
     atividade: "",
@@ -213,16 +213,16 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
     mes: "Agosto",
     atividade: "",
     categoria: "Atendimento e Relacionamento Interno",
-    tempo_investido: "65:45:00",
-    tempo_investido_minutos: 3945
+    tempo_investido: "103:15:00",
+    tempo_investido_minutos: 6195
   },
   {
     nome: "Raquel Marques",
     mes: "Agosto",
     atividade: "",
     categoria: "Gestão de Equipes",
-    tempo_investido: "40:00:00",
-    tempo_investido_minutos: 2400
+    tempo_investido: "2:30:00",
+    tempo_investido_minutos: 150
   },
   {
     nome: "Raquel Marques",
@@ -309,8 +309,8 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
     mes: "Setembro",
     atividade: "",
     categoria: "Atendimento e Relacionamento Interno",
-    tempo_investido: "46:48:00",
-    tempo_investido_minutos: 2808
+    tempo_investido: "66:06:00",
+    tempo_investido_minutos: 3966
   },
   {
     nome: "Raquel Marques",
@@ -325,8 +325,8 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
     mes: "Setembro",
     atividade: "",
     categoria: "Gestão de Equipes",
-    tempo_investido: "20:48:00",
-    tempo_investido_minutos: 1248
+    tempo_investido: "1:30:00",
+    tempo_investido_minutos: 90
   },
   {
     nome: "Raquel Marques",
@@ -335,5 +335,125 @@ export const tsGcAtividadesData: TSGCAtividadeRegistro[] = [
     categoria: "Inovação e Eficiência",
     tempo_investido: "72:48:00",
     tempo_investido_minutos: 4368
+  },
+  {
+    nome: "Clarissa Machado",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Inovação e Eficiência",
+    tempo_investido: "125:00:00",
+    tempo_investido_minutos: 7500
+  },
+  {
+    nome: "Clarissa Machado",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Gestão de Equipes",
+    tempo_investido: "23:00:00",
+    tempo_investido_minutos: 1380
+  },
+  {
+    nome: "Clarissa Machado",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Atendimento e Relacionamento Interno",
+    tempo_investido: "10:00:00",
+    tempo_investido_minutos: 600
+  },
+  {
+    nome: "Clarissa Machado",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Academia Madrona",
+    tempo_investido: "10:00:00",
+    tempo_investido_minutos: 600
+  },
+  {
+    nome: "Clarissa Machado",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Planajamento Estratégico e Orçamento",
+    tempo_investido: "12:00:00",
+    tempo_investido_minutos: 720
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Projeto Migração iManage",
+    tempo_investido: "48:00:00",
+    tempo_investido_minutos: 2880
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Madrona Research",
+    tempo_investido: "30:00:00",
+    tempo_investido_minutos: 1800
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Atendimento e Relacionamento Interno",
+    tempo_investido: "25:00:00",
+    tempo_investido_minutos: 1500
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Demandas operacionais",
+    tempo_investido: "35:00:00",
+    tempo_investido_minutos: 2100
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Gestão de Equipes",
+    tempo_investido: "10:00:00",
+    tempo_investido_minutos: 600
+  },
+  {
+    nome: "Deborah Lindau",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Curadoria e Distribuição de Conteúdo",
+    tempo_investido: "20:00:00",
+    tempo_investido_minutos: 1200
+  },
+  {
+    nome: "Andrezza Soares",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Academia Madrona",
+    tempo_investido: "4:00:00",
+    tempo_investido_minutos: 240
+  },
+  {
+    nome: "Andrezza Soares",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Curadoria e Distribuição de Conteúdo",
+    tempo_investido: "12:00:00",
+    tempo_investido_minutos: 720
+  },
+  {
+    nome: "Andrezza Soares",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Demandas operacionais",
+    tempo_investido: "20:00:00",
+    tempo_investido_minutos: 1200
+  },
+  {
+    nome: "Andrezza Soares",
+    mes: "Setembro",
+    atividade: "",
+    categoria: "Apoio geral aos projetos",
+    tempo_investido: "20:00:00",
+    tempo_investido_minutos: 1200
   },
 ];
