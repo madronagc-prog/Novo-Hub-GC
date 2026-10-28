@@ -208,4 +208,28 @@ export const acadMadronaData: AcadMadronaRegistro[] = [
     participantes: 79,
     convidados: 230
   },
+    {
+    mes: "Outubro",
+    titulo: "Dicas de Copilot",
+    pilar: "Treinamentos",
+    apresentado_por: "Clarissa",
+    participantes: 100,
+    convidados: 373
+  },
+  {
+    mes: "Outubro",
+    titulo: "Tudo sobre a Marca Madrona",
+    pilar: "Cultura",
+    apresentado_por: "Time Comunicação",
+    participantes: 93,
+    convidados: 373
+  },
+  {
+    mes: "Outubro",
+    titulo: "Tira-dúvidas iM",
+    pilar: "Treinamentos",
+    apresentado_por: "Deborah",
+    participantes: 63,
+    convidados: 373
+  },
 ];
